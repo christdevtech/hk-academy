@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "functions": {
+    "/[slug]": {},
+    "/account": {},
+    "/login": {},
+    "/logout": {},
+    "/posts/[slug]": {},
+    "/projects/[slug]": {},
+    "/recover-password": {},
+    "/reset-password": {},
+    "/styleguide/content-block": {},
+    "/styleguide/buttons": {},
+    "/styleguide/call-to-action": {},
+    "/styleguide/media-block": {},
+    "/styleguide/message": {},
+    "/styleguide/typography": {},
+    "/styleguide": {}
+  }
+}

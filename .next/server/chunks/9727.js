@@ -1,0 +1,1 @@
+"use strict";exports.id=9727,exports.ids=[9727],exports.modules={3323:(e,t,r)=>{e.exports=r(517)},5655:()=>{"getAll"in Headers.prototype||(Headers.prototype.getAll=function(e){if("set-cookie"!==(e=e.toLowerCase()))throw Error("Headers.getAll is only supported for Set-Cookie header");let t=[...this.entries()].filter(([t])=>t===e);return t.map(([,e])=>e)})}};
