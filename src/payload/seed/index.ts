@@ -69,6 +69,7 @@ export const seed = async (payload: Payload): Promise<void> => {
     }),
   )
 
+  // eslint-disable-next-line prefer-const
   let [{ id: demoAuthorID }, { id: demoUserID }] = await Promise.all([
     await payload.create({
       collection: 'users',
