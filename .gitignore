@@ -1,9 +1,9 @@
-# build
-# dist
+build
+dist
 /media
 node_modules
 .DS_Store
 .env
 .env.example
-# .next
+.next
 .vercel
