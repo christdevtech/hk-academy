@@ -37,8 +37,10 @@ export const LogoutPage: React.FC<{
         <div>
           <h1>{error || success}</h1>
           <p>
-            {'What would you like to do next? '}
-            {hasPostsPage && hasProjectsPage && <Fragment>{'Browse '}</Fragment>}
+            {
+              'What would you like to do next? Refer a friend to take advantage of this great experience?'
+            }
+            {/* {hasPostsPage && hasProjectsPage && <Fragment>{'Browse '}</Fragment>}
             {hasPostsPage && (
               <Fragment>
                 <Link href={`/${postsPage.slug}`}>all posts</Link>
@@ -49,7 +51,7 @@ export const LogoutPage: React.FC<{
               <Fragment>
                 <Link href={`/${projectsPage.slug}`}>all projects</Link>
               </Fragment>
-            )}
+            )} */}
             {` To log back in, `}
             <Link href="/login">click here</Link>
             {'.'}

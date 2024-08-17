@@ -1,4 +1,5 @@
 import { LINK_FIELDS } from './link'
+import { MEDIA_FIELDS } from './media'
 
 export const HEADER = `
   Header {
@@ -35,6 +36,23 @@ export const SETTINGS = `
     }
     projectsPage {
       slug
+    }
+    logoLight{
+      ${MEDIA_FIELDS}
+    }
+    logoDark{
+      ${MEDIA_FIELDS}
+    }
+    contactInformation{
+      email
+      phone
+    }
+    socialLinks{
+      platform
+      url
+      icon{
+        ${MEDIA_FIELDS}
+      }
     }
   }
 `

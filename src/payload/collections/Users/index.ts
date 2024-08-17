@@ -6,6 +6,8 @@ import adminsAndUser from './access/adminsAndUser'
 import { checkRole } from './checkRole'
 import { ensureFirstUserIsAdmin } from './hooks/ensureFirstUserIsAdmin'
 import { loginAfterCreate } from './hooks/loginAfterCreate'
+import { assignReferralCodeBeforeCreate } from './hooks/assignReferralCodeBeforeCreate'
+import { setReferrerAfterCreate } from './hooks/setReferrerAfterCreate'
 
 const Users: CollectionConfig = {
   slug: 'users',
@@ -21,7 +23,8 @@ const Users: CollectionConfig = {
     admin: ({ req: { user } }) => checkRole(['admin'], user),
   },
   hooks: {
-    afterChange: [loginAfterCreate],
+    beforeChange: [assignReferralCodeBeforeCreate],
+    afterChange: [setReferrerAfterCreate, loginAfterCreate],
   },
   auth: true,
   fields: [
@@ -52,6 +55,35 @@ const Users: CollectionConfig = {
         create: admins,
         update: admins,
       },
+    },
+    {
+      name: 'referralCode',
+      type: 'text',
+      // unique: true,
+    },
+    {
+      name: 'referredBy',
+      type: 'relationship',
+      relationTo: 'users',
+      hasMany: false,
+    },
+    {
+      name: 'referredUsers',
+      type: 'relationship',
+      relationTo: 'users',
+      hasMany: true,
+    },
+    {
+      name: 'subscriptions',
+      type: 'relationship',
+      relationTo: 'subscriptions',
+      hasMany: true,
+    },
+    {
+      name: 'phoneNumber',
+      type: 'text',
+      unique: true,
+      required: false,
     },
   ],
   timestamps: true,

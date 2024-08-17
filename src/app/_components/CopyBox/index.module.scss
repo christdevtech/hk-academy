@@ -1,0 +1,42 @@
+.container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: var(--theme-elevation-1000);
+  color: var(--theme-elevation-100);
+  margin: 20px 0;
+}
+
+.text {
+  flex-grow: 1;
+  margin: 0;
+  padding-right: 10px;
+  word-break: break-all;
+}
+
+.copyButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.svgIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--theme-elevation-100);
+}
+
+.copiedText {
+  position: absolute;
+  right: 10px;
+  top: -20px;
+  background-color: var(--theme-elevation-500);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+}

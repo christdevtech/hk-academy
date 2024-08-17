@@ -6,6 +6,9 @@ import { POST } from '../_graphql/posts'
 import { PROJECT } from '../_graphql/projects'
 import { GRAPHQL_API_URL } from './shared'
 import { payloadToken } from './token'
+import { query } from 'express'
+import { SUBSCRIPTION } from '../_graphql/subscriptions'
+import { COURSE } from '../_graphql/courses'
 
 const queryMap = {
   pages: {
@@ -19,6 +22,14 @@ const queryMap = {
   projects: {
     query: PROJECT,
     key: 'Projects',
+  },
+  subscriptions: {
+    query: SUBSCRIPTION,
+    key: 'Subscriptions',
+  },
+  courses: {
+    query: COURSE,
+    key: 'Courses',
   },
 }
 

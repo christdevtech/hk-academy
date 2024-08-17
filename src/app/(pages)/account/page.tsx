@@ -14,6 +14,7 @@ import { mergeOpenGraph } from '../../_utilities/mergeOpenGraph'
 import AccountForm from './AccountForm'
 
 import classes from './index.module.scss'
+import CopyBox from '../../_components/CopyBox'
 
 export default async function Account() {
   const { user } = await getMeUser({
@@ -47,16 +48,7 @@ export default async function Account() {
             type: 'paragraph',
             children: [
               {
-                text: 'This is your account dashboard. Here you can update your account information, view your comment history, and more. To manage all users, ',
-              },
-              {
-                type: 'link',
-                url: '/admin/collections/users',
-                children: [
-                  {
-                    text: 'login to the admin dashboard.',
-                  },
-                ],
+                text: 'This is your account dashboard. Here you can update your account information, view your purchased Subscriptions, and get your referral link as well as track referrals',
               },
             ],
           },
@@ -65,13 +57,26 @@ export default async function Account() {
       <Gutter className={classes.account}>
         <AccountForm />
         <HR />
-        <h2>Comments</h2>
+        <h2>Subscriptions</h2>
+
         <p>
-          These are the comments you have placed over time. Each comment is associated with a
-          specific post. All comments must be approved by an admin before they appear on the site.
+          This is where the subscriptions you have purchased will appear. Once you purchase a
+          subscription, you will see it in this section
         </p>
         <HR />
-        {comments?.length === 0 && <p>You have not made any comments yet.</p>}
+        <h2>Referrals</h2>
+        <h4>Your Referral Link: </h4>
+        <CopyBox
+          textToCopy={`${process.env.PAYLOAD_PUBLIC_SERVER_URL}/referral/${user.referralCode}`}
+        />
+        <p>
+          This is where you will see the statistics of your referrals and how much you have made
+          from them.
+        </p>
+        <div>
+          <h4>Number of Referred Users: {user?.referredUsers?.length || 0}</h4>
+        </div>
+        {/* {comments?.length === 0 && <p>You have not made any comments yet.</p>}
         {comments.length > 0 &&
           comments?.map((com, index) => {
             const { doc, comment, createdAt } = com
@@ -96,7 +101,7 @@ export default async function Account() {
                 {index < comments.length - 1 && <HR />}
               </Fragment>
             )
-          })}
+          })} */}
         <HR />
         <Button href="/logout" appearance="secondary" label="Log out" />
       </Gutter>

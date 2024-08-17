@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 import next from 'next'
 import nextBuild from 'next/dist/build'
 import path from 'path'
+import cookieParser from 'cookie-parser'
 
 dotenv.config({
   path: path.resolve(__dirname, '../.env'),
@@ -10,10 +11,13 @@ dotenv.config({
 import express from 'express'
 import payload from 'payload'
 
+import customRoutes from './customRoutes'
 import { seed } from './payload/seed'
 
 const app = express()
 const PORT = process.env.PORT || 3000
+
+app.use(cookieParser())
 
 const start = async (): Promise<void> => {
   await payload.init({
@@ -28,6 +32,9 @@ const start = async (): Promise<void> => {
     await seed(payload)
     process.exit()
   }
+
+  // Use the custom routes before Next.js handling
+  app.use(customRoutes)
 
   if (process.env.NEXT_BUILD) {
     app.listen(PORT, async () => {

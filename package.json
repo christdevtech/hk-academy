@@ -1,5 +1,5 @@
 {
-  "name": "@payloadcms/template-website",
+  "name": "hkacademy",
   "description": "Website template for Payload",
   "version": "1.0.0",
   "main": "dist/server.js",
@@ -29,6 +29,7 @@
     "@payloadcms/plugin-redirects": "^1.0.0",
     "@payloadcms/plugin-seo": "^1.0.10",
     "@payloadcms/richtext-slate": "^1.0.0",
+    "cookie-parser": "^1.4.6",
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
     "escape-html": "^1.0.3",
@@ -40,7 +41,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "7.45.4",
-    "react-router-dom": "5.3.4"
+    "react-router-dom": "5.3.4",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^13.1.6",

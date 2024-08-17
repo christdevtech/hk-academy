@@ -23,9 +23,12 @@ import { seed } from './endpoints/seed'
 import { Footer } from './globals/Footer'
 import { Header } from './globals/Header'
 import { Settings } from './globals/Settings'
+import Subscriptions from './collections/Subscriptions'
+import Courses from './collections/Courses'
+import Icon from './components/SiteIcon'
 
 const generateTitle: GenerateTitle = () => {
-  return 'My Website'
+  return 'HK Academy'
 }
 
 dotenv.config({
@@ -37,12 +40,13 @@ export default buildConfig({
     user: Users.slug,
     bundler: webpackBundler(), // bundler-config
     components: {
-      // The `BeforeLogin` component renders a message that you see while logging into your admin panel.
-      // Feel free to delete this at any time. Simply remove the line below and the import `BeforeLogin` statement on line 15.
       beforeLogin: [BeforeLogin],
-      // The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
-      // Feel free to delete this at any time. Simply remove the line below and the import `BeforeDashboard` statement on line 15.
+
       beforeDashboard: [BeforeDashboard],
+      graphics: {
+        Logo: Icon,
+        Icon,
+      },
     },
     webpack: config => ({
       ...config,
@@ -58,6 +62,11 @@ export default buildConfig({
         },
       },
     }),
+    meta: {
+      titleSuffix: '- HK Academy',
+      favicon: '/logo.png',
+      ogImage: '/logo.png',
+    },
   },
   editor: slateEditor({}), // editor-config
   // database-adapter-config-start
@@ -66,7 +75,7 @@ export default buildConfig({
   }),
   // database-adapter-config-end
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL,
-  collections: [Pages, Posts, Projects, Media, Categories, Users, Comments],
+  collections: [Pages, Posts, Projects, Subscriptions, Courses, Media, Categories, Users, Comments],
   globals: [Settings, Header, Footer],
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts'),
@@ -93,7 +102,7 @@ export default buildConfig({
       collections: ['categories'],
     }),
     seo({
-      collections: ['pages', 'posts', 'projects'],
+      collections: ['pages', 'posts', 'projects', 'subscriptions', 'courses'],
       generateTitle,
       uploadsCollection: 'media',
     }),

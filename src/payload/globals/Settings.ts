@@ -24,5 +24,64 @@ export const Settings: GlobalConfig = {
       relationTo: 'pages',
       label: 'Projects page',
     },
+    {
+      name: 'logoLight',
+      label: 'Logo Light Theme',
+      type: 'upload',
+      relationTo: 'media',
+      // required: true,
+    },
+    {
+      name: 'logoDark',
+      label: 'Logo Dark Theme',
+      type: 'upload',
+      relationTo: 'media',
+      // required: true,
+    },
+    {
+      name: 'contactInformation',
+      label: 'Contact Information',
+      type: 'group',
+      fields: [
+        {
+          name: 'email',
+          label: 'Email',
+          type: 'text',
+          // required: true,
+        },
+        {
+          name: 'phone',
+          label: 'Phone Number',
+          type: 'text',
+          // required: true,
+        },
+      ],
+    },
+    {
+      name: 'socialLinks',
+      label: 'Social Links',
+      type: 'array',
+      fields: [
+        {
+          name: 'platform',
+          label: 'Platform',
+          type: 'text',
+          // required: true,
+        },
+        {
+          name: 'url',
+          label: 'URL',
+          type: 'text',
+          // required: true,
+        },
+        {
+          name: 'icon',
+          label: 'Icon',
+          type: 'upload',
+          relationTo: 'media',
+          // required: true,
+        },
+      ],
+    },
   ],
 }

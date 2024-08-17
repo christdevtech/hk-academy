@@ -55,5 +55,13 @@ export const hero: Field = {
         condition: (_, { type } = {}) => ['highImpact', 'mediumImpact'].includes(type),
       },
     },
+    {
+      name: 'textcolor',
+      type: 'text',
+      required: false,
+      admin: {
+        condition: (_, { type }) => ['highImpact', 'mediumImpact'].includes(type),
+      },
+    },
   ],
 }

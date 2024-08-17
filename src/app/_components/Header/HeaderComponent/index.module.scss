@@ -1,7 +1,8 @@
-@use '../../_css/queries.scss' as *;
+@use '../../../_css/queries.scss' as *;
 
 .header {
   padding: var(--base) 0;
+  box-shadow:  0 0 calc(var(--base) / 2) rgba($color: #000000, $alpha: 0.1);
 }
 
 .wrap {
@@ -15,8 +16,6 @@
   width: 150px;
 }
 
-:global([data-theme="light"]) {
-  .logo {
-    filter: invert(1);
-  }
+.hide{
+  display: none;
 }
