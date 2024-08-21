@@ -11,6 +11,8 @@ import classes from './index.module.scss'
 import Logo from '../../Logo'
 import { noHeaderFooterUrls } from '../../../constants'
 import { usePathname } from 'next/navigation'
+import { MenuIcon } from '../../icons/Menu'
+import Image from 'next/image'
 
 export const FooterComponent = ({ footer, settings }: { footer: Footer; settings: Settings }) => {
   const navItems = footer?.navItems || []
@@ -23,27 +25,41 @@ export const FooterComponent = ({ footer, settings }: { footer: Footer; settings
     >
       <Gutter className={classes.main}>
         <div className={classes.wrap}>
-          <Link href="/">
-            <Logo {...settings} />
-          </Link>
+          <div className={classes.col1}>
+            <Link href="/">
+              <Logo {...settings} />
+            </Link>
+          </div>
+
           <nav className={classes.nav}>
             <ThemeSelector />
             {navItems.map(({ link }, i) => {
               return <CMSLink key={i} {...link} />
             })}
+            <Link href="/terms-and-conditions">Terms & Conditions</Link>
+            <Link href="/privacy-policy">Privacy Policy</Link>
           </nav>
         </div>
+
         <div className={classes.copyright}>
-          <span className="span">
-            &copy; {new Date().getFullYear()} HK Academy. All rights reserved.
-          </span>
-          <span>
-            <Link href="/terms-and-conditions">Terms & Conditions</Link> |{' '}
-            <Link href="/privacy-policy">Privacy Policy</Link>
-          </span>{' '}
-          <Link href="https://christdev.com" target="_blank" rel="noopener noreferrer">
-            Powered by Christdev
-          </Link>
+          <p className="span">
+            &copy; {new Date().getFullYear()} HK Academy. All rights reserved. | Powered by{' '}
+            <Link href="https://christdev.com" target="_blank" rel="noopener noreferrer">
+              Christdev
+            </Link>
+          </p>
+          <div className={classes.socials}>
+            {settings.socialLinks?.map((socialLink, index) => (
+              <Link href={socialLink.url} target="_blank" key={index}>
+                <Image
+                  width={30}
+                  height={30}
+                  src={typeof socialLink.icon !== 'string' && socialLink.icon.url}
+                  alt={socialLink.platform}
+                />
+              </Link>
+            ))}
+          </div>
         </div>
       </Gutter>
     </footer>

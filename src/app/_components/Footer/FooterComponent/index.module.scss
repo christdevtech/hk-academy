@@ -20,15 +20,13 @@
 .main{
   display: flex;
   flex-flow: column;
-  gap: 30px;
-}
-
-.copyright{
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
+  gap: 20px; 
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
+  text-align: center;
+   @include small-break {
+   gap: 0;
+    }
 }
 
 .wrap {
@@ -36,8 +34,34 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: calc(var(--base) / 2) var(--base);
+   @include small-break {
+    justify-content: center;
+    align-items: center;
+    }
+}
+.copyright{
+  display: flex;
+  gap: 0px;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
+
+.col1{
+  display: flex;
+  gap: 30px;
+  flex-direction: column;
+}
+
+.socials
+{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
 .logo {
   width: 150px;
 }
@@ -54,6 +78,9 @@
   > * {
     text-decoration: none;
   }
+
+ 
+
 }
 
 

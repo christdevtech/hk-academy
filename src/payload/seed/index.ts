@@ -78,6 +78,10 @@ export const seed = async (payload: Payload): Promise<void> => {
         name: 'Demo Author',
         password: 'password',
         roles: ['admin'],
+        referralCode: 'AUTH123',
+        phoneNumber: '+1234567890', // Standard phone number format
+        subscriptions: [], // Assuming this would be filled with actual subscription IDs
+        referredUsers: [], // Initialized as an empty array
       },
     }),
     await payload.create({
@@ -87,6 +91,10 @@ export const seed = async (payload: Payload): Promise<void> => {
         name: 'Demo User',
         password: 'password',
         roles: ['user'],
+        referralCode: 'USER456',
+        phoneNumber: '+0987654321', // Standard phone number format
+        subscriptions: [], // Assuming this would be filled with actual subscription IDs
+        referredUsers: [], // Initialized as an empty array
       },
     }),
   ])

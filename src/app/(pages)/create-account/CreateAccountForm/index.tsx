@@ -16,6 +16,7 @@ type FormData = {
   email: string
   password: string
   passwordConfirm: string
+  // phoneNumber: string
 }
 
 const CreateAccountForm: React.FC = () => {
@@ -83,6 +84,14 @@ const CreateAccountForm: React.FC = () => {
         error={errors.email}
         type="email"
       />
+      {/* <Input
+        name="phoneNumber"
+        type="text"
+        label="Phone Number"
+        required
+        register={register}
+        error={errors.phoneNumber}
+      /> */}
       <Input
         name="password"
         type="password"

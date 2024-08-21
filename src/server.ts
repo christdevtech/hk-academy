@@ -12,7 +12,6 @@ import express from 'express'
 import payload from 'payload'
 
 import customRoutes from './customRoutes'
-import { seed } from './payload/seed'
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -26,12 +25,21 @@ const start = async (): Promise<void> => {
     onInit: () => {
       payload.logger.info(`Payload Admin URL: ${payload.getAdminURL()}`)
     },
+    email: {
+      transportOptions: {
+        host: process.env.SMTP_HOST,
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+        port: Number(process.env.SMTP_HOST),
+        secure: Number(process.env.SMTP_PORT) === 465, // true for port 465, false (the default) for 587 and others
+        requireTLS: true,
+      },
+      fromName: 'HK Academy',
+      fromAddress: 'no-reply@hkacademy.net',
+    },
   })
-
-  if (process.env.PAYLOAD_SEED === 'true') {
-    await seed(payload)
-    process.exit()
-  }
 
   // Use the custom routes before Next.js handling
   app.use(customRoutes)

@@ -19,13 +19,13 @@ import { Projects } from './collections/Projects'
 import Users from './collections/Users'
 import BeforeDashboard from './components/BeforeDashboard'
 import BeforeLogin from './components/BeforeLogin'
-import { seed } from './endpoints/seed'
 import { Footer } from './globals/Footer'
 import { Header } from './globals/Header'
 import { Settings } from './globals/Settings'
 import Subscriptions from './collections/Subscriptions'
 import Courses from './collections/Courses'
 import Icon from './components/SiteIcon'
+// import { seed } from './endpoints/seed'
 
 const generateTitle: GenerateTitle = () => {
   return 'HK Academy'
@@ -55,10 +55,10 @@ export default buildConfig({
         alias: {
           ...config.resolve.alias,
           dotenv: path.resolve(__dirname, './dotenv.js'),
-          [path.resolve(__dirname, './endpoints/seed')]: path.resolve(
-            __dirname,
-            './emptyModuleMock.js',
-          ),
+          // [path.resolve(__dirname, './endpoints/seed')]: path.resolve(
+          //   __dirname,
+          //   './emptyModuleMock.js',
+          // ),
         },
       },
     }),
@@ -88,11 +88,11 @@ export default buildConfig({
   endpoints: [
     // The seed endpoint is used to populate the database with some example data
     // You should delete this endpoint before deploying your site to production
-    {
-      path: '/seed',
-      method: 'get',
-      handler: seed,
-    },
+    // {
+    //   path: '/seed',
+    //   method: 'get',
+    //   handler: seed,
+    // },
   ],
   plugins: [
     redirects({

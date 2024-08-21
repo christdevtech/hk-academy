@@ -17,5 +17,6 @@ module.exports = {
     '@typescript-eslint/no-empty-function': 'off', // Allow empty functions
     '@typescript-eslint/no-inferrable-types': 'off', // Allow explicit type annotations
     'prettier/prettier': ['off', { endOfLine: 'auto' }],
+    '@typescript-eslint/no-implicit-any-catch': 'off',
   },
 }

@@ -7,7 +7,8 @@ import { checkRole } from './checkRole'
 import { ensureFirstUserIsAdmin } from './hooks/ensureFirstUserIsAdmin'
 import { loginAfterCreate } from './hooks/loginAfterCreate'
 import { assignReferralCodeBeforeCreate } from './hooks/assignReferralCodeBeforeCreate'
-import { setReferrerAfterCreate } from './hooks/setReferrerAfterCreate'
+import { updateReferrerAfterCreate } from './hooks/updateReferrerAfterCreate'
+import { setReferredByBeforeCreate } from './hooks/setReferrerBeforeCreate'
 
 const Users: CollectionConfig = {
   slug: 'users',
@@ -23,8 +24,8 @@ const Users: CollectionConfig = {
     admin: ({ req: { user } }) => checkRole(['admin'], user),
   },
   hooks: {
-    beforeChange: [assignReferralCodeBeforeCreate],
-    afterChange: [setReferrerAfterCreate, loginAfterCreate],
+    beforeChange: [assignReferralCodeBeforeCreate, setReferredByBeforeCreate],
+    afterChange: [loginAfterCreate, updateReferrerAfterCreate],
   },
   auth: true,
   fields: [
@@ -59,6 +60,7 @@ const Users: CollectionConfig = {
     {
       name: 'referralCode',
       type: 'text',
+      required: false,
       // unique: true,
     },
     {
@@ -82,7 +84,7 @@ const Users: CollectionConfig = {
     {
       name: 'phoneNumber',
       type: 'text',
-      unique: true,
+      // unique: true,
       required: false,
     },
   ],

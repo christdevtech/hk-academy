@@ -3,7 +3,7 @@ import type { CollectionAfterChangeHook } from 'payload/types'
 
 import type { User } from '../../../payload-types'
 
-export const setReferrerAfterCreate: CollectionAfterChangeHook = async ({
+export const updateReferrerAfterCreate: CollectionAfterChangeHook = async ({
   doc,
   req,
   operation,
@@ -82,13 +82,17 @@ export const setReferrerAfterCreate: CollectionAfterChangeHook = async ({
     referrerUser = referrers.docs[0]
 
     // Update the referredBy field on the new user
-    await payload.update({
-      collection: 'users',
-      id: doc.id,
-      data: {
-        referredBy: referrerUser.id,
-      },
-    })
+    // try {
+    //   await payload.update({
+    //     collection: 'users',
+    //     id: doc.id,
+    //     data: {
+    //       referredBy: referrerUser.id,
+    //     },
+    //   })
+    // } catch (error) {
+    //   payload.logger.info(`Error setting referredBy field on ${doc.id}: ${error.message}`)
+    // }
 
     // Extract only the IDs from the existing referredUsers array
     const referredUserIDs = referrerUser.referredUsers
@@ -97,14 +101,17 @@ export const setReferrerAfterCreate: CollectionAfterChangeHook = async ({
 
     // Update the referredUsers field on the referrer user
     const updatedReferredUsers = [...referredUserIDs, doc.id]
-
-    await payload.update({
-      collection: 'users',
-      id: referrerUser.id,
-      data: {
-        referredUsers: updatedReferredUsers,
-      },
-    })
+    try {
+      await payload.update({
+        collection: 'users',
+        id: referrerUser.id,
+        data: {
+          referredUsers: updatedReferredUsers,
+        },
+      })
+    } catch (error) {
+      payload.logger.info(`Error setting referrerUser on ${referrerUser.id}: ${error}`)
+    }
   }
 
   return doc

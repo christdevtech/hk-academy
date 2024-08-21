@@ -1,23 +1,27 @@
 import React from 'react'
-import { Banner } from 'payload/components'
+import { Banner, Button } from 'payload/components'
 
 import { SeedButton } from './SeedButton'
 
 import './index.scss'
+import Link from 'next/link'
 
 const baseClass = 'before-dashboard'
 
 const BeforeDashboard: React.FC = () => {
   return (
     <div className={baseClass}>
-      <Banner className={`${baseClass}__banner`} type="success">
+      <Banner className={`${baseClass}__banner`} type="default">
         <h4>Welcome to your dashboard!</h4>
       </Banner>
-      Here&apos;s what to do next:
+
+      <Link href={'/'}>
+        <Button>Go to the Home Page</Button>
+      </Link>
+
       {/* <ul className={`${baseClass}__instructions`}>
         <li>
-          <SeedButton />
-          {' with a few pages, posts, and projects to jump-start your new site, then '}
+          <SeedButton /> {' with a few pages, posts, and projects to jump-start your new site, then '} 
           <a href="/">visit your website</a>
           {' to see the results.'}
         </li>
