@@ -48,7 +48,7 @@ export const FooterComponent = ({ footer, settings }: { footer: Footer; settings
               Christdev
             </Link>
           </p>
-          <div className={classes.socials}>
+          {/* <div className={classes.socials}>
             {settings.socialLinks &&
               settings.socialLinks?.map((socialLink, index) => (
                 <Link href={socialLink.url} target="_blank" key={index}>
@@ -60,7 +60,7 @@ export const FooterComponent = ({ footer, settings }: { footer: Footer; settings
                   />
                 </Link>
               ))}
-          </div>
+          </div> */}
         </div>
       </Gutter>
     </footer>
