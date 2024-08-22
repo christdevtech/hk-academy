@@ -37,6 +37,7 @@ jobs:
           cd /var/www/hkacademy
           git pull origin main
           yarn install
+          pm2 start hkacademy
           NODE_OPTIONS='--max-old-space-size=1604' yarn build
-          pm2 restart all
+          pm2 start hkacademy
         EOF
