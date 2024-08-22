@@ -7,7 +7,18 @@
   overflow: hidden;
   background-position: center;
   background-size: cover; 
-  text-shadow: 0 0 14px rgba(0, 0, 0, 0.81);
+  min-height: 70dvh;
+  display: flex;
+  align-items: center;
+
+  @include mid-break{
+    min-height: 60dvh;
+  }
+
+  @include small-break{
+    min-height: 50dvh;
+  }
+
 }
 
 .media {

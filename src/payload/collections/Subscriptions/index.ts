@@ -34,6 +34,30 @@ const Subscriptions: CollectionConfig = {
       label: 'Description',
     },
     {
+      name: 'price',
+      type: 'number',
+      defaultValue: 6000,
+    },
+    {
+      name: 'coupons',
+      type: 'array',
+      fields: [
+        {
+          name: 'code',
+          type: 'text',
+        },
+        {
+          name: 'value',
+          label: 'Amount to deduct from Price',
+          type: 'number',
+        },
+        {
+          name: 'expiryDate',
+          type: 'date',
+        },
+      ],
+    },
+    {
       name: 'referralAmount',
       label: 'Referral Amount',
       type: 'number',
@@ -41,7 +65,7 @@ const Subscriptions: CollectionConfig = {
     },
     {
       name: 'endOfPromotion',
-      label: 'End of Promotion Date',
+      label: 'End of Referral Promotion Date',
       type: 'date',
       // required: true,
     },
