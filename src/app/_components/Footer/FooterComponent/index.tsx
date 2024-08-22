@@ -49,16 +49,17 @@ export const FooterComponent = ({ footer, settings }: { footer: Footer; settings
             </Link>
           </p>
           <div className={classes.socials}>
-            {settings.socialLinks?.map((socialLink, index) => (
-              <Link href={socialLink.url} target="_blank" key={index}>
-                <Image
-                  width={30}
-                  height={30}
-                  src={typeof socialLink.icon !== 'string' && socialLink.icon.url}
-                  alt={socialLink.platform}
-                />
-              </Link>
-            ))}
+            {settings.socialLinks &&
+              settings.socialLinks?.map((socialLink, index) => (
+                <Link href={socialLink.url} target="_blank" key={index}>
+                  <Image
+                    width={30}
+                    height={30}
+                    src={typeof socialLink.icon !== 'string' && socialLink.icon.url}
+                    alt={socialLink.platform}
+                  />
+                </Link>
+              ))}
           </div>
         </div>
       </Gutter>
