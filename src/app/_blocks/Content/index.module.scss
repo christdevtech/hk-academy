@@ -35,6 +35,20 @@
 
 .column--full {
   grid-column-end: span 12;
+
+  @include mid-break {
+     &.column{
+
+      grid-column-end: span 12;
+    }
+  }
+
+  @include small-break {
+    &.column{
+
+      grid-column-end: span 12;
+    }
+  }
 }
 
 .column {
