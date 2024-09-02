@@ -17,6 +17,7 @@ export interface Config {
     categories: Category;
     users: User;
     comments: Comment;
+    transactions: Transaction;
     redirects: Redirect;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -453,6 +454,8 @@ export interface User {
   referredUsers?: (string | User)[] | null;
   subscriptions?: (string | Subscription)[] | null;
   phoneNumber?: string | null;
+  accountBalance?: number | null;
+  referralTotal?: number | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -468,6 +471,15 @@ export interface Subscription {
   id: string;
   title: string;
   description?: string | null;
+  price?: number | null;
+  coupons?:
+    | {
+        code?: string | null;
+        value?: number | null;
+        expiryDate?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   referralAmount?: number | null;
   endOfPromotion?: string | null;
   courses?: (string | Course)[] | null;
@@ -647,6 +659,21 @@ export interface Comment {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+export interface Transaction {
+  id: string;
+  title?: (string | null) | Subscription;
+  transId?: string | null;
+  user: string | User;
+  amount: number;
+  status: 'CREATED' | 'PENDING' | 'SUCCESSFUL' | 'FAILED' | 'EXPIRED';
+  type: 'PURCHASE' | 'REFERRAL_COMMISSION' | 'WALLET_CREDIT';
+  paymentMethod: 'FAPSHI' | 'SYSTEM_CREDIT';
+  transactionDate?: string | null;
+  fromAccount: string;
+  toAccount: string;
+  updatedAt: string;
+  createdAt: string;
 }
 export interface Redirect {
   id: string;

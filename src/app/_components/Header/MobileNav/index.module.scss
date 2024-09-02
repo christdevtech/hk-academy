@@ -1,37 +1,26 @@
-@use '../../../_css/queries.scss' as *;
-
-.header {
-  padding: var(--base) 0;
-  box-shadow:  0 0 calc(var(--base) / 2) rgba($color: var(--theme-elevation-1000), $alpha: 0.1);
-  color: var(--theme-elevation-1000);
-  background-color:var(--theme-elevation-0); 
-}
-
-.wrap {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: calc(var(--base) / 2) var(--base);
-
-  .mobileNav{
+ @use '../../../_css/queries.scss' as *;
+    
+ .mobileNav{
   display: none;
-  }
-   @include small-break {
+ 
+  
+  
+  @include small-break {
 
     nav{
       display: none;
     }
     justify-content: space-between;
     align-items: center;
-    .mobileNav{
+   
       display: block;
-    }
+  
     .mobileMenu {
 
     position: fixed; 
     top: 0;
     left: 0;
-    width: 80%; 
+    width: 70%; 
     height: 100dvh;
     color: var(--theme-elevation-1000);
     background-color:var(--theme-elevation-0); 
@@ -47,13 +36,13 @@
       transform: translateX(0); 
     }
 
-    
-    
-
     .mobileMenuItem{
         padding: 1rem;
-        background-color: var(--theme-elevation-200);
+        background-color: var(--theme-elevation-100);
         margin: 0 calc(
+          var(--base) / 2
+        );
+        border-radius: calc(
           var(--base) / 2
         );
       }
@@ -64,8 +53,7 @@
     }
   }
     
-  }
-}
+  }}
 
 .logo {
   width: 150px;

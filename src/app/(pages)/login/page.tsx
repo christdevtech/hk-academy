@@ -8,17 +8,27 @@ import { mergeOpenGraph } from '../../_utilities/mergeOpenGraph'
 import LoginForm from './LoginForm'
 
 import classes from './index.module.scss'
+import { fetchSettings } from '../../_api/fetchGlobals'
+import Link from 'next/link'
+import Logo from '../../_components/Logo'
 
 export default async function Login() {
   await getMeUser({
     validUserRedirect: `/account?warning=${encodeURIComponent('You are already logged in.')}`,
   })
 
+  const settings = await fetchSettings()
+
   return (
     <Gutter className={classes.login}>
-      <RenderParams className={classes.params} />
-      <h1>Log in</h1>
-      <LoginForm />
+      <div>
+        <Link href={'/'}>
+          <Logo {...settings} />
+        </Link>
+        <RenderParams className={classes.params} />
+        <h1>Log in</h1>
+        <LoginForm />
+      </div>
     </Gutter>
   )
 }

@@ -25,6 +25,7 @@ import { Settings } from './globals/Settings'
 import Subscriptions from './collections/Subscriptions'
 import Courses from './collections/Courses'
 import Icon from './components/SiteIcon'
+import Transactions from './collections/Transactions'
 // import { seed } from './endpoints/seed'
 
 const generateTitle: GenerateTitle = () => {
@@ -75,7 +76,18 @@ export default buildConfig({
   }),
   // database-adapter-config-end
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL,
-  collections: [Pages, Posts, Projects, Subscriptions, Courses, Media, Categories, Users, Comments],
+  collections: [
+    Pages,
+    Posts,
+    Projects,
+    Subscriptions,
+    Courses,
+    Media,
+    Categories,
+    Users,
+    Comments,
+    Transactions,
+  ],
   globals: [Settings, Header, Footer],
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts'),

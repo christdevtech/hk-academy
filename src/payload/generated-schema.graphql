@@ -40,6 +40,9 @@ type Query {
   docAccessComment(id: String!): commentsDocAccess
   versionComment(id: String): CommentVersion
   versionsComments(where: versionsComment_where, limit: Int, page: Int, sort: String): versionsComments
+  Transaction(id: String!, draft: Boolean): Transaction
+  Transactions(draft: Boolean, where: Transaction_where, limit: Int, page: Int, sort: String): Transactions
+  docAccessTransaction(id: String!): transactionsDocAccess
   Redirect(id: String!, draft: Boolean): Redirect
   Redirects(draft: Boolean, where: Redirect_where, limit: Int, page: Int, sort: String): Redirects
   docAccessRedirect(id: String!): redirectsDocAccess
@@ -661,6 +664,8 @@ type User {
   referredUsers: [User!]
   subscriptions: [Subscription!]
   phoneNumber: String
+  accountBalance: Float
+  referralTotal: Float
   updatedAt: DateTime
   createdAt: DateTime
   email: EmailAddress!
@@ -682,6 +687,8 @@ type Subscription {
   id: String
   title: String
   description: String
+  price: Float
+  coupons: [Subscription_Coupons!]
   referralAmount: Float
   endOfPromotion: DateTime
   courses: [Course!]
@@ -689,6 +696,13 @@ type Subscription {
   updatedAt: DateTime
   createdAt: DateTime
   _status: Subscription__status
+}
+
+type Subscription_Coupons {
+  code: String
+  value: Float
+  expiryDate: DateTime
+  id: String
 }
 
 type Course {
@@ -7836,6 +7850,11 @@ type Subscriptions {
 input Subscription_where {
   title: Subscription_title_operator
   description: Subscription_description_operator
+  price: Subscription_price_operator
+  coupons__code: Subscription_coupons__code_operator
+  coupons__value: Subscription_coupons__value_operator
+  coupons__expiryDate: Subscription_coupons__expiryDate_operator
+  coupons__id: Subscription_coupons__id_operator
   referralAmount: Subscription_referralAmount_operator
   endOfPromotion: Subscription_endOfPromotion_operator
   courses: Subscription_courses_operator
@@ -7865,6 +7884,59 @@ input Subscription_description_operator {
   not_equals: String
   like: String
   contains: String
+  exists: Boolean
+}
+
+input Subscription_price_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input Subscription_coupons__code_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input Subscription_coupons__value_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input Subscription_coupons__expiryDate_operator {
+  equals: DateTime
+  not_equals: DateTime
+  greater_than_equal: DateTime
+  greater_than: DateTime
+  less_than_equal: DateTime
+  less_than: DateTime
+  like: DateTime
+  exists: Boolean
+}
+
+input Subscription_coupons__id_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
   exists: Boolean
 }
 
@@ -7973,6 +8045,11 @@ input Subscription_id_operator {
 input Subscription_where_and {
   title: Subscription_title_operator
   description: Subscription_description_operator
+  price: Subscription_price_operator
+  coupons__code: Subscription_coupons__code_operator
+  coupons__value: Subscription_coupons__value_operator
+  coupons__expiryDate: Subscription_coupons__expiryDate_operator
+  coupons__id: Subscription_coupons__id_operator
   referralAmount: Subscription_referralAmount_operator
   endOfPromotion: Subscription_endOfPromotion_operator
   courses: Subscription_courses_operator
@@ -7990,6 +8067,11 @@ input Subscription_where_and {
 input Subscription_where_or {
   title: Subscription_title_operator
   description: Subscription_description_operator
+  price: Subscription_price_operator
+  coupons__code: Subscription_coupons__code_operator
+  coupons__value: Subscription_coupons__value_operator
+  coupons__expiryDate: Subscription_coupons__expiryDate_operator
+  coupons__id: Subscription_coupons__id_operator
   referralAmount: Subscription_referralAmount_operator
   endOfPromotion: Subscription_endOfPromotion_operator
   courses: Subscription_courses_operator
@@ -8016,6 +8098,8 @@ type subscriptionsDocAccess {
 type SubscriptionsDocAccessFields {
   title: SubscriptionsDocAccessFields_title
   description: SubscriptionsDocAccessFields_description
+  price: SubscriptionsDocAccessFields_price
+  coupons: SubscriptionsDocAccessFields_coupons
   referralAmount: SubscriptionsDocAccessFields_referralAmount
   endOfPromotion: SubscriptionsDocAccessFields_endOfPromotion
   courses: SubscriptionsDocAccessFields_courses
@@ -8068,6 +8152,152 @@ type SubscriptionsDocAccessFields_description_Update {
 }
 
 type SubscriptionsDocAccessFields_description_Delete {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_price {
+  create: SubscriptionsDocAccessFields_price_Create
+  read: SubscriptionsDocAccessFields_price_Read
+  update: SubscriptionsDocAccessFields_price_Update
+  delete: SubscriptionsDocAccessFields_price_Delete
+}
+
+type SubscriptionsDocAccessFields_price_Create {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_price_Read {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_price_Update {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_price_Delete {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_coupons {
+  create: SubscriptionsDocAccessFields_coupons_Create
+  read: SubscriptionsDocAccessFields_coupons_Read
+  update: SubscriptionsDocAccessFields_coupons_Update
+  delete: SubscriptionsDocAccessFields_coupons_Delete
+  fields: SubscriptionsDocAccessFields_coupons_Fields
+}
+
+type SubscriptionsDocAccessFields_coupons_Create {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_coupons_Read {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_coupons_Update {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_coupons_Delete {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_coupons_Fields {
+  code: SubscriptionsDocAccessFields_coupons_code
+  value: SubscriptionsDocAccessFields_coupons_value
+  expiryDate: SubscriptionsDocAccessFields_coupons_expiryDate
+  id: SubscriptionsDocAccessFields_coupons_id
+}
+
+type SubscriptionsDocAccessFields_coupons_code {
+  create: SubscriptionsDocAccessFields_coupons_code_Create
+  read: SubscriptionsDocAccessFields_coupons_code_Read
+  update: SubscriptionsDocAccessFields_coupons_code_Update
+  delete: SubscriptionsDocAccessFields_coupons_code_Delete
+}
+
+type SubscriptionsDocAccessFields_coupons_code_Create {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_coupons_code_Read {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_coupons_code_Update {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_coupons_code_Delete {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_coupons_value {
+  create: SubscriptionsDocAccessFields_coupons_value_Create
+  read: SubscriptionsDocAccessFields_coupons_value_Read
+  update: SubscriptionsDocAccessFields_coupons_value_Update
+  delete: SubscriptionsDocAccessFields_coupons_value_Delete
+}
+
+type SubscriptionsDocAccessFields_coupons_value_Create {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_coupons_value_Read {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_coupons_value_Update {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_coupons_value_Delete {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_coupons_expiryDate {
+  create: SubscriptionsDocAccessFields_coupons_expiryDate_Create
+  read: SubscriptionsDocAccessFields_coupons_expiryDate_Read
+  update: SubscriptionsDocAccessFields_coupons_expiryDate_Update
+  delete: SubscriptionsDocAccessFields_coupons_expiryDate_Delete
+}
+
+type SubscriptionsDocAccessFields_coupons_expiryDate_Create {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_coupons_expiryDate_Read {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_coupons_expiryDate_Update {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_coupons_expiryDate_Delete {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_coupons_id {
+  create: SubscriptionsDocAccessFields_coupons_id_Create
+  read: SubscriptionsDocAccessFields_coupons_id_Read
+  update: SubscriptionsDocAccessFields_coupons_id_Update
+  delete: SubscriptionsDocAccessFields_coupons_id_Delete
+}
+
+type SubscriptionsDocAccessFields_coupons_id_Create {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_coupons_id_Read {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_coupons_id_Update {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_coupons_id_Delete {
   permission: Boolean!
 }
 
@@ -8393,6 +8623,8 @@ type SubscriptionVersion {
 type SubscriptionVersion_Version {
   title: String
   description: String
+  price: Float
+  coupons: [SubscriptionVersion_Version_Coupons!]
   referralAmount: Float
   endOfPromotion: DateTime
   courses: [Course!]
@@ -8400,6 +8632,13 @@ type SubscriptionVersion_Version {
   updatedAt: DateTime
   createdAt: DateTime
   _status: SubscriptionVersion_Version__status
+}
+
+type SubscriptionVersion_Version_Coupons {
+  code: String
+  value: Float
+  expiryDate: DateTime
+  id: String
 }
 
 type SubscriptionVersion_Version_Meta {
@@ -8593,6 +8832,11 @@ input versionsSubscription_where {
   parent: versionsSubscription_parent_operator
   version__title: versionsSubscription_version__title_operator
   version__description: versionsSubscription_version__description_operator
+  version__price: versionsSubscription_version__price_operator
+  version__coupons__code: versionsSubscription_version__coupons__code_operator
+  version__coupons__value: versionsSubscription_version__coupons__value_operator
+  version__coupons__expiryDate: versionsSubscription_version__coupons__expiryDate_operator
+  version__coupons__id: versionsSubscription_version__coupons__id_operator
   version__referralAmount: versionsSubscription_version__referralAmount_operator
   version__endOfPromotion: versionsSubscription_version__endOfPromotion_operator
   version__courses: versionsSubscription_version__courses_operator
@@ -8634,6 +8878,59 @@ input versionsSubscription_version__description_operator {
   not_equals: String
   like: String
   contains: String
+  exists: Boolean
+}
+
+input versionsSubscription_version__price_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input versionsSubscription_version__coupons__code_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input versionsSubscription_version__coupons__value_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input versionsSubscription_version__coupons__expiryDate_operator {
+  equals: DateTime
+  not_equals: DateTime
+  greater_than_equal: DateTime
+  greater_than: DateTime
+  less_than_equal: DateTime
+  less_than: DateTime
+  like: DateTime
+  exists: Boolean
+}
+
+input versionsSubscription_version__coupons__id_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
   exists: Boolean
 }
 
@@ -8771,6 +9068,11 @@ input versionsSubscription_where_and {
   parent: versionsSubscription_parent_operator
   version__title: versionsSubscription_version__title_operator
   version__description: versionsSubscription_version__description_operator
+  version__price: versionsSubscription_version__price_operator
+  version__coupons__code: versionsSubscription_version__coupons__code_operator
+  version__coupons__value: versionsSubscription_version__coupons__value_operator
+  version__coupons__expiryDate: versionsSubscription_version__coupons__expiryDate_operator
+  version__coupons__id: versionsSubscription_version__coupons__id_operator
   version__referralAmount: versionsSubscription_version__referralAmount_operator
   version__endOfPromotion: versionsSubscription_version__endOfPromotion_operator
   version__courses: versionsSubscription_version__courses_operator
@@ -8792,6 +9094,11 @@ input versionsSubscription_where_or {
   parent: versionsSubscription_parent_operator
   version__title: versionsSubscription_version__title_operator
   version__description: versionsSubscription_version__description_operator
+  version__price: versionsSubscription_version__price_operator
+  version__coupons__code: versionsSubscription_version__coupons__code_operator
+  version__coupons__value: versionsSubscription_version__coupons__value_operator
+  version__coupons__expiryDate: versionsSubscription_version__coupons__expiryDate_operator
+  version__coupons__id: versionsSubscription_version__coupons__id_operator
   version__referralAmount: versionsSubscription_version__referralAmount_operator
   version__endOfPromotion: versionsSubscription_version__endOfPromotion_operator
   version__courses: versionsSubscription_version__courses_operator
@@ -10566,6 +10873,8 @@ input User_where {
   referredUsers: User_referredUsers_operator
   subscriptions: User_subscriptions_operator
   phoneNumber: User_phoneNumber_operator
+  accountBalance: User_accountBalance_operator
+  referralTotal: User_referralTotal_operator
   updatedAt: User_updatedAt_operator
   createdAt: User_createdAt_operator
   email: User_email_operator
@@ -10648,6 +10957,26 @@ input User_phoneNumber_operator {
   exists: Boolean
 }
 
+input User_accountBalance_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input User_referralTotal_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input User_updatedAt_operator {
   equals: DateTime
   not_equals: DateTime
@@ -10699,6 +11028,8 @@ input User_where_and {
   referredUsers: User_referredUsers_operator
   subscriptions: User_subscriptions_operator
   phoneNumber: User_phoneNumber_operator
+  accountBalance: User_accountBalance_operator
+  referralTotal: User_referralTotal_operator
   updatedAt: User_updatedAt_operator
   createdAt: User_createdAt_operator
   email: User_email_operator
@@ -10715,6 +11046,8 @@ input User_where_or {
   referredUsers: User_referredUsers_operator
   subscriptions: User_subscriptions_operator
   phoneNumber: User_phoneNumber_operator
+  accountBalance: User_accountBalance_operator
+  referralTotal: User_referralTotal_operator
   updatedAt: User_updatedAt_operator
   createdAt: User_createdAt_operator
   email: User_email_operator
@@ -10740,6 +11073,8 @@ type UsersDocAccessFields {
   referredUsers: UsersDocAccessFields_referredUsers
   subscriptions: UsersDocAccessFields_subscriptions
   phoneNumber: UsersDocAccessFields_phoneNumber
+  accountBalance: UsersDocAccessFields_accountBalance
+  referralTotal: UsersDocAccessFields_referralTotal
   updatedAt: UsersDocAccessFields_updatedAt
   createdAt: UsersDocAccessFields_createdAt
   email: UsersDocAccessFields_email
@@ -10904,6 +11239,52 @@ type UsersDocAccessFields_phoneNumber_Update {
 }
 
 type UsersDocAccessFields_phoneNumber_Delete {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_accountBalance {
+  create: UsersDocAccessFields_accountBalance_Create
+  read: UsersDocAccessFields_accountBalance_Read
+  update: UsersDocAccessFields_accountBalance_Update
+  delete: UsersDocAccessFields_accountBalance_Delete
+}
+
+type UsersDocAccessFields_accountBalance_Create {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_accountBalance_Read {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_accountBalance_Update {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_accountBalance_Delete {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_referralTotal {
+  create: UsersDocAccessFields_referralTotal_Create
+  read: UsersDocAccessFields_referralTotal_Read
+  update: UsersDocAccessFields_referralTotal_Update
+  delete: UsersDocAccessFields_referralTotal_Delete
+}
+
+type UsersDocAccessFields_referralTotal_Create {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_referralTotal_Read {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_referralTotal_Update {
+  permission: Boolean!
+}
+
+type UsersDocAccessFields_referralTotal_Delete {
   permission: Boolean!
 }
 
@@ -11687,6 +12068,484 @@ input versionsComment_where_or {
   id: versionsComment_id_operator
   AND: [versionsComment_where_and]
   OR: [versionsComment_where_or]
+}
+
+type Transaction {
+  id: String
+  title: String
+  transId: String
+  link: String
+  user: User!
+  amount: Float!
+  status: Transaction_status
+  paymentMethod: String
+  createdAt: DateTime
+  transactionDate: DateTime
+  redirectUrl: String
+  updatedAt: DateTime
+}
+
+enum Transaction_status {
+  CREATED
+  PENDING
+  SUCCESSFUL
+  FAILED
+  EXPIRED
+}
+
+type Transactions {
+  docs: [Transaction]
+  hasNextPage: Boolean
+  hasPrevPage: Boolean
+  limit: Int
+  nextPage: Int
+  offset: Int
+  page: Int
+  pagingCounter: Int
+  prevPage: Int
+  totalDocs: Int
+  totalPages: Int
+}
+
+input Transaction_where {
+  title: Transaction_title_operator
+  transId: Transaction_transId_operator
+  link: Transaction_link_operator
+  user: Transaction_user_operator
+  amount: Transaction_amount_operator
+  status: Transaction_status_operator
+  paymentMethod: Transaction_paymentMethod_operator
+  createdAt: Transaction_createdAt_operator
+  transactionDate: Transaction_transactionDate_operator
+  updatedAt: Transaction_updatedAt_operator
+  id: Transaction_id_operator
+  AND: [Transaction_where_and]
+  OR: [Transaction_where_or]
+}
+
+input Transaction_title_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input Transaction_transId_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input Transaction_link_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input Transaction_user_operator {
+  equals: JSON
+  not_equals: JSON
+  in: [JSON]
+  not_in: [JSON]
+  all: [JSON]
+}
+
+input Transaction_amount_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+}
+
+input Transaction_status_operator {
+  equals: Transaction_status_Input
+  not_equals: Transaction_status_Input
+  in: [Transaction_status_Input]
+  not_in: [Transaction_status_Input]
+  all: [Transaction_status_Input]
+  exists: Boolean
+}
+
+enum Transaction_status_Input {
+  CREATED
+  PENDING
+  SUCCESSFUL
+  FAILED
+  EXPIRED
+}
+
+input Transaction_paymentMethod_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input Transaction_createdAt_operator {
+  equals: DateTime
+  not_equals: DateTime
+  greater_than_equal: DateTime
+  greater_than: DateTime
+  less_than_equal: DateTime
+  less_than: DateTime
+  like: DateTime
+  exists: Boolean
+}
+
+input Transaction_transactionDate_operator {
+  equals: DateTime
+  not_equals: DateTime
+  greater_than_equal: DateTime
+  greater_than: DateTime
+  less_than_equal: DateTime
+  less_than: DateTime
+  like: DateTime
+  exists: Boolean
+}
+
+input Transaction_updatedAt_operator {
+  equals: DateTime
+  not_equals: DateTime
+  greater_than_equal: DateTime
+  greater_than: DateTime
+  less_than_equal: DateTime
+  less_than: DateTime
+  like: DateTime
+  exists: Boolean
+}
+
+input Transaction_id_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input Transaction_where_and {
+  title: Transaction_title_operator
+  transId: Transaction_transId_operator
+  link: Transaction_link_operator
+  user: Transaction_user_operator
+  amount: Transaction_amount_operator
+  status: Transaction_status_operator
+  paymentMethod: Transaction_paymentMethod_operator
+  createdAt: Transaction_createdAt_operator
+  transactionDate: Transaction_transactionDate_operator
+  updatedAt: Transaction_updatedAt_operator
+  id: Transaction_id_operator
+  AND: [Transaction_where_and]
+  OR: [Transaction_where_or]
+}
+
+input Transaction_where_or {
+  title: Transaction_title_operator
+  transId: Transaction_transId_operator
+  link: Transaction_link_operator
+  user: Transaction_user_operator
+  amount: Transaction_amount_operator
+  status: Transaction_status_operator
+  paymentMethod: Transaction_paymentMethod_operator
+  createdAt: Transaction_createdAt_operator
+  transactionDate: Transaction_transactionDate_operator
+  updatedAt: Transaction_updatedAt_operator
+  id: Transaction_id_operator
+  AND: [Transaction_where_and]
+  OR: [Transaction_where_or]
+}
+
+type transactionsDocAccess {
+  fields: TransactionsDocAccessFields
+  create: TransactionsCreateDocAccess
+  read: TransactionsReadDocAccess
+  update: TransactionsUpdateDocAccess
+  delete: TransactionsDeleteDocAccess
+}
+
+type TransactionsDocAccessFields {
+  title: TransactionsDocAccessFields_title
+  transId: TransactionsDocAccessFields_transId
+  link: TransactionsDocAccessFields_link
+  user: TransactionsDocAccessFields_user
+  amount: TransactionsDocAccessFields_amount
+  status: TransactionsDocAccessFields_status
+  paymentMethod: TransactionsDocAccessFields_paymentMethod
+  createdAt: TransactionsDocAccessFields_createdAt
+  transactionDate: TransactionsDocAccessFields_transactionDate
+  updatedAt: TransactionsDocAccessFields_updatedAt
+}
+
+type TransactionsDocAccessFields_title {
+  create: TransactionsDocAccessFields_title_Create
+  read: TransactionsDocAccessFields_title_Read
+  update: TransactionsDocAccessFields_title_Update
+  delete: TransactionsDocAccessFields_title_Delete
+}
+
+type TransactionsDocAccessFields_title_Create {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_title_Read {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_title_Update {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_title_Delete {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_transId {
+  create: TransactionsDocAccessFields_transId_Create
+  read: TransactionsDocAccessFields_transId_Read
+  update: TransactionsDocAccessFields_transId_Update
+  delete: TransactionsDocAccessFields_transId_Delete
+}
+
+type TransactionsDocAccessFields_transId_Create {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_transId_Read {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_transId_Update {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_transId_Delete {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_link {
+  create: TransactionsDocAccessFields_link_Create
+  read: TransactionsDocAccessFields_link_Read
+  update: TransactionsDocAccessFields_link_Update
+  delete: TransactionsDocAccessFields_link_Delete
+}
+
+type TransactionsDocAccessFields_link_Create {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_link_Read {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_link_Update {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_link_Delete {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_user {
+  create: TransactionsDocAccessFields_user_Create
+  read: TransactionsDocAccessFields_user_Read
+  update: TransactionsDocAccessFields_user_Update
+  delete: TransactionsDocAccessFields_user_Delete
+}
+
+type TransactionsDocAccessFields_user_Create {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_user_Read {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_user_Update {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_user_Delete {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_amount {
+  create: TransactionsDocAccessFields_amount_Create
+  read: TransactionsDocAccessFields_amount_Read
+  update: TransactionsDocAccessFields_amount_Update
+  delete: TransactionsDocAccessFields_amount_Delete
+}
+
+type TransactionsDocAccessFields_amount_Create {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_amount_Read {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_amount_Update {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_amount_Delete {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_status {
+  create: TransactionsDocAccessFields_status_Create
+  read: TransactionsDocAccessFields_status_Read
+  update: TransactionsDocAccessFields_status_Update
+  delete: TransactionsDocAccessFields_status_Delete
+}
+
+type TransactionsDocAccessFields_status_Create {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_status_Read {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_status_Update {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_status_Delete {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_paymentMethod {
+  create: TransactionsDocAccessFields_paymentMethod_Create
+  read: TransactionsDocAccessFields_paymentMethod_Read
+  update: TransactionsDocAccessFields_paymentMethod_Update
+  delete: TransactionsDocAccessFields_paymentMethod_Delete
+}
+
+type TransactionsDocAccessFields_paymentMethod_Create {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_paymentMethod_Read {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_paymentMethod_Update {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_paymentMethod_Delete {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_createdAt {
+  create: TransactionsDocAccessFields_createdAt_Create
+  read: TransactionsDocAccessFields_createdAt_Read
+  update: TransactionsDocAccessFields_createdAt_Update
+  delete: TransactionsDocAccessFields_createdAt_Delete
+}
+
+type TransactionsDocAccessFields_createdAt_Create {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_createdAt_Read {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_createdAt_Update {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_createdAt_Delete {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_transactionDate {
+  create: TransactionsDocAccessFields_transactionDate_Create
+  read: TransactionsDocAccessFields_transactionDate_Read
+  update: TransactionsDocAccessFields_transactionDate_Update
+  delete: TransactionsDocAccessFields_transactionDate_Delete
+}
+
+type TransactionsDocAccessFields_transactionDate_Create {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_transactionDate_Read {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_transactionDate_Update {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_transactionDate_Delete {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_updatedAt {
+  create: TransactionsDocAccessFields_updatedAt_Create
+  read: TransactionsDocAccessFields_updatedAt_Read
+  update: TransactionsDocAccessFields_updatedAt_Update
+  delete: TransactionsDocAccessFields_updatedAt_Delete
+}
+
+type TransactionsDocAccessFields_updatedAt_Create {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_updatedAt_Read {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_updatedAt_Update {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_updatedAt_Delete {
+  permission: Boolean!
+}
+
+type TransactionsCreateDocAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type TransactionsReadDocAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type TransactionsUpdateDocAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type TransactionsDeleteDocAccess {
+  permission: Boolean!
+  where: JSONObject
 }
 
 type Redirect {
@@ -13817,6 +14676,7 @@ type Access {
   categories: categoriesAccess
   users: usersAccess
   comments: commentsAccess
+  transactions: transactionsAccess
   redirects: redirectsAccess
   payload_preferences: payload_preferencesAccess
   settings: settingsAccess
@@ -16183,6 +17043,8 @@ type subscriptionsAccess {
 type SubscriptionsFields {
   title: SubscriptionsFields_title
   description: SubscriptionsFields_description
+  price: SubscriptionsFields_price
+  coupons: SubscriptionsFields_coupons
   referralAmount: SubscriptionsFields_referralAmount
   endOfPromotion: SubscriptionsFields_endOfPromotion
   courses: SubscriptionsFields_courses
@@ -16235,6 +17097,152 @@ type SubscriptionsFields_description_Update {
 }
 
 type SubscriptionsFields_description_Delete {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_price {
+  create: SubscriptionsFields_price_Create
+  read: SubscriptionsFields_price_Read
+  update: SubscriptionsFields_price_Update
+  delete: SubscriptionsFields_price_Delete
+}
+
+type SubscriptionsFields_price_Create {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_price_Read {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_price_Update {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_price_Delete {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_coupons {
+  create: SubscriptionsFields_coupons_Create
+  read: SubscriptionsFields_coupons_Read
+  update: SubscriptionsFields_coupons_Update
+  delete: SubscriptionsFields_coupons_Delete
+  fields: SubscriptionsFields_coupons_Fields
+}
+
+type SubscriptionsFields_coupons_Create {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_coupons_Read {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_coupons_Update {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_coupons_Delete {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_coupons_Fields {
+  code: SubscriptionsFields_coupons_code
+  value: SubscriptionsFields_coupons_value
+  expiryDate: SubscriptionsFields_coupons_expiryDate
+  id: SubscriptionsFields_coupons_id
+}
+
+type SubscriptionsFields_coupons_code {
+  create: SubscriptionsFields_coupons_code_Create
+  read: SubscriptionsFields_coupons_code_Read
+  update: SubscriptionsFields_coupons_code_Update
+  delete: SubscriptionsFields_coupons_code_Delete
+}
+
+type SubscriptionsFields_coupons_code_Create {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_coupons_code_Read {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_coupons_code_Update {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_coupons_code_Delete {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_coupons_value {
+  create: SubscriptionsFields_coupons_value_Create
+  read: SubscriptionsFields_coupons_value_Read
+  update: SubscriptionsFields_coupons_value_Update
+  delete: SubscriptionsFields_coupons_value_Delete
+}
+
+type SubscriptionsFields_coupons_value_Create {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_coupons_value_Read {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_coupons_value_Update {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_coupons_value_Delete {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_coupons_expiryDate {
+  create: SubscriptionsFields_coupons_expiryDate_Create
+  read: SubscriptionsFields_coupons_expiryDate_Read
+  update: SubscriptionsFields_coupons_expiryDate_Update
+  delete: SubscriptionsFields_coupons_expiryDate_Delete
+}
+
+type SubscriptionsFields_coupons_expiryDate_Create {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_coupons_expiryDate_Read {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_coupons_expiryDate_Update {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_coupons_expiryDate_Delete {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_coupons_id {
+  create: SubscriptionsFields_coupons_id_Create
+  read: SubscriptionsFields_coupons_id_Read
+  update: SubscriptionsFields_coupons_id_Update
+  delete: SubscriptionsFields_coupons_id_Delete
+}
+
+type SubscriptionsFields_coupons_id_Create {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_coupons_id_Read {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_coupons_id_Update {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_coupons_id_Delete {
   permission: Boolean!
 }
 
@@ -17416,6 +18424,8 @@ type UsersFields {
   referredUsers: UsersFields_referredUsers
   subscriptions: UsersFields_subscriptions
   phoneNumber: UsersFields_phoneNumber
+  accountBalance: UsersFields_accountBalance
+  referralTotal: UsersFields_referralTotal
   updatedAt: UsersFields_updatedAt
   createdAt: UsersFields_createdAt
   email: UsersFields_email
@@ -17580,6 +18590,52 @@ type UsersFields_phoneNumber_Update {
 }
 
 type UsersFields_phoneNumber_Delete {
+  permission: Boolean!
+}
+
+type UsersFields_accountBalance {
+  create: UsersFields_accountBalance_Create
+  read: UsersFields_accountBalance_Read
+  update: UsersFields_accountBalance_Update
+  delete: UsersFields_accountBalance_Delete
+}
+
+type UsersFields_accountBalance_Create {
+  permission: Boolean!
+}
+
+type UsersFields_accountBalance_Read {
+  permission: Boolean!
+}
+
+type UsersFields_accountBalance_Update {
+  permission: Boolean!
+}
+
+type UsersFields_accountBalance_Delete {
+  permission: Boolean!
+}
+
+type UsersFields_referralTotal {
+  create: UsersFields_referralTotal_Create
+  read: UsersFields_referralTotal_Read
+  update: UsersFields_referralTotal_Update
+  delete: UsersFields_referralTotal_Delete
+}
+
+type UsersFields_referralTotal_Create {
+  permission: Boolean!
+}
+
+type UsersFields_referralTotal_Read {
+  permission: Boolean!
+}
+
+type UsersFields_referralTotal_Update {
+  permission: Boolean!
+}
+
+type UsersFields_referralTotal_Delete {
   permission: Boolean!
 }
 
@@ -17953,6 +19009,277 @@ type CommentsDeleteAccess {
 }
 
 type CommentsReadVersionsAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type transactionsAccess {
+  fields: TransactionsFields
+  create: TransactionsCreateAccess
+  read: TransactionsReadAccess
+  update: TransactionsUpdateAccess
+  delete: TransactionsDeleteAccess
+}
+
+type TransactionsFields {
+  title: TransactionsFields_title
+  transId: TransactionsFields_transId
+  link: TransactionsFields_link
+  user: TransactionsFields_user
+  amount: TransactionsFields_amount
+  status: TransactionsFields_status
+  paymentMethod: TransactionsFields_paymentMethod
+  createdAt: TransactionsFields_createdAt
+  transactionDate: TransactionsFields_transactionDate
+  updatedAt: TransactionsFields_updatedAt
+}
+
+type TransactionsFields_title {
+  create: TransactionsFields_title_Create
+  read: TransactionsFields_title_Read
+  update: TransactionsFields_title_Update
+  delete: TransactionsFields_title_Delete
+}
+
+type TransactionsFields_title_Create {
+  permission: Boolean!
+}
+
+type TransactionsFields_title_Read {
+  permission: Boolean!
+}
+
+type TransactionsFields_title_Update {
+  permission: Boolean!
+}
+
+type TransactionsFields_title_Delete {
+  permission: Boolean!
+}
+
+type TransactionsFields_transId {
+  create: TransactionsFields_transId_Create
+  read: TransactionsFields_transId_Read
+  update: TransactionsFields_transId_Update
+  delete: TransactionsFields_transId_Delete
+}
+
+type TransactionsFields_transId_Create {
+  permission: Boolean!
+}
+
+type TransactionsFields_transId_Read {
+  permission: Boolean!
+}
+
+type TransactionsFields_transId_Update {
+  permission: Boolean!
+}
+
+type TransactionsFields_transId_Delete {
+  permission: Boolean!
+}
+
+type TransactionsFields_link {
+  create: TransactionsFields_link_Create
+  read: TransactionsFields_link_Read
+  update: TransactionsFields_link_Update
+  delete: TransactionsFields_link_Delete
+}
+
+type TransactionsFields_link_Create {
+  permission: Boolean!
+}
+
+type TransactionsFields_link_Read {
+  permission: Boolean!
+}
+
+type TransactionsFields_link_Update {
+  permission: Boolean!
+}
+
+type TransactionsFields_link_Delete {
+  permission: Boolean!
+}
+
+type TransactionsFields_user {
+  create: TransactionsFields_user_Create
+  read: TransactionsFields_user_Read
+  update: TransactionsFields_user_Update
+  delete: TransactionsFields_user_Delete
+}
+
+type TransactionsFields_user_Create {
+  permission: Boolean!
+}
+
+type TransactionsFields_user_Read {
+  permission: Boolean!
+}
+
+type TransactionsFields_user_Update {
+  permission: Boolean!
+}
+
+type TransactionsFields_user_Delete {
+  permission: Boolean!
+}
+
+type TransactionsFields_amount {
+  create: TransactionsFields_amount_Create
+  read: TransactionsFields_amount_Read
+  update: TransactionsFields_amount_Update
+  delete: TransactionsFields_amount_Delete
+}
+
+type TransactionsFields_amount_Create {
+  permission: Boolean!
+}
+
+type TransactionsFields_amount_Read {
+  permission: Boolean!
+}
+
+type TransactionsFields_amount_Update {
+  permission: Boolean!
+}
+
+type TransactionsFields_amount_Delete {
+  permission: Boolean!
+}
+
+type TransactionsFields_status {
+  create: TransactionsFields_status_Create
+  read: TransactionsFields_status_Read
+  update: TransactionsFields_status_Update
+  delete: TransactionsFields_status_Delete
+}
+
+type TransactionsFields_status_Create {
+  permission: Boolean!
+}
+
+type TransactionsFields_status_Read {
+  permission: Boolean!
+}
+
+type TransactionsFields_status_Update {
+  permission: Boolean!
+}
+
+type TransactionsFields_status_Delete {
+  permission: Boolean!
+}
+
+type TransactionsFields_paymentMethod {
+  create: TransactionsFields_paymentMethod_Create
+  read: TransactionsFields_paymentMethod_Read
+  update: TransactionsFields_paymentMethod_Update
+  delete: TransactionsFields_paymentMethod_Delete
+}
+
+type TransactionsFields_paymentMethod_Create {
+  permission: Boolean!
+}
+
+type TransactionsFields_paymentMethod_Read {
+  permission: Boolean!
+}
+
+type TransactionsFields_paymentMethod_Update {
+  permission: Boolean!
+}
+
+type TransactionsFields_paymentMethod_Delete {
+  permission: Boolean!
+}
+
+type TransactionsFields_createdAt {
+  create: TransactionsFields_createdAt_Create
+  read: TransactionsFields_createdAt_Read
+  update: TransactionsFields_createdAt_Update
+  delete: TransactionsFields_createdAt_Delete
+}
+
+type TransactionsFields_createdAt_Create {
+  permission: Boolean!
+}
+
+type TransactionsFields_createdAt_Read {
+  permission: Boolean!
+}
+
+type TransactionsFields_createdAt_Update {
+  permission: Boolean!
+}
+
+type TransactionsFields_createdAt_Delete {
+  permission: Boolean!
+}
+
+type TransactionsFields_transactionDate {
+  create: TransactionsFields_transactionDate_Create
+  read: TransactionsFields_transactionDate_Read
+  update: TransactionsFields_transactionDate_Update
+  delete: TransactionsFields_transactionDate_Delete
+}
+
+type TransactionsFields_transactionDate_Create {
+  permission: Boolean!
+}
+
+type TransactionsFields_transactionDate_Read {
+  permission: Boolean!
+}
+
+type TransactionsFields_transactionDate_Update {
+  permission: Boolean!
+}
+
+type TransactionsFields_transactionDate_Delete {
+  permission: Boolean!
+}
+
+type TransactionsFields_updatedAt {
+  create: TransactionsFields_updatedAt_Create
+  read: TransactionsFields_updatedAt_Read
+  update: TransactionsFields_updatedAt_Update
+  delete: TransactionsFields_updatedAt_Delete
+}
+
+type TransactionsFields_updatedAt_Create {
+  permission: Boolean!
+}
+
+type TransactionsFields_updatedAt_Read {
+  permission: Boolean!
+}
+
+type TransactionsFields_updatedAt_Update {
+  permission: Boolean!
+}
+
+type TransactionsFields_updatedAt_Delete {
+  permission: Boolean!
+}
+
+type TransactionsCreateAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type TransactionsReadAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type TransactionsUpdateAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type TransactionsDeleteAccess {
   permission: Boolean!
   where: JSONObject
 }
@@ -19249,6 +20576,9 @@ type Mutation {
   updateComment(id: String!, autosave: Boolean, data: mutationCommentUpdateInput!, draft: Boolean): Comment
   deleteComment(id: String!): Comment
   restoreVersionComment(id: String): Comment
+  createTransaction(data: mutationTransactionInput!, draft: Boolean): Transaction
+  updateTransaction(id: String!, autosave: Boolean, data: mutationTransactionUpdateInput!, draft: Boolean): Transaction
+  deleteTransaction(id: String!): Transaction
   createRedirect(data: mutationRedirectInput!, draft: Boolean): Redirect
   updateRedirect(id: String!, autosave: Boolean, data: mutationRedirectUpdateInput!, draft: Boolean): Redirect
   deleteRedirect(id: String!): Redirect
@@ -19691,6 +21021,8 @@ enum ProjectUpdate__status_MutationInput {
 input mutationSubscriptionInput {
   title: String!
   description: String
+  price: Float
+  coupons: [mutationSubscription_CouponsInput]
   referralAmount: Float
   endOfPromotion: String
   courses: [String]
@@ -19698,6 +21030,13 @@ input mutationSubscriptionInput {
   updatedAt: String
   createdAt: String
   _status: Subscription__status_MutationInput
+}
+
+input mutationSubscription_CouponsInput {
+  code: String
+  value: Float
+  expiryDate: String
+  id: String
 }
 
 input mutationSubscription_MetaInput {
@@ -19714,6 +21053,8 @@ enum Subscription__status_MutationInput {
 input mutationSubscriptionUpdateInput {
   title: String
   description: String
+  price: Float
+  coupons: [mutationSubscriptionUpdate_CouponsInput]
   referralAmount: Float
   endOfPromotion: String
   courses: [String]
@@ -19721,6 +21062,13 @@ input mutationSubscriptionUpdateInput {
   updatedAt: String
   createdAt: String
   _status: SubscriptionUpdate__status_MutationInput
+}
+
+input mutationSubscriptionUpdate_CouponsInput {
+  code: String
+  value: Float
+  expiryDate: String
+  id: String
 }
 
 input mutationSubscriptionUpdate_MetaInput {
@@ -19840,6 +21188,8 @@ input mutationUserInput {
   referredUsers: [String]
   subscriptions: [String]
   phoneNumber: String
+  accountBalance: Float
+  referralTotal: Float
   updatedAt: String
   createdAt: String
   email: String!
@@ -19865,6 +21215,8 @@ input mutationUserUpdateInput {
   referredUsers: [String]
   subscriptions: [String]
   phoneNumber: String
+  accountBalance: Float
+  referralTotal: Float
   updatedAt: String
   createdAt: String
   email: String
@@ -19942,6 +21294,50 @@ input mutationCommentUpdate_PopulatedUserInput {
 enum CommentUpdate__status_MutationInput {
   draft
   published
+}
+
+input mutationTransactionInput {
+  title: String
+  transId: String
+  link: String
+  user: String
+  amount: Float!
+  status: Transaction_status_MutationInput
+  paymentMethod: String
+  createdAt: String
+  transactionDate: String
+  redirectUrl: String
+  updatedAt: String
+}
+
+enum Transaction_status_MutationInput {
+  CREATED
+  PENDING
+  SUCCESSFUL
+  FAILED
+  EXPIRED
+}
+
+input mutationTransactionUpdateInput {
+  title: String
+  transId: String
+  link: String
+  user: String
+  amount: Float
+  status: TransactionUpdate_status_MutationInput
+  paymentMethod: String
+  createdAt: String
+  transactionDate: String
+  redirectUrl: String
+  updatedAt: String
+}
+
+enum TransactionUpdate_status_MutationInput {
+  CREATED
+  PENDING
+  SUCCESSFUL
+  FAILED
+  EXPIRED
 }
 
 input mutationRedirectInput {

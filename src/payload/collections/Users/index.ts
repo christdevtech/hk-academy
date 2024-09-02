@@ -87,6 +87,18 @@ const Users: CollectionConfig = {
       // unique: true,
       required: false,
     },
+    {
+      name: 'accountBalance',
+      type: 'number',
+      defaultValue: 0,
+      required: false,
+    },
+    {
+      name: 'referralTotal',
+      type: 'number',
+      defaultValue: 0,
+      required: false,
+    },
   ],
   timestamps: true,
 }

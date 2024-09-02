@@ -68,8 +68,9 @@
 
 .nav {
   display: flex;
-  gap: calc(var(--base) / 4) var(--base);
+  gap: calc(var(--base) / 4) ;
   align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
   opacity: 1;
   transition: opacity 100ms linear;
@@ -77,9 +78,8 @@
 
   > * {
     text-decoration: none;
+    text-align: center;
   }
-
- 
 
 }
 

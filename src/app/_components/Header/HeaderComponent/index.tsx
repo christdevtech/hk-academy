@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import { Gutter } from '../../Gutter'
 import { HeaderNav } from '../Nav'
 import Link from 'next/link'
@@ -9,9 +9,11 @@ import Logo from '../../Logo'
 import { Header, Settings } from '../../../../payload/payload-types'
 import { noHeaderFooterUrls } from '../../../constants'
 import { usePathname } from 'next/navigation'
+import { MobileNav } from '../MobileNav'
 
 const HeaderComponent = ({ header, settings }: { header: Header; settings: Settings }) => {
   const pathname = usePathname()
+
   return (
     <header
       className={[classes.header, noHeaderFooterUrls.includes(pathname) && classes.hide]
@@ -23,6 +25,7 @@ const HeaderComponent = ({ header, settings }: { header: Header; settings: Setti
           <Logo {...settings} />
         </Link>
         <HeaderNav header={header} />
+        <MobileNav header={header} />
       </Gutter>
     </header>
   )

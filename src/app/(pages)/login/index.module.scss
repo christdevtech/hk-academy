@@ -2,6 +2,14 @@
 
 .login {
   margin-bottom: var(--block-padding);
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+
+  div{
+    width: 100%;
+  }
+
 }
 
 .params {
