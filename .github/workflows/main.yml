@@ -36,6 +36,8 @@ jobs:
         sshpass -p $SERVER_PASSWORD ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} <<EOF
           cd /var/www/hkacademy
           git pull origin main
+          npx update-browserslist-db@latest
+          npx browserslist@latest --update-db
           yarn install
           pm2 stop hkacademy
           NODE_OPTIONS='--max-old-space-size=1604' yarn build
