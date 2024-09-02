@@ -22,22 +22,25 @@ export const handleSuccessfulTransaction: CollectionAfterChangeHook = async ({
     transaction.status === 'SUCCESSFUL' &&
     transaction.type === 'PURCHASE'
   ) {
-    const { user: userId, title: subscription } = transaction
+    // const { user: userId, title: subscription } = transaction
+
+    const user = typeof transaction.user !== 'string' && transaction.user
+    const subscription = typeof transaction.title !== 'string' && transaction.title
 
     try {
       // Fetch the user data
-      const userResult = await payload.find({
-        collection: 'users',
-        where: { id: { equals: userId } },
-        limit: 1, // Limit to 1 to ensure we only deal with one user
-      })
+      // const userResult = await payload.find({
+      //   collection: 'users',
+      //   where: { id: { equals: user.id } },
+      //   limit: 1, // Limit to 1 to ensure we only deal with one user
+      // })
 
-      if (userResult.docs.length > 0) {
-        const user: User = userResult[0]
+      if (user) {
+        // const user: User = userResult[0]
 
         // Update user's subscriptions
         const oldSubscriptions = user.subscriptions
-          ? user.subscriptions.map((subscription: Subscription) => subscription.id)
+          ? user.subscriptions.map(subs => typeof subs !== 'string' && subs.id)
           : []
 
         const updatedSubscriptions = [
@@ -47,7 +50,7 @@ export const handleSuccessfulTransaction: CollectionAfterChangeHook = async ({
 
         await payload.update({
           collection: 'users',
-          id: typeof userId !== 'string' && userId.id,
+          id: user.id,
           data: {
             subscriptions: updatedSubscriptions,
           },
@@ -82,7 +85,7 @@ export const handleSuccessfulTransaction: CollectionAfterChangeHook = async ({
           })
         }
       } else {
-        payload.logger.info(`User with ID ${userId} not found.`)
+        payload.logger.info(`User with ID ${user.id} not found.`)
       }
     } catch (error) {
       payload.logger.error(`Error handling successful transaction: ${error.message}`)

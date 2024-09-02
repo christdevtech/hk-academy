@@ -1,4 +1,4 @@
-import { CollectionConfig } from 'payload/types'
+import type { CollectionConfig } from 'payload/types'
 import { admins } from '../../access/admins'
 import { handleSuccessfulTransaction } from './hooks/handleSuccessfulTransaction'
 // import { processTransactionType } from './hooks/processTransactionType'
