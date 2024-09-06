@@ -471,6 +471,7 @@ export interface Subscription {
   id: string;
   title: string;
   description?: string | null;
+  purchaseMessage?: string | null;
   price?: number | null;
   coupons?:
     | {
@@ -483,6 +484,7 @@ export interface Subscription {
   referralAmount?: number | null;
   endOfPromotion?: string | null;
   courses?: (string | Course)[] | null;
+  slug?: string | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -499,6 +501,8 @@ export interface Course {
     [k: string]: unknown;
   }[];
   videoUrl: string;
+  courseImage?: string | Media | null;
+  slug?: string | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -664,6 +668,7 @@ export interface Transaction {
   id: string;
   title?: (string | null) | Subscription;
   transId?: string | null;
+  externalId?: string | null;
   user: string | User;
   amount: number;
   status: 'CREATED' | 'PENDING' | 'SUCCESSFUL' | 'FAILED' | 'EXPIRED';
@@ -724,6 +729,7 @@ export interface Settings {
   id: string;
   postsPage?: (string | null) | Page;
   projectsPage?: (string | null) | Page;
+  baseSubscription?: (string | null) | Subscription;
   logoLight?: string | Media | null;
   logoDark?: string | Media | null;
   contactInformation?: {

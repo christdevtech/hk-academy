@@ -3,6 +3,7 @@ import next from 'next'
 import nextBuild from 'next/dist/build'
 import path from 'path'
 import cookieParser from 'cookie-parser'
+import fapshiPayments from './app/_api/fapshiPayments'
 
 dotenv.config({
   path: path.resolve(__dirname, '../.env'),
@@ -43,6 +44,8 @@ const start = async (): Promise<void> => {
 
   // Use the custom routes before Next.js handling
   app.use(customRoutes)
+
+  app.use('/api/payments', fapshiPayments)
 
   if (process.env.NEXT_BUILD) {
     app.listen(PORT, async () => {

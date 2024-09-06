@@ -1,3 +1,5 @@
+@use '../../_css/queries.scss' as *;
+
 .account {
   margin-bottom: var(--block-padding);
 }
@@ -18,4 +20,52 @@
 
 .meta {
   margin: 0;
+}
+
+.subscription{
+  padding: var(--base);
+  border: solid 4px var(--theme-elevation-300);
+  border-radius: var(--base);
+  
+  .courses {
+  *{
+    margin: 0;
+  }
+
+  display: flex;
+  gap: var(--base);
+  flex-flow: wrap;
+}
+  .course {
+    background: var(--theme-elevation-50);
+    color: var(--theme-elevation-1000);
+    padding: var(--base);
+    width: calc((100% - (var(--base) * 2)) / 3); 
+    border-radius: calc(var(--base) / 2);
+    display: flex;
+    flex-flow: column; 
+    gap: calc(var(--base) /2);
+    align-items: flex-start;
+  }
+
+  @include mid-break {
+    .course {
+      width: calc((100% - var(--base)) / 2); // Adjusted for two-column layout
+    }
+  }
+
+  @include small-break {
+    flex-direction: column;
+    gap: var(--base);
+    padding: 0;
+    border: none;
+    width: 100%;
+
+    .course {
+      width: 100%; // Full width for single-column layout
+       border-radius: calc(var(--base) / 3);
+    }
+  }
+
+
 }

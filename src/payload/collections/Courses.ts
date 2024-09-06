@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload/types'
 
 import { admins } from '../access/admins'
 import richText from '../fields/richText'
+import { slugField } from '../fields/slug'
 
 const Courses: CollectionConfig = {
   slug: 'courses',
@@ -38,7 +39,12 @@ const Courses: CollectionConfig = {
       type: 'text',
       required: true,
     },
-    // Additional fields as needed
+    {
+      name: 'courseImage',
+      type: 'upload',
+      relationTo: 'media',
+    },
+    slugField(),
   ],
 }
 

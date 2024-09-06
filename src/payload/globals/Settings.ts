@@ -25,6 +25,12 @@ export const Settings: GlobalConfig = {
       label: 'Projects page',
     },
     {
+      name: 'baseSubscription',
+      type: 'relationship',
+      relationTo: 'subscriptions',
+      label: 'Starter Subscription (The one every user must buy before they buy another one)',
+    },
+    {
       name: 'logoLight',
       label: 'Logo Light Theme',
       type: 'upload',

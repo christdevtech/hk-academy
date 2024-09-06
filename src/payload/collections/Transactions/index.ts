@@ -13,7 +13,7 @@ const Transactions: CollectionConfig = {
     read: () => true,
     create: admins,
     update: admins,
-    delete: () => false,
+    delete: admins,
   },
   hooks: {
     afterChange: [handleSuccessfulTransaction],
@@ -27,6 +27,11 @@ const Transactions: CollectionConfig = {
     },
     {
       name: 'transId',
+      type: 'text',
+      //   required: true,
+    },
+    {
+      name: 'externalId',
       type: 'text',
       //   required: true,
     },

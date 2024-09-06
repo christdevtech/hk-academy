@@ -1,3 +1,4 @@
+import { COURSE_FIELDS } from './courses'
 import { LINK_FIELDS } from './link'
 import { MEDIA_FIELDS } from './media'
 
@@ -36,6 +37,24 @@ export const SETTINGS = `
     }
     projectsPage {
       slug
+    }
+    baseSubscription {
+      slug
+      id
+      title
+      description
+      purchaseMessage
+      price
+      coupons{
+        code
+        value
+        expiryDate
+      }
+      referralAmount
+      endOfPromotion
+      courses{
+        ${COURSE_FIELDS}
+      }
     }
     logoLight{
       ${MEDIA_FIELDS}

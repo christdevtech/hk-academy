@@ -16,7 +16,7 @@
       display: block;
   
     .mobileMenu {
-
+box-shadow: var(--theme-elevation-300) 0 0 6px;
     position: fixed; 
     top: 0;
     left: 0;
@@ -37,7 +37,7 @@
     }
 
     .mobileMenuItem{
-        padding: 1rem;
+        padding: 1rem 2rem;
         background-color: var(--theme-elevation-100);
         margin: 0 calc(
           var(--base) / 2

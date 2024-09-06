@@ -1,3 +1,5 @@
+import { MEDIA_FIELDS } from './media'
+
 export const COURSES = `
   query Courses {
     Courses(limit: 300){
@@ -8,14 +10,21 @@ export const COURSES = `
   }
 `
 
+export const COURSE_FIELDS = `
+id
+title
+description
+videoUrl
+courseImage{
+${MEDIA_FIELDS}
+}
+`
+
 export const COURSE = `
   query Course($slug: string, $draft: boolean){
       Courses(where: {slug:{equals:$slug}}, limit:1, draft: $draft) {
         docs{
-            id
-            title
-            description
-            videoUrl
+            ${COURSE_FIELDS}
         }
     }
   }

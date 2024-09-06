@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload/types'
 
 import { admins } from '../../access/admins'
+import { slugField } from '../../fields/slug'
 
 const Subscriptions: CollectionConfig = {
   slug: 'subscriptions',
@@ -32,6 +33,10 @@ const Subscriptions: CollectionConfig = {
       name: 'description',
       type: 'textarea',
       label: 'Description',
+    },
+    {
+      name: 'purchaseMessage',
+      type: 'text',
     },
     {
       name: 'price',
@@ -73,9 +78,10 @@ const Subscriptions: CollectionConfig = {
       name: 'courses',
       type: 'relationship',
       relationTo: 'courses',
+      maxDepth: 3,
       hasMany: true,
     },
-    // Additional fields as needed
+    slugField(),
   ],
 }
 

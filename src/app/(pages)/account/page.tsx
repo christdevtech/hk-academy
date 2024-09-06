@@ -8,13 +8,17 @@ import { Gutter } from '../../_components/Gutter'
 import { HR } from '../../_components/HR'
 import { RenderParams } from '../../_components/RenderParams'
 import { LowImpactHero } from '../../_heros/LowImpact'
-import { formatDateTime } from '../../_utilities/formatDateTime'
 import { getMeUser } from '../../_utilities/getMeUser'
 import { mergeOpenGraph } from '../../_utilities/mergeOpenGraph'
 import AccountForm from './AccountForm'
 
 import classes from './index.module.scss'
 import CopyBox from '../../_components/CopyBox'
+import type { Subscription } from '../../../payload/payload-types'
+import RichText from '../../_components/RichText'
+import payload from 'payload'
+import { Media } from '../../_components/Media'
+import CreatePaymentLink from './CreatePaymentLink'
 
 export default async function Account() {
   const { user } = await getMeUser({
@@ -23,9 +27,24 @@ export default async function Account() {
     )}&redirect=${encodeURIComponent('/account')}`,
   })
 
-  const comments = await fetchComments({
-    user: user?.id,
-  })
+  function isSubscription(doc: any): doc is Subscription {
+    return doc && typeof doc.id === 'string' && typeof doc.title === 'string' // Add more checks as needed
+  }
+
+  let subscriptions: Subscription[] = []
+  if (user.subscriptions.length > 0) {
+    const subscriptionIdArray = user.subscriptions.map(subscription => {
+      return typeof subscription === 'string' ? subscription : subscription.id
+    })
+    const subscriptionDocs = await payload.find({
+      collection: 'subscriptions',
+      where: {
+        id: { in: subscriptionIdArray },
+      },
+    })
+
+    subscriptions = subscriptionDocs.docs.filter(isSubscription) as unknown as Subscription[]
+  }
 
   return (
     <Fragment>
@@ -57,12 +76,46 @@ export default async function Account() {
       <Gutter className={classes.account}>
         <AccountForm />
         <HR />
-        <h2>Subscriptions</h2>
+        {subscriptions.length > 0 && <h2>Subscriptions</h2>}
 
-        <p>
-          This is where the subscriptions you have purchased will appear. Once you purchase a
-          subscription, you will see it in this section
-        </p>
+        {subscriptions?.length > 0 ? (
+          subscriptions.map((subscription, index) => {
+            const { title, description, courses } = subscription
+            return (
+              <div key={index} className={classes.subscription}>
+                <h4>{title} </h4>
+                <p>{description}</p>
+                <h5>{title} Courses:</h5>
+                <div className={classes.courses}>
+                  {courses.map((course, index) => {
+                    if (typeof course !== 'string') {
+                      const { title, description, courseImage } = course
+                      return (
+                        <div key={index} className={classes.course}>
+                          <Media resource={courseImage} />
+                          <h6>{title}:</h6>
+                          <RichText content={description} />
+                          <Button
+                            href={`/course/${course.id}`}
+                            appearance="primary"
+                            label="View Course"
+                          ></Button>
+                        </div>
+                      )
+                    }
+                  })}
+                </div>
+              </div>
+            )
+          })
+        ) : (
+          <div>
+            <h2>Pay HK Academy SignUp Fee!</h2>
+
+            <p>Subscribe now to access all the features of HK Academy.</p>
+            <CreatePaymentLink {...user} />
+          </div>
+        )}
         <HR />
         <h2>Referrals</h2>
         <h4>Your Referral Link: </h4>

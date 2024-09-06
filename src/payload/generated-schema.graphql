@@ -687,11 +687,13 @@ type Subscription {
   id: String
   title: String
   description: String
+  purchaseMessage: String
   price: Float
   coupons: [Subscription_Coupons!]
   referralAmount: Float
   endOfPromotion: DateTime
   courses: [Course!]
+  slug: String
   meta: Subscription_Meta
   updatedAt: DateTime
   createdAt: DateTime
@@ -710,10 +712,174 @@ type Course {
   title: String
   description(depth: Int): JSON
   videoUrl: String
+  courseImage(where: Course_CourseImage_where): Media
+  slug: String
   meta: Course_Meta
   updatedAt: DateTime
   createdAt: DateTime
   _status: Course__status
+}
+
+input Course_CourseImage_where {
+  alt: Course_CourseImage_alt_operator
+  caption: Course_CourseImage_caption_operator
+  updatedAt: Course_CourseImage_updatedAt_operator
+  createdAt: Course_CourseImage_createdAt_operator
+  url: Course_CourseImage_url_operator
+  filename: Course_CourseImage_filename_operator
+  mimeType: Course_CourseImage_mimeType_operator
+  filesize: Course_CourseImage_filesize_operator
+  width: Course_CourseImage_width_operator
+  height: Course_CourseImage_height_operator
+  id: Course_CourseImage_id_operator
+  AND: [Course_CourseImage_where_and]
+  OR: [Course_CourseImage_where_or]
+}
+
+input Course_CourseImage_alt_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+}
+
+input Course_CourseImage_caption_operator {
+  equals: JSON
+  not_equals: JSON
+  like: JSON
+  contains: JSON
+  exists: Boolean
+}
+
+input Course_CourseImage_updatedAt_operator {
+  equals: DateTime
+  not_equals: DateTime
+  greater_than_equal: DateTime
+  greater_than: DateTime
+  less_than_equal: DateTime
+  less_than: DateTime
+  like: DateTime
+  exists: Boolean
+}
+
+input Course_CourseImage_createdAt_operator {
+  equals: DateTime
+  not_equals: DateTime
+  greater_than_equal: DateTime
+  greater_than: DateTime
+  less_than_equal: DateTime
+  less_than: DateTime
+  like: DateTime
+  exists: Boolean
+}
+
+input Course_CourseImage_url_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input Course_CourseImage_filename_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input Course_CourseImage_mimeType_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input Course_CourseImage_filesize_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input Course_CourseImage_width_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input Course_CourseImage_height_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input Course_CourseImage_id_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input Course_CourseImage_where_and {
+  alt: Course_CourseImage_alt_operator
+  caption: Course_CourseImage_caption_operator
+  updatedAt: Course_CourseImage_updatedAt_operator
+  createdAt: Course_CourseImage_createdAt_operator
+  url: Course_CourseImage_url_operator
+  filename: Course_CourseImage_filename_operator
+  mimeType: Course_CourseImage_mimeType_operator
+  filesize: Course_CourseImage_filesize_operator
+  width: Course_CourseImage_width_operator
+  height: Course_CourseImage_height_operator
+  id: Course_CourseImage_id_operator
+  AND: [Course_CourseImage_where_and]
+  OR: [Course_CourseImage_where_or]
+}
+
+input Course_CourseImage_where_or {
+  alt: Course_CourseImage_alt_operator
+  caption: Course_CourseImage_caption_operator
+  updatedAt: Course_CourseImage_updatedAt_operator
+  createdAt: Course_CourseImage_createdAt_operator
+  url: Course_CourseImage_url_operator
+  filename: Course_CourseImage_filename_operator
+  mimeType: Course_CourseImage_mimeType_operator
+  filesize: Course_CourseImage_filesize_operator
+  width: Course_CourseImage_width_operator
+  height: Course_CourseImage_height_operator
+  id: Course_CourseImage_id_operator
+  AND: [Course_CourseImage_where_and]
+  OR: [Course_CourseImage_where_or]
 }
 
 type Course_Meta {
@@ -7850,6 +8016,7 @@ type Subscriptions {
 input Subscription_where {
   title: Subscription_title_operator
   description: Subscription_description_operator
+  purchaseMessage: Subscription_purchaseMessage_operator
   price: Subscription_price_operator
   coupons__code: Subscription_coupons__code_operator
   coupons__value: Subscription_coupons__value_operator
@@ -7858,6 +8025,7 @@ input Subscription_where {
   referralAmount: Subscription_referralAmount_operator
   endOfPromotion: Subscription_endOfPromotion_operator
   courses: Subscription_courses_operator
+  slug: Subscription_slug_operator
   meta__title: Subscription_meta__title_operator
   meta__description: Subscription_meta__description_operator
   meta__image: Subscription_meta__image_operator
@@ -7884,6 +8052,17 @@ input Subscription_description_operator {
   not_equals: String
   like: String
   contains: String
+  exists: Boolean
+}
+
+input Subscription_purchaseMessage_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
   exists: Boolean
 }
 
@@ -7970,6 +8149,17 @@ input Subscription_courses_operator {
   exists: Boolean
 }
 
+input Subscription_slug_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
 input Subscription_meta__title_operator {
   equals: String
   not_equals: String
@@ -8045,6 +8235,7 @@ input Subscription_id_operator {
 input Subscription_where_and {
   title: Subscription_title_operator
   description: Subscription_description_operator
+  purchaseMessage: Subscription_purchaseMessage_operator
   price: Subscription_price_operator
   coupons__code: Subscription_coupons__code_operator
   coupons__value: Subscription_coupons__value_operator
@@ -8053,6 +8244,7 @@ input Subscription_where_and {
   referralAmount: Subscription_referralAmount_operator
   endOfPromotion: Subscription_endOfPromotion_operator
   courses: Subscription_courses_operator
+  slug: Subscription_slug_operator
   meta__title: Subscription_meta__title_operator
   meta__description: Subscription_meta__description_operator
   meta__image: Subscription_meta__image_operator
@@ -8067,6 +8259,7 @@ input Subscription_where_and {
 input Subscription_where_or {
   title: Subscription_title_operator
   description: Subscription_description_operator
+  purchaseMessage: Subscription_purchaseMessage_operator
   price: Subscription_price_operator
   coupons__code: Subscription_coupons__code_operator
   coupons__value: Subscription_coupons__value_operator
@@ -8075,6 +8268,7 @@ input Subscription_where_or {
   referralAmount: Subscription_referralAmount_operator
   endOfPromotion: Subscription_endOfPromotion_operator
   courses: Subscription_courses_operator
+  slug: Subscription_slug_operator
   meta__title: Subscription_meta__title_operator
   meta__description: Subscription_meta__description_operator
   meta__image: Subscription_meta__image_operator
@@ -8098,11 +8292,13 @@ type subscriptionsDocAccess {
 type SubscriptionsDocAccessFields {
   title: SubscriptionsDocAccessFields_title
   description: SubscriptionsDocAccessFields_description
+  purchaseMessage: SubscriptionsDocAccessFields_purchaseMessage
   price: SubscriptionsDocAccessFields_price
   coupons: SubscriptionsDocAccessFields_coupons
   referralAmount: SubscriptionsDocAccessFields_referralAmount
   endOfPromotion: SubscriptionsDocAccessFields_endOfPromotion
   courses: SubscriptionsDocAccessFields_courses
+  slug: SubscriptionsDocAccessFields_slug
   meta: SubscriptionsDocAccessFields_meta
   updatedAt: SubscriptionsDocAccessFields_updatedAt
   createdAt: SubscriptionsDocAccessFields_createdAt
@@ -8152,6 +8348,29 @@ type SubscriptionsDocAccessFields_description_Update {
 }
 
 type SubscriptionsDocAccessFields_description_Delete {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_purchaseMessage {
+  create: SubscriptionsDocAccessFields_purchaseMessage_Create
+  read: SubscriptionsDocAccessFields_purchaseMessage_Read
+  update: SubscriptionsDocAccessFields_purchaseMessage_Update
+  delete: SubscriptionsDocAccessFields_purchaseMessage_Delete
+}
+
+type SubscriptionsDocAccessFields_purchaseMessage_Create {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_purchaseMessage_Read {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_purchaseMessage_Update {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_purchaseMessage_Delete {
   permission: Boolean!
 }
 
@@ -8367,6 +8586,29 @@ type SubscriptionsDocAccessFields_courses_Update {
 }
 
 type SubscriptionsDocAccessFields_courses_Delete {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_slug {
+  create: SubscriptionsDocAccessFields_slug_Create
+  read: SubscriptionsDocAccessFields_slug_Read
+  update: SubscriptionsDocAccessFields_slug_Update
+  delete: SubscriptionsDocAccessFields_slug_Delete
+}
+
+type SubscriptionsDocAccessFields_slug_Create {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_slug_Read {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_slug_Update {
+  permission: Boolean!
+}
+
+type SubscriptionsDocAccessFields_slug_Delete {
   permission: Boolean!
 }
 
@@ -8623,11 +8865,13 @@ type SubscriptionVersion {
 type SubscriptionVersion_Version {
   title: String
   description: String
+  purchaseMessage: String
   price: Float
   coupons: [SubscriptionVersion_Version_Coupons!]
   referralAmount: Float
   endOfPromotion: DateTime
   courses: [Course!]
+  slug: String
   meta: SubscriptionVersion_Version_Meta
   updatedAt: DateTime
   createdAt: DateTime
@@ -8832,6 +9076,7 @@ input versionsSubscription_where {
   parent: versionsSubscription_parent_operator
   version__title: versionsSubscription_version__title_operator
   version__description: versionsSubscription_version__description_operator
+  version__purchaseMessage: versionsSubscription_version__purchaseMessage_operator
   version__price: versionsSubscription_version__price_operator
   version__coupons__code: versionsSubscription_version__coupons__code_operator
   version__coupons__value: versionsSubscription_version__coupons__value_operator
@@ -8840,6 +9085,7 @@ input versionsSubscription_where {
   version__referralAmount: versionsSubscription_version__referralAmount_operator
   version__endOfPromotion: versionsSubscription_version__endOfPromotion_operator
   version__courses: versionsSubscription_version__courses_operator
+  version__slug: versionsSubscription_version__slug_operator
   version__meta__title: versionsSubscription_version__meta__title_operator
   version__meta__description: versionsSubscription_version__meta__description_operator
   version__meta__image: versionsSubscription_version__meta__image_operator
@@ -8878,6 +9124,17 @@ input versionsSubscription_version__description_operator {
   not_equals: String
   like: String
   contains: String
+  exists: Boolean
+}
+
+input versionsSubscription_version__purchaseMessage_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
   exists: Boolean
 }
 
@@ -8961,6 +9218,17 @@ input versionsSubscription_version__courses_operator {
   in: [JSON]
   not_in: [JSON]
   all: [JSON]
+  exists: Boolean
+}
+
+input versionsSubscription_version__slug_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
   exists: Boolean
 }
 
@@ -9068,6 +9336,7 @@ input versionsSubscription_where_and {
   parent: versionsSubscription_parent_operator
   version__title: versionsSubscription_version__title_operator
   version__description: versionsSubscription_version__description_operator
+  version__purchaseMessage: versionsSubscription_version__purchaseMessage_operator
   version__price: versionsSubscription_version__price_operator
   version__coupons__code: versionsSubscription_version__coupons__code_operator
   version__coupons__value: versionsSubscription_version__coupons__value_operator
@@ -9076,6 +9345,7 @@ input versionsSubscription_where_and {
   version__referralAmount: versionsSubscription_version__referralAmount_operator
   version__endOfPromotion: versionsSubscription_version__endOfPromotion_operator
   version__courses: versionsSubscription_version__courses_operator
+  version__slug: versionsSubscription_version__slug_operator
   version__meta__title: versionsSubscription_version__meta__title_operator
   version__meta__description: versionsSubscription_version__meta__description_operator
   version__meta__image: versionsSubscription_version__meta__image_operator
@@ -9094,6 +9364,7 @@ input versionsSubscription_where_or {
   parent: versionsSubscription_parent_operator
   version__title: versionsSubscription_version__title_operator
   version__description: versionsSubscription_version__description_operator
+  version__purchaseMessage: versionsSubscription_version__purchaseMessage_operator
   version__price: versionsSubscription_version__price_operator
   version__coupons__code: versionsSubscription_version__coupons__code_operator
   version__coupons__value: versionsSubscription_version__coupons__value_operator
@@ -9102,6 +9373,7 @@ input versionsSubscription_where_or {
   version__referralAmount: versionsSubscription_version__referralAmount_operator
   version__endOfPromotion: versionsSubscription_version__endOfPromotion_operator
   version__courses: versionsSubscription_version__courses_operator
+  version__slug: versionsSubscription_version__slug_operator
   version__meta__title: versionsSubscription_version__meta__title_operator
   version__meta__description: versionsSubscription_version__meta__description_operator
   version__meta__image: versionsSubscription_version__meta__image_operator
@@ -9134,6 +9406,8 @@ input Course_where {
   title: Course_title_operator
   description: Course_description_operator
   videoUrl: Course_videoUrl_operator
+  courseImage: Course_courseImage_operator
+  slug: Course_slug_operator
   meta__title: Course_meta__title_operator
   meta__description: Course_meta__description_operator
   meta__image: Course_meta__image_operator
@@ -9170,6 +9444,23 @@ input Course_videoUrl_operator {
   in: [String]
   not_in: [String]
   all: [String]
+}
+
+input Course_courseImage_operator {
+  equals: String
+  not_equals: String
+  exists: Boolean
+}
+
+input Course_slug_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
 }
 
 input Course_meta__title_operator {
@@ -9248,6 +9539,8 @@ input Course_where_and {
   title: Course_title_operator
   description: Course_description_operator
   videoUrl: Course_videoUrl_operator
+  courseImage: Course_courseImage_operator
+  slug: Course_slug_operator
   meta__title: Course_meta__title_operator
   meta__description: Course_meta__description_operator
   meta__image: Course_meta__image_operator
@@ -9263,6 +9556,8 @@ input Course_where_or {
   title: Course_title_operator
   description: Course_description_operator
   videoUrl: Course_videoUrl_operator
+  courseImage: Course_courseImage_operator
+  slug: Course_slug_operator
   meta__title: Course_meta__title_operator
   meta__description: Course_meta__description_operator
   meta__image: Course_meta__image_operator
@@ -9287,6 +9582,8 @@ type CoursesDocAccessFields {
   title: CoursesDocAccessFields_title
   description: CoursesDocAccessFields_description
   videoUrl: CoursesDocAccessFields_videoUrl
+  courseImage: CoursesDocAccessFields_courseImage
+  slug: CoursesDocAccessFields_slug
   meta: CoursesDocAccessFields_meta
   updatedAt: CoursesDocAccessFields_updatedAt
   createdAt: CoursesDocAccessFields_createdAt
@@ -9359,6 +9656,52 @@ type CoursesDocAccessFields_videoUrl_Update {
 }
 
 type CoursesDocAccessFields_videoUrl_Delete {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_courseImage {
+  create: CoursesDocAccessFields_courseImage_Create
+  read: CoursesDocAccessFields_courseImage_Read
+  update: CoursesDocAccessFields_courseImage_Update
+  delete: CoursesDocAccessFields_courseImage_Delete
+}
+
+type CoursesDocAccessFields_courseImage_Create {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_courseImage_Read {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_courseImage_Update {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_courseImage_Delete {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_slug {
+  create: CoursesDocAccessFields_slug_Create
+  read: CoursesDocAccessFields_slug_Read
+  update: CoursesDocAccessFields_slug_Update
+  delete: CoursesDocAccessFields_slug_Delete
+}
+
+type CoursesDocAccessFields_slug_Create {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_slug_Read {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_slug_Update {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_slug_Delete {
   permission: Boolean!
 }
 
@@ -9616,10 +9959,174 @@ type CourseVersion_Version {
   title: String
   description(depth: Int): JSON
   videoUrl: String
+  courseImage(where: CourseVersion_Version_CourseImage_where): Media
+  slug: String
   meta: CourseVersion_Version_Meta
   updatedAt: DateTime
   createdAt: DateTime
   _status: CourseVersion_Version__status
+}
+
+input CourseVersion_Version_CourseImage_where {
+  alt: CourseVersion_Version_CourseImage_alt_operator
+  caption: CourseVersion_Version_CourseImage_caption_operator
+  updatedAt: CourseVersion_Version_CourseImage_updatedAt_operator
+  createdAt: CourseVersion_Version_CourseImage_createdAt_operator
+  url: CourseVersion_Version_CourseImage_url_operator
+  filename: CourseVersion_Version_CourseImage_filename_operator
+  mimeType: CourseVersion_Version_CourseImage_mimeType_operator
+  filesize: CourseVersion_Version_CourseImage_filesize_operator
+  width: CourseVersion_Version_CourseImage_width_operator
+  height: CourseVersion_Version_CourseImage_height_operator
+  id: CourseVersion_Version_CourseImage_id_operator
+  AND: [CourseVersion_Version_CourseImage_where_and]
+  OR: [CourseVersion_Version_CourseImage_where_or]
+}
+
+input CourseVersion_Version_CourseImage_alt_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+}
+
+input CourseVersion_Version_CourseImage_caption_operator {
+  equals: JSON
+  not_equals: JSON
+  like: JSON
+  contains: JSON
+  exists: Boolean
+}
+
+input CourseVersion_Version_CourseImage_updatedAt_operator {
+  equals: DateTime
+  not_equals: DateTime
+  greater_than_equal: DateTime
+  greater_than: DateTime
+  less_than_equal: DateTime
+  less_than: DateTime
+  like: DateTime
+  exists: Boolean
+}
+
+input CourseVersion_Version_CourseImage_createdAt_operator {
+  equals: DateTime
+  not_equals: DateTime
+  greater_than_equal: DateTime
+  greater_than: DateTime
+  less_than_equal: DateTime
+  less_than: DateTime
+  like: DateTime
+  exists: Boolean
+}
+
+input CourseVersion_Version_CourseImage_url_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input CourseVersion_Version_CourseImage_filename_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input CourseVersion_Version_CourseImage_mimeType_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input CourseVersion_Version_CourseImage_filesize_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input CourseVersion_Version_CourseImage_width_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input CourseVersion_Version_CourseImage_height_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input CourseVersion_Version_CourseImage_id_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input CourseVersion_Version_CourseImage_where_and {
+  alt: CourseVersion_Version_CourseImage_alt_operator
+  caption: CourseVersion_Version_CourseImage_caption_operator
+  updatedAt: CourseVersion_Version_CourseImage_updatedAt_operator
+  createdAt: CourseVersion_Version_CourseImage_createdAt_operator
+  url: CourseVersion_Version_CourseImage_url_operator
+  filename: CourseVersion_Version_CourseImage_filename_operator
+  mimeType: CourseVersion_Version_CourseImage_mimeType_operator
+  filesize: CourseVersion_Version_CourseImage_filesize_operator
+  width: CourseVersion_Version_CourseImage_width_operator
+  height: CourseVersion_Version_CourseImage_height_operator
+  id: CourseVersion_Version_CourseImage_id_operator
+  AND: [CourseVersion_Version_CourseImage_where_and]
+  OR: [CourseVersion_Version_CourseImage_where_or]
+}
+
+input CourseVersion_Version_CourseImage_where_or {
+  alt: CourseVersion_Version_CourseImage_alt_operator
+  caption: CourseVersion_Version_CourseImage_caption_operator
+  updatedAt: CourseVersion_Version_CourseImage_updatedAt_operator
+  createdAt: CourseVersion_Version_CourseImage_createdAt_operator
+  url: CourseVersion_Version_CourseImage_url_operator
+  filename: CourseVersion_Version_CourseImage_filename_operator
+  mimeType: CourseVersion_Version_CourseImage_mimeType_operator
+  filesize: CourseVersion_Version_CourseImage_filesize_operator
+  width: CourseVersion_Version_CourseImage_width_operator
+  height: CourseVersion_Version_CourseImage_height_operator
+  id: CourseVersion_Version_CourseImage_id_operator
+  AND: [CourseVersion_Version_CourseImage_where_and]
+  OR: [CourseVersion_Version_CourseImage_where_or]
 }
 
 type CourseVersion_Version_Meta {
@@ -9814,6 +10321,8 @@ input versionsCourse_where {
   version__title: versionsCourse_version__title_operator
   version__description: versionsCourse_version__description_operator
   version__videoUrl: versionsCourse_version__videoUrl_operator
+  version__courseImage: versionsCourse_version__courseImage_operator
+  version__slug: versionsCourse_version__slug_operator
   version__meta__title: versionsCourse_version__meta__title_operator
   version__meta__description: versionsCourse_version__meta__description_operator
   version__meta__image: versionsCourse_version__meta__image_operator
@@ -9862,6 +10371,23 @@ input versionsCourse_version__videoUrl_operator {
   in: [String]
   not_in: [String]
   all: [String]
+}
+
+input versionsCourse_version__courseImage_operator {
+  equals: String
+  not_equals: String
+  exists: Boolean
+}
+
+input versionsCourse_version__slug_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
 }
 
 input versionsCourse_version__meta__title_operator {
@@ -9969,6 +10495,8 @@ input versionsCourse_where_and {
   version__title: versionsCourse_version__title_operator
   version__description: versionsCourse_version__description_operator
   version__videoUrl: versionsCourse_version__videoUrl_operator
+  version__courseImage: versionsCourse_version__courseImage_operator
+  version__slug: versionsCourse_version__slug_operator
   version__meta__title: versionsCourse_version__meta__title_operator
   version__meta__description: versionsCourse_version__meta__description_operator
   version__meta__image: versionsCourse_version__meta__image_operator
@@ -9988,6 +10516,8 @@ input versionsCourse_where_or {
   version__title: versionsCourse_version__title_operator
   version__description: versionsCourse_version__description_operator
   version__videoUrl: versionsCourse_version__videoUrl_operator
+  version__courseImage: versionsCourse_version__courseImage_operator
+  version__slug: versionsCourse_version__slug_operator
   version__meta__title: versionsCourse_version__meta__title_operator
   version__meta__description: versionsCourse_version__meta__description_operator
   version__meta__image: versionsCourse_version__meta__image_operator
@@ -12072,17 +12602,19 @@ input versionsComment_where_or {
 
 type Transaction {
   id: String
-  title: String
+  title: Subscription
   transId: String
-  link: String
+  externalId: String
   user: User!
   amount: Float!
-  status: Transaction_status
-  paymentMethod: String
-  createdAt: DateTime
+  status: Transaction_status!
+  type: Transaction_type!
+  paymentMethod: Transaction_paymentMethod!
   transactionDate: DateTime
-  redirectUrl: String
+  fromAccount: String!
+  toAccount: String!
   updatedAt: DateTime
+  createdAt: DateTime
 }
 
 enum Transaction_status {
@@ -12091,6 +12623,17 @@ enum Transaction_status {
   SUCCESSFUL
   FAILED
   EXPIRED
+}
+
+enum Transaction_type {
+  PURCHASE
+  REFERRAL_COMMISSION
+  WALLET_CREDIT
+}
+
+enum Transaction_paymentMethod {
+  FAPSHI
+  SYSTEM_CREDIT
 }
 
 type Transactions {
@@ -12110,27 +12653,28 @@ type Transactions {
 input Transaction_where {
   title: Transaction_title_operator
   transId: Transaction_transId_operator
-  link: Transaction_link_operator
+  externalId: Transaction_externalId_operator
   user: Transaction_user_operator
   amount: Transaction_amount_operator
   status: Transaction_status_operator
+  type: Transaction_type_operator
   paymentMethod: Transaction_paymentMethod_operator
-  createdAt: Transaction_createdAt_operator
   transactionDate: Transaction_transactionDate_operator
+  fromAccount: Transaction_fromAccount_operator
+  toAccount: Transaction_toAccount_operator
   updatedAt: Transaction_updatedAt_operator
+  createdAt: Transaction_createdAt_operator
   id: Transaction_id_operator
   AND: [Transaction_where_and]
   OR: [Transaction_where_or]
 }
 
 input Transaction_title_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
+  equals: JSON
+  not_equals: JSON
+  in: [JSON]
+  not_in: [JSON]
+  all: [JSON]
   exists: Boolean
 }
 
@@ -12145,7 +12689,7 @@ input Transaction_transId_operator {
   exists: Boolean
 }
 
-input Transaction_link_operator {
+input Transaction_externalId_operator {
   equals: String
   not_equals: String
   like: String
@@ -12179,7 +12723,6 @@ input Transaction_status_operator {
   in: [Transaction_status_Input]
   not_in: [Transaction_status_Input]
   all: [Transaction_status_Input]
-  exists: Boolean
 }
 
 enum Transaction_status_Input {
@@ -12190,26 +12733,31 @@ enum Transaction_status_Input {
   EXPIRED
 }
 
-input Transaction_paymentMethod_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-  exists: Boolean
+input Transaction_type_operator {
+  equals: Transaction_type_Input
+  not_equals: Transaction_type_Input
+  in: [Transaction_type_Input]
+  not_in: [Transaction_type_Input]
+  all: [Transaction_type_Input]
 }
 
-input Transaction_createdAt_operator {
-  equals: DateTime
-  not_equals: DateTime
-  greater_than_equal: DateTime
-  greater_than: DateTime
-  less_than_equal: DateTime
-  less_than: DateTime
-  like: DateTime
-  exists: Boolean
+enum Transaction_type_Input {
+  PURCHASE
+  REFERRAL_COMMISSION
+  WALLET_CREDIT
+}
+
+input Transaction_paymentMethod_operator {
+  equals: Transaction_paymentMethod_Input
+  not_equals: Transaction_paymentMethod_Input
+  in: [Transaction_paymentMethod_Input]
+  not_in: [Transaction_paymentMethod_Input]
+  all: [Transaction_paymentMethod_Input]
+}
+
+enum Transaction_paymentMethod_Input {
+  FAPSHI
+  SYSTEM_CREDIT
 }
 
 input Transaction_transactionDate_operator {
@@ -12223,7 +12771,38 @@ input Transaction_transactionDate_operator {
   exists: Boolean
 }
 
+input Transaction_fromAccount_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+}
+
+input Transaction_toAccount_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+}
+
 input Transaction_updatedAt_operator {
+  equals: DateTime
+  not_equals: DateTime
+  greater_than_equal: DateTime
+  greater_than: DateTime
+  less_than_equal: DateTime
+  less_than: DateTime
+  like: DateTime
+  exists: Boolean
+}
+
+input Transaction_createdAt_operator {
   equals: DateTime
   not_equals: DateTime
   greater_than_equal: DateTime
@@ -12248,14 +12827,17 @@ input Transaction_id_operator {
 input Transaction_where_and {
   title: Transaction_title_operator
   transId: Transaction_transId_operator
-  link: Transaction_link_operator
+  externalId: Transaction_externalId_operator
   user: Transaction_user_operator
   amount: Transaction_amount_operator
   status: Transaction_status_operator
+  type: Transaction_type_operator
   paymentMethod: Transaction_paymentMethod_operator
-  createdAt: Transaction_createdAt_operator
   transactionDate: Transaction_transactionDate_operator
+  fromAccount: Transaction_fromAccount_operator
+  toAccount: Transaction_toAccount_operator
   updatedAt: Transaction_updatedAt_operator
+  createdAt: Transaction_createdAt_operator
   id: Transaction_id_operator
   AND: [Transaction_where_and]
   OR: [Transaction_where_or]
@@ -12264,14 +12846,17 @@ input Transaction_where_and {
 input Transaction_where_or {
   title: Transaction_title_operator
   transId: Transaction_transId_operator
-  link: Transaction_link_operator
+  externalId: Transaction_externalId_operator
   user: Transaction_user_operator
   amount: Transaction_amount_operator
   status: Transaction_status_operator
+  type: Transaction_type_operator
   paymentMethod: Transaction_paymentMethod_operator
-  createdAt: Transaction_createdAt_operator
   transactionDate: Transaction_transactionDate_operator
+  fromAccount: Transaction_fromAccount_operator
+  toAccount: Transaction_toAccount_operator
   updatedAt: Transaction_updatedAt_operator
+  createdAt: Transaction_createdAt_operator
   id: Transaction_id_operator
   AND: [Transaction_where_and]
   OR: [Transaction_where_or]
@@ -12288,14 +12873,17 @@ type transactionsDocAccess {
 type TransactionsDocAccessFields {
   title: TransactionsDocAccessFields_title
   transId: TransactionsDocAccessFields_transId
-  link: TransactionsDocAccessFields_link
+  externalId: TransactionsDocAccessFields_externalId
   user: TransactionsDocAccessFields_user
   amount: TransactionsDocAccessFields_amount
   status: TransactionsDocAccessFields_status
+  type: TransactionsDocAccessFields_type
   paymentMethod: TransactionsDocAccessFields_paymentMethod
-  createdAt: TransactionsDocAccessFields_createdAt
   transactionDate: TransactionsDocAccessFields_transactionDate
+  fromAccount: TransactionsDocAccessFields_fromAccount
+  toAccount: TransactionsDocAccessFields_toAccount
   updatedAt: TransactionsDocAccessFields_updatedAt
+  createdAt: TransactionsDocAccessFields_createdAt
 }
 
 type TransactionsDocAccessFields_title {
@@ -12344,26 +12932,26 @@ type TransactionsDocAccessFields_transId_Delete {
   permission: Boolean!
 }
 
-type TransactionsDocAccessFields_link {
-  create: TransactionsDocAccessFields_link_Create
-  read: TransactionsDocAccessFields_link_Read
-  update: TransactionsDocAccessFields_link_Update
-  delete: TransactionsDocAccessFields_link_Delete
+type TransactionsDocAccessFields_externalId {
+  create: TransactionsDocAccessFields_externalId_Create
+  read: TransactionsDocAccessFields_externalId_Read
+  update: TransactionsDocAccessFields_externalId_Update
+  delete: TransactionsDocAccessFields_externalId_Delete
 }
 
-type TransactionsDocAccessFields_link_Create {
+type TransactionsDocAccessFields_externalId_Create {
   permission: Boolean!
 }
 
-type TransactionsDocAccessFields_link_Read {
+type TransactionsDocAccessFields_externalId_Read {
   permission: Boolean!
 }
 
-type TransactionsDocAccessFields_link_Update {
+type TransactionsDocAccessFields_externalId_Update {
   permission: Boolean!
 }
 
-type TransactionsDocAccessFields_link_Delete {
+type TransactionsDocAccessFields_externalId_Delete {
   permission: Boolean!
 }
 
@@ -12436,6 +13024,29 @@ type TransactionsDocAccessFields_status_Delete {
   permission: Boolean!
 }
 
+type TransactionsDocAccessFields_type {
+  create: TransactionsDocAccessFields_type_Create
+  read: TransactionsDocAccessFields_type_Read
+  update: TransactionsDocAccessFields_type_Update
+  delete: TransactionsDocAccessFields_type_Delete
+}
+
+type TransactionsDocAccessFields_type_Create {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_type_Read {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_type_Update {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_type_Delete {
+  permission: Boolean!
+}
+
 type TransactionsDocAccessFields_paymentMethod {
   create: TransactionsDocAccessFields_paymentMethod_Create
   read: TransactionsDocAccessFields_paymentMethod_Read
@@ -12456,29 +13067,6 @@ type TransactionsDocAccessFields_paymentMethod_Update {
 }
 
 type TransactionsDocAccessFields_paymentMethod_Delete {
-  permission: Boolean!
-}
-
-type TransactionsDocAccessFields_createdAt {
-  create: TransactionsDocAccessFields_createdAt_Create
-  read: TransactionsDocAccessFields_createdAt_Read
-  update: TransactionsDocAccessFields_createdAt_Update
-  delete: TransactionsDocAccessFields_createdAt_Delete
-}
-
-type TransactionsDocAccessFields_createdAt_Create {
-  permission: Boolean!
-}
-
-type TransactionsDocAccessFields_createdAt_Read {
-  permission: Boolean!
-}
-
-type TransactionsDocAccessFields_createdAt_Update {
-  permission: Boolean!
-}
-
-type TransactionsDocAccessFields_createdAt_Delete {
   permission: Boolean!
 }
 
@@ -12505,6 +13093,52 @@ type TransactionsDocAccessFields_transactionDate_Delete {
   permission: Boolean!
 }
 
+type TransactionsDocAccessFields_fromAccount {
+  create: TransactionsDocAccessFields_fromAccount_Create
+  read: TransactionsDocAccessFields_fromAccount_Read
+  update: TransactionsDocAccessFields_fromAccount_Update
+  delete: TransactionsDocAccessFields_fromAccount_Delete
+}
+
+type TransactionsDocAccessFields_fromAccount_Create {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_fromAccount_Read {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_fromAccount_Update {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_fromAccount_Delete {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_toAccount {
+  create: TransactionsDocAccessFields_toAccount_Create
+  read: TransactionsDocAccessFields_toAccount_Read
+  update: TransactionsDocAccessFields_toAccount_Update
+  delete: TransactionsDocAccessFields_toAccount_Delete
+}
+
+type TransactionsDocAccessFields_toAccount_Create {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_toAccount_Read {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_toAccount_Update {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_toAccount_Delete {
+  permission: Boolean!
+}
+
 type TransactionsDocAccessFields_updatedAt {
   create: TransactionsDocAccessFields_updatedAt_Create
   read: TransactionsDocAccessFields_updatedAt_Read
@@ -12525,6 +13159,29 @@ type TransactionsDocAccessFields_updatedAt_Update {
 }
 
 type TransactionsDocAccessFields_updatedAt_Delete {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_createdAt {
+  create: TransactionsDocAccessFields_createdAt_Create
+  read: TransactionsDocAccessFields_createdAt_Read
+  update: TransactionsDocAccessFields_createdAt_Update
+  delete: TransactionsDocAccessFields_createdAt_Delete
+}
+
+type TransactionsDocAccessFields_createdAt_Create {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_createdAt_Read {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_createdAt_Update {
+  permission: Boolean!
+}
+
+type TransactionsDocAccessFields_createdAt_Delete {
   permission: Boolean!
 }
 
@@ -13192,6 +13849,7 @@ type PayloadPreferencesDeleteDocAccess {
 type Settings {
   postsPage: Page
   projectsPage: Page
+  baseSubscription: Subscription
   logoLight(where: Settings_LogoLight_where): Media
   logoDark(where: Settings_LogoDark_where): Media
   contactInformation: Settings_ContactInformation
@@ -13707,6 +14365,7 @@ type settingsDocAccess {
 type SettingsDocAccessFields {
   postsPage: SettingsDocAccessFields_postsPage
   projectsPage: SettingsDocAccessFields_projectsPage
+  baseSubscription: SettingsDocAccessFields_baseSubscription
   logoLight: SettingsDocAccessFields_logoLight
   logoDark: SettingsDocAccessFields_logoDark
   contactInformation: SettingsDocAccessFields_contactInformation
@@ -13758,6 +14417,29 @@ type SettingsDocAccessFields_projectsPage_Update {
 }
 
 type SettingsDocAccessFields_projectsPage_Delete {
+  permission: Boolean!
+}
+
+type SettingsDocAccessFields_baseSubscription {
+  create: SettingsDocAccessFields_baseSubscription_Create
+  read: SettingsDocAccessFields_baseSubscription_Read
+  update: SettingsDocAccessFields_baseSubscription_Update
+  delete: SettingsDocAccessFields_baseSubscription_Delete
+}
+
+type SettingsDocAccessFields_baseSubscription_Create {
+  permission: Boolean!
+}
+
+type SettingsDocAccessFields_baseSubscription_Read {
+  permission: Boolean!
+}
+
+type SettingsDocAccessFields_baseSubscription_Update {
+  permission: Boolean!
+}
+
+type SettingsDocAccessFields_baseSubscription_Delete {
   permission: Boolean!
 }
 
@@ -17043,11 +17725,13 @@ type subscriptionsAccess {
 type SubscriptionsFields {
   title: SubscriptionsFields_title
   description: SubscriptionsFields_description
+  purchaseMessage: SubscriptionsFields_purchaseMessage
   price: SubscriptionsFields_price
   coupons: SubscriptionsFields_coupons
   referralAmount: SubscriptionsFields_referralAmount
   endOfPromotion: SubscriptionsFields_endOfPromotion
   courses: SubscriptionsFields_courses
+  slug: SubscriptionsFields_slug
   meta: SubscriptionsFields_meta
   updatedAt: SubscriptionsFields_updatedAt
   createdAt: SubscriptionsFields_createdAt
@@ -17097,6 +17781,29 @@ type SubscriptionsFields_description_Update {
 }
 
 type SubscriptionsFields_description_Delete {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_purchaseMessage {
+  create: SubscriptionsFields_purchaseMessage_Create
+  read: SubscriptionsFields_purchaseMessage_Read
+  update: SubscriptionsFields_purchaseMessage_Update
+  delete: SubscriptionsFields_purchaseMessage_Delete
+}
+
+type SubscriptionsFields_purchaseMessage_Create {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_purchaseMessage_Read {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_purchaseMessage_Update {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_purchaseMessage_Delete {
   permission: Boolean!
 }
 
@@ -17312,6 +18019,29 @@ type SubscriptionsFields_courses_Update {
 }
 
 type SubscriptionsFields_courses_Delete {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_slug {
+  create: SubscriptionsFields_slug_Create
+  read: SubscriptionsFields_slug_Read
+  update: SubscriptionsFields_slug_Update
+  delete: SubscriptionsFields_slug_Delete
+}
+
+type SubscriptionsFields_slug_Create {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_slug_Read {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_slug_Update {
+  permission: Boolean!
+}
+
+type SubscriptionsFields_slug_Delete {
   permission: Boolean!
 }
 
@@ -17569,6 +18299,8 @@ type CoursesFields {
   title: CoursesFields_title
   description: CoursesFields_description
   videoUrl: CoursesFields_videoUrl
+  courseImage: CoursesFields_courseImage
+  slug: CoursesFields_slug
   meta: CoursesFields_meta
   updatedAt: CoursesFields_updatedAt
   createdAt: CoursesFields_createdAt
@@ -17641,6 +18373,52 @@ type CoursesFields_videoUrl_Update {
 }
 
 type CoursesFields_videoUrl_Delete {
+  permission: Boolean!
+}
+
+type CoursesFields_courseImage {
+  create: CoursesFields_courseImage_Create
+  read: CoursesFields_courseImage_Read
+  update: CoursesFields_courseImage_Update
+  delete: CoursesFields_courseImage_Delete
+}
+
+type CoursesFields_courseImage_Create {
+  permission: Boolean!
+}
+
+type CoursesFields_courseImage_Read {
+  permission: Boolean!
+}
+
+type CoursesFields_courseImage_Update {
+  permission: Boolean!
+}
+
+type CoursesFields_courseImage_Delete {
+  permission: Boolean!
+}
+
+type CoursesFields_slug {
+  create: CoursesFields_slug_Create
+  read: CoursesFields_slug_Read
+  update: CoursesFields_slug_Update
+  delete: CoursesFields_slug_Delete
+}
+
+type CoursesFields_slug_Create {
+  permission: Boolean!
+}
+
+type CoursesFields_slug_Read {
+  permission: Boolean!
+}
+
+type CoursesFields_slug_Update {
+  permission: Boolean!
+}
+
+type CoursesFields_slug_Delete {
   permission: Boolean!
 }
 
@@ -19024,14 +19802,17 @@ type transactionsAccess {
 type TransactionsFields {
   title: TransactionsFields_title
   transId: TransactionsFields_transId
-  link: TransactionsFields_link
+  externalId: TransactionsFields_externalId
   user: TransactionsFields_user
   amount: TransactionsFields_amount
   status: TransactionsFields_status
+  type: TransactionsFields_type
   paymentMethod: TransactionsFields_paymentMethod
-  createdAt: TransactionsFields_createdAt
   transactionDate: TransactionsFields_transactionDate
+  fromAccount: TransactionsFields_fromAccount
+  toAccount: TransactionsFields_toAccount
   updatedAt: TransactionsFields_updatedAt
+  createdAt: TransactionsFields_createdAt
 }
 
 type TransactionsFields_title {
@@ -19080,26 +19861,26 @@ type TransactionsFields_transId_Delete {
   permission: Boolean!
 }
 
-type TransactionsFields_link {
-  create: TransactionsFields_link_Create
-  read: TransactionsFields_link_Read
-  update: TransactionsFields_link_Update
-  delete: TransactionsFields_link_Delete
+type TransactionsFields_externalId {
+  create: TransactionsFields_externalId_Create
+  read: TransactionsFields_externalId_Read
+  update: TransactionsFields_externalId_Update
+  delete: TransactionsFields_externalId_Delete
 }
 
-type TransactionsFields_link_Create {
+type TransactionsFields_externalId_Create {
   permission: Boolean!
 }
 
-type TransactionsFields_link_Read {
+type TransactionsFields_externalId_Read {
   permission: Boolean!
 }
 
-type TransactionsFields_link_Update {
+type TransactionsFields_externalId_Update {
   permission: Boolean!
 }
 
-type TransactionsFields_link_Delete {
+type TransactionsFields_externalId_Delete {
   permission: Boolean!
 }
 
@@ -19172,6 +19953,29 @@ type TransactionsFields_status_Delete {
   permission: Boolean!
 }
 
+type TransactionsFields_type {
+  create: TransactionsFields_type_Create
+  read: TransactionsFields_type_Read
+  update: TransactionsFields_type_Update
+  delete: TransactionsFields_type_Delete
+}
+
+type TransactionsFields_type_Create {
+  permission: Boolean!
+}
+
+type TransactionsFields_type_Read {
+  permission: Boolean!
+}
+
+type TransactionsFields_type_Update {
+  permission: Boolean!
+}
+
+type TransactionsFields_type_Delete {
+  permission: Boolean!
+}
+
 type TransactionsFields_paymentMethod {
   create: TransactionsFields_paymentMethod_Create
   read: TransactionsFields_paymentMethod_Read
@@ -19192,29 +19996,6 @@ type TransactionsFields_paymentMethod_Update {
 }
 
 type TransactionsFields_paymentMethod_Delete {
-  permission: Boolean!
-}
-
-type TransactionsFields_createdAt {
-  create: TransactionsFields_createdAt_Create
-  read: TransactionsFields_createdAt_Read
-  update: TransactionsFields_createdAt_Update
-  delete: TransactionsFields_createdAt_Delete
-}
-
-type TransactionsFields_createdAt_Create {
-  permission: Boolean!
-}
-
-type TransactionsFields_createdAt_Read {
-  permission: Boolean!
-}
-
-type TransactionsFields_createdAt_Update {
-  permission: Boolean!
-}
-
-type TransactionsFields_createdAt_Delete {
   permission: Boolean!
 }
 
@@ -19241,6 +20022,52 @@ type TransactionsFields_transactionDate_Delete {
   permission: Boolean!
 }
 
+type TransactionsFields_fromAccount {
+  create: TransactionsFields_fromAccount_Create
+  read: TransactionsFields_fromAccount_Read
+  update: TransactionsFields_fromAccount_Update
+  delete: TransactionsFields_fromAccount_Delete
+}
+
+type TransactionsFields_fromAccount_Create {
+  permission: Boolean!
+}
+
+type TransactionsFields_fromAccount_Read {
+  permission: Boolean!
+}
+
+type TransactionsFields_fromAccount_Update {
+  permission: Boolean!
+}
+
+type TransactionsFields_fromAccount_Delete {
+  permission: Boolean!
+}
+
+type TransactionsFields_toAccount {
+  create: TransactionsFields_toAccount_Create
+  read: TransactionsFields_toAccount_Read
+  update: TransactionsFields_toAccount_Update
+  delete: TransactionsFields_toAccount_Delete
+}
+
+type TransactionsFields_toAccount_Create {
+  permission: Boolean!
+}
+
+type TransactionsFields_toAccount_Read {
+  permission: Boolean!
+}
+
+type TransactionsFields_toAccount_Update {
+  permission: Boolean!
+}
+
+type TransactionsFields_toAccount_Delete {
+  permission: Boolean!
+}
+
 type TransactionsFields_updatedAt {
   create: TransactionsFields_updatedAt_Create
   read: TransactionsFields_updatedAt_Read
@@ -19261,6 +20088,29 @@ type TransactionsFields_updatedAt_Update {
 }
 
 type TransactionsFields_updatedAt_Delete {
+  permission: Boolean!
+}
+
+type TransactionsFields_createdAt {
+  create: TransactionsFields_createdAt_Create
+  read: TransactionsFields_createdAt_Read
+  update: TransactionsFields_createdAt_Update
+  delete: TransactionsFields_createdAt_Delete
+}
+
+type TransactionsFields_createdAt_Create {
+  permission: Boolean!
+}
+
+type TransactionsFields_createdAt_Read {
+  permission: Boolean!
+}
+
+type TransactionsFields_createdAt_Update {
+  permission: Boolean!
+}
+
+type TransactionsFields_createdAt_Delete {
   permission: Boolean!
 }
 
@@ -19647,6 +20497,7 @@ type settingsAccess {
 type SettingsFields {
   postsPage: SettingsFields_postsPage
   projectsPage: SettingsFields_projectsPage
+  baseSubscription: SettingsFields_baseSubscription
   logoLight: SettingsFields_logoLight
   logoDark: SettingsFields_logoDark
   contactInformation: SettingsFields_contactInformation
@@ -19698,6 +20549,29 @@ type SettingsFields_projectsPage_Update {
 }
 
 type SettingsFields_projectsPage_Delete {
+  permission: Boolean!
+}
+
+type SettingsFields_baseSubscription {
+  create: SettingsFields_baseSubscription_Create
+  read: SettingsFields_baseSubscription_Read
+  update: SettingsFields_baseSubscription_Update
+  delete: SettingsFields_baseSubscription_Delete
+}
+
+type SettingsFields_baseSubscription_Create {
+  permission: Boolean!
+}
+
+type SettingsFields_baseSubscription_Read {
+  permission: Boolean!
+}
+
+type SettingsFields_baseSubscription_Update {
+  permission: Boolean!
+}
+
+type SettingsFields_baseSubscription_Delete {
   permission: Boolean!
 }
 
@@ -21021,11 +21895,13 @@ enum ProjectUpdate__status_MutationInput {
 input mutationSubscriptionInput {
   title: String!
   description: String
+  purchaseMessage: String
   price: Float
   coupons: [mutationSubscription_CouponsInput]
   referralAmount: Float
   endOfPromotion: String
   courses: [String]
+  slug: String
   meta: mutationSubscription_MetaInput
   updatedAt: String
   createdAt: String
@@ -21053,11 +21929,13 @@ enum Subscription__status_MutationInput {
 input mutationSubscriptionUpdateInput {
   title: String
   description: String
+  purchaseMessage: String
   price: Float
   coupons: [mutationSubscriptionUpdate_CouponsInput]
   referralAmount: Float
   endOfPromotion: String
   courses: [String]
+  slug: String
   meta: mutationSubscriptionUpdate_MetaInput
   updatedAt: String
   createdAt: String
@@ -21086,6 +21964,8 @@ input mutationCourseInput {
   title: String!
   description: JSON!
   videoUrl: String!
+  courseImage: String
+  slug: String
   meta: mutationCourse_MetaInput
   updatedAt: String
   createdAt: String
@@ -21107,6 +21987,8 @@ input mutationCourseUpdateInput {
   title: String
   description: JSON
   videoUrl: String
+  courseImage: String
+  slug: String
   meta: mutationCourseUpdate_MetaInput
   updatedAt: String
   createdAt: String
@@ -21299,15 +22181,17 @@ enum CommentUpdate__status_MutationInput {
 input mutationTransactionInput {
   title: String
   transId: String
-  link: String
+  externalId: String
   user: String
   amount: Float!
-  status: Transaction_status_MutationInput
-  paymentMethod: String
-  createdAt: String
+  status: Transaction_status_MutationInput!
+  type: Transaction_type_MutationInput!
+  paymentMethod: Transaction_paymentMethod_MutationInput!
   transactionDate: String
-  redirectUrl: String
+  fromAccount: String!
+  toAccount: String!
   updatedAt: String
+  createdAt: String
 }
 
 enum Transaction_status_MutationInput {
@@ -21318,18 +22202,31 @@ enum Transaction_status_MutationInput {
   EXPIRED
 }
 
+enum Transaction_type_MutationInput {
+  PURCHASE
+  REFERRAL_COMMISSION
+  WALLET_CREDIT
+}
+
+enum Transaction_paymentMethod_MutationInput {
+  FAPSHI
+  SYSTEM_CREDIT
+}
+
 input mutationTransactionUpdateInput {
   title: String
   transId: String
-  link: String
+  externalId: String
   user: String
   amount: Float
   status: TransactionUpdate_status_MutationInput
-  paymentMethod: String
-  createdAt: String
+  type: TransactionUpdate_type_MutationInput
+  paymentMethod: TransactionUpdate_paymentMethod_MutationInput
   transactionDate: String
-  redirectUrl: String
+  fromAccount: String
+  toAccount: String
   updatedAt: String
+  createdAt: String
 }
 
 enum TransactionUpdate_status_MutationInput {
@@ -21338,6 +22235,17 @@ enum TransactionUpdate_status_MutationInput {
   SUCCESSFUL
   FAILED
   EXPIRED
+}
+
+enum TransactionUpdate_type_MutationInput {
+  PURCHASE
+  REFERRAL_COMMISSION
+  WALLET_CREDIT
+}
+
+enum TransactionUpdate_paymentMethod_MutationInput {
+  FAPSHI
+  SYSTEM_CREDIT
 }
 
 input mutationRedirectInput {
@@ -21423,6 +22331,7 @@ enum PayloadPreferenceUpdate_UserRelationshipInputRelationTo {
 input mutationSettingsInput {
   postsPage: String
   projectsPage: String
+  baseSubscription: String
   logoLight: String
   logoDark: String
   contactInformation: mutationSettings_ContactInformationInput

@@ -45,3 +45,37 @@ export const profileNavItems = [
 ]
 
 export const noHeaderFooterUrls = ['/create-account', '/login', '/recover-password']
+
+export interface CreatePaymentLinkRequest {
+  amount: number
+  email: string
+  userId: string
+  message: string
+  redirectUrlBase: string
+  subscriptionId: string
+}
+
+export interface CreatePaymentLinkResponse {
+  message: string
+  link: string
+  transId: string
+}
+
+export interface PaymentStatusResponse {
+  message: string
+  status: string
+  transId: string
+  amount: number
+  payerName: string
+  medium: string
+  serviceName: string
+  transType: string
+  revenue: number
+  email: string
+  redirectUrl: string
+  userId: string
+  webhook: string | null
+  financialTransId: string
+  dateInitiated: string
+  dateConfirmed: string
+}

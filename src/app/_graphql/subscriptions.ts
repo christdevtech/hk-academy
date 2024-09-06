@@ -1,3 +1,5 @@
+import { COURSE_FIELDS } from './courses'
+
 export const SUBSCRIPTIONS = `
   query Subscriptions {
     Subscriptions(limit: 300){
@@ -11,17 +13,21 @@ export const SUBSCRIPTIONS = `
 export const SUBSCRIPTION = `
   query Subscription($slug: string, $draft: boolean){
     Subscriptions(where: {slug:{equals:$slug}}, limit:1, draft: $draft) {
-      docs{
+      docs{       
         id
         title
         description
+        purchaseMessage
+        price
+        coupons{
+          code
+          value
+          expiryDate
+        }
         referralAmount
         endOfPromotion
-        courses {
-          id
-          title
-          description
-          videoUrl
+        courses{
+          ${COURSE_FIELDS}
         }
       }
     }
