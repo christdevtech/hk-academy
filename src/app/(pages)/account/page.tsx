@@ -33,7 +33,7 @@ export default async function Account() {
 
   let subscriptions: Subscription[] = []
   if (user.subscriptions.length > 0) {
-    const subscriptionIdArray = user.subscriptions.map(subscription => {
+    const subscriptionIdArray = user.subscriptions?.map(subscription => {
       return typeof subscription === 'string' ? subscription : subscription.id
     })
     const subscriptionDocs = await payload.find({
@@ -43,7 +43,7 @@ export default async function Account() {
       },
     })
 
-    subscriptions = subscriptionDocs.docs.filter(isSubscription) as unknown as Subscription[]
+    subscriptions = subscriptionDocs.docs?.filter(isSubscription) as unknown as Subscription[]
   }
 
   return (
@@ -76,7 +76,7 @@ export default async function Account() {
       <Gutter className={classes.account}>
         <AccountForm />
         <HR />
-        {subscriptions.length > 0 && <h2>Subscriptions</h2>}
+        {subscriptions?.length > 0 && <h2>Subscriptions</h2>}
 
         {subscriptions?.length > 0 ? (
           subscriptions.map((subscription, index) => {
