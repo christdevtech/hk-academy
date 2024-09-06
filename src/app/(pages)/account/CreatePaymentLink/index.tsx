@@ -1,14 +1,19 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import { useAuth } from '../../../_providers/Auth'
 import { fetchSettings } from '../../../_api/fetchGlobals'
 import type { Subscription, User } from '../../../../payload/payload-types'
 import { CreatePaymentLinkRequest, CreatePaymentLinkResponse } from '../../../constants'
 import axios from 'axios'
 import { Button } from '../../../_components/Button'
+// import { useRouter } from 'next/router'
 
 const CreatePaymentLink = (user: User) => {
+  // const router = useRouter()
+  const [clicked, setClicked] = useState(false)
+
   const onCreatePaymentLink = async () => {
+    setClicked(true)
     const settings = await fetchSettings()
     // console.log(settings.baseSubscription)
     const baseSubscription = settings.baseSubscription as Subscription
@@ -33,14 +38,19 @@ const CreatePaymentLink = (user: User) => {
     try {
       // console.log(`Attempting to post ${data}`)
       const response = await axios.request(config)
+      window.open(`${response.data.link}`)
+      // router.push(response.data.link)
+      setClicked(false)
       // console.log(response.data)
     } catch (error) {
       // console.log(error)
+      setClicked(false)
     }
   }
   return (
     <div>
       <Button
+        disabled={clicked}
         appearance="secondary"
         label="Subscribe Now!"
         onClick={() => onCreatePaymentLink()}
