@@ -77,16 +77,16 @@ export default buildConfig({
   // database-adapter-config-end
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL,
   collections: [
+    Users,
+    Media,
+    Subscriptions,
+    Courses,
+    Transactions,
     Pages,
     Posts,
     Projects,
-    Subscriptions,
-    Courses,
-    Media,
     Categories,
-    Users,
     Comments,
-    Transactions,
   ],
   globals: [Settings, Header, Footer],
   typescript: {

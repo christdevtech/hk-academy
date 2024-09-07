@@ -32,9 +32,9 @@ export default async function Account() {
   }
 
   let subscriptions: Subscription[] = []
-  if (user.subscriptions.length > 0) {
+  if (user?.subscriptions?.length > 0) {
     const subscriptionIdArray = user.subscriptions?.map(subscription => {
-      return typeof subscription === 'string' ? subscription : subscription.id
+      return typeof subscription === 'string' ? subscription : subscription?.id
     })
     const subscriptionDocs = await payload.find({
       collection: 'subscriptions',

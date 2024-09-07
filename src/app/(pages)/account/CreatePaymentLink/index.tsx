@@ -11,6 +11,7 @@ import { Button } from '../../../_components/Button'
 const CreatePaymentLink = (user: User) => {
   // const router = useRouter()
   const [clicked, setClicked] = useState(false)
+  const [link, setLink] = useState('')
 
   const onCreatePaymentLink = async () => {
     setClicked(true)
@@ -50,9 +51,8 @@ const CreatePaymentLink = (user: User) => {
   return (
     <div>
       <Button
-        disabled={clicked}
         appearance="secondary"
-        label="Subscribe Now!"
+        label={clicked ? 'Processing' : 'Subscribe Now!'}
         onClick={() => onCreatePaymentLink()}
       ></Button>
     </div>

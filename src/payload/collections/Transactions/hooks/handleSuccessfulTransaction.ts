@@ -15,7 +15,7 @@ export const handleSuccessfulTransaction: CollectionAfterChangeHook = async ({
   // Type guard to ensure we're working with a Transaction type
   const transaction = doc as Transaction
   const previousTransaction = previousDoc as Transaction
-
+  const user = typeof transaction.user !== 'string' && transaction.user
   // Check if the status has just changed to 'SUCCESSFUL' and type is 'PURCHASE'
   if (
     previousTransaction.status !== 'SUCCESSFUL' &&
@@ -24,7 +24,6 @@ export const handleSuccessfulTransaction: CollectionAfterChangeHook = async ({
   ) {
     // const { user: userId, title: subscription } = transaction
 
-    const user = typeof transaction.user !== 'string' && transaction.user
     const subscription = typeof transaction.title !== 'string' && transaction.title
 
     try {
@@ -58,31 +57,28 @@ export const handleSuccessfulTransaction: CollectionAfterChangeHook = async ({
 
         // Create a new transaction for referral commission if applicable
         if (user.referredBy) {
-          const referrer = typeof user.referredBy !== 'string' && user.referredBy
+          const referrerId =
+            typeof user.referredBy === 'string' ? user.referredBy : user.referredBy.id
 
           // Get the referral commission from the subscription's referral amount
-          const commissionAmount = typeof subscription !== 'string' && subscription.referralAmount
+          const referralAmount = typeof subscription !== 'string' && subscription.referralAmount
 
           await payload.create({
             collection: 'transactions',
             data: {
-              user: referrer,
-              amount: commissionAmount,
+              user: referrerId,
+              amount: referralAmount,
               status: 'SUCCESSFUL',
               type: 'REFERRAL_COMMISSION',
               paymentMethod: 'SYSTEM_CREDIT',
               transactionDate: new Date().toISOString(),
               fromAccount: 'SYSTEM',
-              toAccount: referrer.name,
+              toAccount: referrerId,
             },
           })
-          await payload.update({
-            collection: 'users',
-            id: referrer.id,
-            data: {
-              accountBalance: (referrer.accountBalance || 0) + commissionAmount,
-            },
-          })
+        } else {
+          payload.logger.info(`User with ID ${user.id} does not have a referrer.`)
+          //send the money into the company account
         }
       } else {
         payload.logger.info(`User with ID ${user.id} not found.`)
@@ -90,6 +86,19 @@ export const handleSuccessfulTransaction: CollectionAfterChangeHook = async ({
     } catch (error) {
       payload.logger.error(`Error handling successful transaction: ${error.message}`)
     }
+  } else if (transaction.status === 'SUCCESSFUL' && transaction.type === 'REFERRAL_COMMISSION') {
+    const oldAccountBalance = user.accountBalance || 0
+    const oldTotalReferralBalance = user.referralTotal || 0
+    const updatedAccountBalance = oldAccountBalance + transaction.amount
+    const updatedTotalReferralBalance = oldTotalReferralBalance + transaction.amount
+    await payload.update({
+      collection: 'users',
+      id: user.id,
+      data: {
+        accountBalance: updatedAccountBalance,
+        referralTotal: updatedTotalReferralBalance,
+      },
+    })
   }
 
   return doc
