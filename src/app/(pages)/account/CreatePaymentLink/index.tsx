@@ -6,10 +6,10 @@ import type { Subscription, User } from '../../../../payload/payload-types'
 import { CreatePaymentLinkRequest, CreatePaymentLinkResponse } from '../../../constants'
 import axios from 'axios'
 import { Button } from '../../../_components/Button'
-// import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 
 const CreatePaymentLink = (user: User) => {
-  // const router = useRouter()
+  const router = useRouter()
   const [clicked, setClicked] = useState(false)
   const [link, setLink] = useState('')
 
@@ -39,9 +39,9 @@ const CreatePaymentLink = (user: User) => {
     try {
       // console.log(`Attempting to post ${data}`)
       const response = await axios.request(config)
-      window.open(`${response.data.link}`)
-      // router.push(response.data.link)
-      setClicked(false)
+      // window.open(`${response.data.link}`)
+      router.push(response.data.link)
+
       // console.log(response.data)
     } catch (error) {
       // console.log(error)
@@ -52,7 +52,7 @@ const CreatePaymentLink = (user: User) => {
     <div>
       <Button
         appearance="secondary"
-        label={clicked ? 'Processing' : 'Subscribe Now!'}
+        label={clicked ? 'Processing...' : 'Subscribe Now!'}
         onClick={() => onCreatePaymentLink()}
       ></Button>
     </div>
