@@ -122,10 +122,11 @@ export default async function Account() {
         <CopyBox
           textToCopy={`${process.env.PAYLOAD_PUBLIC_SERVER_URL}/referral/${user.referralCode}`}
         />
-        <p>
-          This is where you will see the statistics of your referrals and how much you have made
-          from them.
-        </p>
+        <div className={classes.flex}>
+          <p>Account Balance: {user.accountBalance} FCFA</p>
+          <p>Total Amount Earned: {user.referralTotal} FCFA</p>
+        </div>
+
         <div>
           <h4>Number of Referred Users: {user?.referredUsers?.length || 0}</h4>
         </div>

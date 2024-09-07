@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload/types'
 import { admins } from '../../access/admins'
-import { handleSuccessfulTransaction } from './hooks/handleSuccessfulTransaction'
+import { handleSuccessfulPayment } from './hooks/handleSuccessfulPayment'
+import { handleCommissionPayment } from './hooks/handleCommisionPament'
 // import { processTransactionType } from './hooks/processTransactionType'
 
 const Transactions: CollectionConfig = {
@@ -16,7 +17,7 @@ const Transactions: CollectionConfig = {
     delete: admins,
   },
   hooks: {
-    afterChange: [handleSuccessfulTransaction],
+    afterChange: [handleSuccessfulPayment, handleCommissionPayment],
   },
   fields: [
     {

@@ -66,6 +66,16 @@
        border-radius: calc(var(--base) / 3);
     }
   }
+}
 
+.flex{
+  display: flex;
+  gap: var(--base);
 
+  *{
+    padding: 10px 30px;
+    background-color: var(--theme-elevation-100);
+    font-weight: 700;
+    border-radius:6px;
+  }
 }

@@ -2,7 +2,7 @@ import payload from 'payload'
 import type { CollectionAfterChangeHook } from 'payload/types'
 import type { Transaction, User, Subscription } from '../../../payload-types'
 
-export const handleSuccessfulTransaction: CollectionAfterChangeHook = async ({
+export const handleSuccessfulPayment: CollectionAfterChangeHook = async ({
   doc,
   previousDoc,
   operation,
@@ -27,16 +27,7 @@ export const handleSuccessfulTransaction: CollectionAfterChangeHook = async ({
     const subscription = typeof transaction.title !== 'string' && transaction.title
 
     try {
-      // Fetch the user data
-      // const userResult = await payload.find({
-      //   collection: 'users',
-      //   where: { id: { equals: user.id } },
-      //   limit: 1, // Limit to 1 to ensure we only deal with one user
-      // })
-
       if (user) {
-        // const user: User = userResult[0]
-
         // Update user's subscriptions
         const oldSubscriptions = user.subscriptions
           ? user.subscriptions.map(subs => typeof subs !== 'string' && subs.id)
@@ -86,19 +77,6 @@ export const handleSuccessfulTransaction: CollectionAfterChangeHook = async ({
     } catch (error) {
       payload.logger.error(`Error handling successful transaction: ${error.message}`)
     }
-  } else if (transaction.status === 'SUCCESSFUL' && transaction.type === 'REFERRAL_COMMISSION') {
-    const oldAccountBalance = user.accountBalance || 0
-    const oldTotalReferralBalance = user.referralTotal || 0
-    const updatedAccountBalance = oldAccountBalance + transaction.amount
-    const updatedTotalReferralBalance = oldTotalReferralBalance + transaction.amount
-    await payload.update({
-      collection: 'users',
-      id: user.id,
-      data: {
-        accountBalance: updatedAccountBalance,
-        referralTotal: updatedTotalReferralBalance,
-      },
-    })
   }
 
   return doc
