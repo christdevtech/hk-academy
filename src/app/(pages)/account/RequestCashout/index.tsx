@@ -16,21 +16,21 @@ type cashoutRequest = {
 }
 const RequestCashout = ({ user }: { user: User }) => {
   const [isLoading, setIsLoading] = useState(false)
-
-  if (user && user.accountBalance < 3000) {
-    return null
-  }
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm()
 
+  if (user && user.accountBalance < 3000) {
+    return null
+  }
+
   const createCashout = async (data: cashoutRequest) => {
     setIsLoading(true)
     data.amount = Number(data.amount)
     data.userId = user.id
-    console.log(data)
+    // console.log(data)
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -44,7 +44,7 @@ const RequestCashout = ({ user }: { user: User }) => {
       alert(response.data.message)
       setIsLoading(false)
     } catch (error) {
-      console.log(error.response)
+      alert(error.response.data.message)
       setIsLoading(false)
     }
   }
