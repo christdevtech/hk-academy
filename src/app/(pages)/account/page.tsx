@@ -1,8 +1,5 @@
 import React, { Fragment } from 'react'
 import { Metadata } from 'next'
-import Link from 'next/link'
-
-import { fetchComments } from '../../_api/fetchComments'
 import { Button } from '../../_components/Button'
 import { Gutter } from '../../_components/Gutter'
 import { HR } from '../../_components/HR'
@@ -19,6 +16,9 @@ import RichText from '../../_components/RichText'
 import payload from 'payload'
 import { Media } from '../../_components/Media'
 import CreatePaymentLink from './CreatePaymentLink'
+import { fetchSettings } from '../../_api/fetchGlobals'
+import ApprovePayout from './ApprovePayout'
+import RequestCashout from './RequestCashout'
 
 export default async function Account() {
   const { user } = await getMeUser({
@@ -26,6 +26,8 @@ export default async function Account() {
       'You must be logged in to access your account.',
     )}&redirect=${encodeURIComponent('/account')}`,
   })
+
+  const { hkWallet } = await fetchSettings()
 
   function isSubscription(doc: any): doc is Subscription {
     return doc && typeof doc.id === 'string' && typeof doc.title === 'string' // Add more checks as needed
@@ -127,36 +129,28 @@ export default async function Account() {
           <p>Total Amount Earned: {user.referralTotal} FCFA</p>
         </div>
 
+        {user.accountBalance >= 3000 && <RequestCashout user={user} />}
+
         <div>
           <h4>Number of Referred Users: {user?.referredUsers?.length || 0}</h4>
         </div>
-        {/* {comments?.length === 0 && <p>You have not made any comments yet.</p>}
-        {comments.length > 0 &&
-          comments?.map((com, index) => {
-            const { doc, comment, createdAt } = com
 
-            if (!comment) return null
-
-            return (
-              <Fragment key={index}>
-                <div className={classes.column}>
-                  <p className={classes.comment}>"{comment}"</p>
-                  <p className={classes.meta}>
-                    {'Posted '}
-                    {doc && typeof doc === 'object' && (
-                      <Fragment>
-                        {' to '}
-                        <Link href={`/posts/${doc?.slug}`}>{doc?.title || 'Untitled Post'}</Link>
-                      </Fragment>
-                    )}
-                    {createdAt && ` on ${formatDateTime(createdAt)}`}
-                  </p>
-                </div>
-                {index < comments.length - 1 && <HR />}
-              </Fragment>
-            )
-          })} */}
         <HR />
+        {user.roles.includes('admin') && (
+          <>
+            <div>
+              <h2>HK Wallet Info</h2>
+              <div className={classes.flex}>
+                <p>Balance: {hkWallet.balance} FCFA</p>
+                <p>Pending Payout: {hkWallet.pendingPayout} FCFA</p>
+                <p>Total Revenue: {hkWallet.total} FCFA</p>
+                <ApprovePayout />
+              </div>
+            </div>
+            <HR />
+          </>
+        )}
+
         <Button href="/logout" appearance="secondary" label="Log out" />
       </Gutter>
     </Fragment>

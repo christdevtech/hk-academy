@@ -16,6 +16,7 @@ query Transaction($slug: string){
       externalId
       title
       amount
+      revenue
       transactionDate
       user{
           id

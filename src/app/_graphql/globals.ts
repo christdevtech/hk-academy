@@ -62,6 +62,11 @@ export const SETTINGS = `
     logoDark{
       ${MEDIA_FIELDS}
     }
+    hkWallet{
+      balance
+      pendingPayout
+      total
+    }
     contactInformation{
       email
       phone

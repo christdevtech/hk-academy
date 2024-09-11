@@ -1,5 +1,5 @@
 import { CollectionAfterChangeHook } from 'payload/types'
-import { Transaction } from '../../../payload-types'
+import { Settings, Transaction } from '../../../payload-types'
 import payload from 'payload'
 
 export const handleCommissionPayment: CollectionAfterChangeHook = async ({ doc, operation }) => {
@@ -11,7 +11,7 @@ export const handleCommissionPayment: CollectionAfterChangeHook = async ({ doc, 
   ) {
     const referrer = typeof transaction.user !== 'string' && transaction.user
 
-    // payload.logger.info('Paying out comission')
+    payload.logger.info('Paying out comission')
 
     payload.update({
       collection: 'users',
@@ -19,6 +19,22 @@ export const handleCommissionPayment: CollectionAfterChangeHook = async ({ doc, 
       data: {
         referralTotal: referrer.referralTotal + transaction.amount,
         accountBalance: referrer.accountBalance + transaction.amount,
+      },
+    })
+
+    const settings = await payload.findGlobal({
+      slug: 'settings',
+    })
+
+    const hkWallet = settings.hkWallet as { balance: number; total: number }
+
+    await payload.updateGlobal({
+      slug: 'settings',
+      data: {
+        hkWallet: {
+          balance: hkWallet.balance - transaction.amount,
+          total: hkWallet.total - transaction.amount,
+        },
       },
     })
   } else {

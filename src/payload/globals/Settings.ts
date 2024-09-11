@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload/types'
+import { admins } from '../access/admins'
 
 export const Settings: GlobalConfig = {
   slug: 'settings',
@@ -43,6 +44,34 @@ export const Settings: GlobalConfig = {
       type: 'upload',
       relationTo: 'media',
       // required: true,
+    },
+    {
+      name: 'hkWallet',
+      type: 'group',
+
+      fields: [
+        {
+          name: 'balance',
+          type: 'number',
+          defaultValue: 0,
+        },
+        {
+          name: 'pendingPayout',
+          type: 'number',
+          defaultValue: 0,
+        },
+        {
+          name: 'total',
+          type: 'number',
+          defaultValue: 0,
+        },
+      ],
+    },
+    {
+      name: 'isPayoutLocked',
+      type: 'checkbox',
+      label: 'Lock Payout Process?',
+      defaultValue: false,
     },
     {
       name: 'contactInformation',

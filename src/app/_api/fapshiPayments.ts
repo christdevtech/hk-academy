@@ -4,6 +4,7 @@ import type { AxiosRequestConfig } from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import payload from 'payload'
 import type { CreatePaymentLinkResponse } from '../constants'
+import { Transaction, User } from '../../payload/payload-types'
 
 const router = Router()
 // Endpoint to create payment link
@@ -139,6 +140,7 @@ router.get('/payment-success/:externalId', async (req, res) => {
 
     const response = await axios.request(config)
     const updatedStatus = response.data.status
+    const revenue = response.data.revenue
 
     // Update the transaction status in the CMS
     await payload.update({
@@ -146,6 +148,7 @@ router.get('/payment-success/:externalId', async (req, res) => {
       id: transaction.docs[0].id,
       data: {
         status: updatedStatus,
+        revenue: revenue,
       },
     })
 
@@ -157,6 +160,190 @@ router.get('/payment-success/:externalId', async (req, res) => {
     }
   } catch (error: any) {
     res.status(500).json({ error: error.message })
+  }
+})
+
+// Endpoint to request Cashout payment
+router.post('/create-cashout', async (req, res) => {
+  try {
+    const { amount, phoneNumber, userId } = req.body
+    payload.logger.info(req.body)
+
+    const user = await payload.findByID({
+      collection: 'users',
+      id: userId,
+    })
+
+    const settings = await payload.findGlobal({
+      slug: 'settings',
+    })
+
+    const hkWallet = settings.hkWallet as {
+      balance: number
+      pendingPayout: number
+      total: number
+    }
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    // Check if user has sufficient balance
+    if (user.accountBalance < amount) {
+      return res.status(400).json({ message: 'Insufficient balance' })
+    }
+
+    await payload.update({
+      collection: 'users',
+      id: userId,
+      data: {
+        accountBalance: Number(user.accountBalance) - amount,
+      },
+    })
+
+    // Create the pending transaction
+    const newTransaction = await payload.create({
+      collection: 'transactions',
+      data: {
+        user: userId,
+        amount,
+        status: 'PENDING',
+        type: 'CASH_OUT',
+        fromAccount: 'HK Academy',
+        toAccount: phoneNumber, // The destination phone number
+        paymentMethod: 'FAPSHI',
+        transactionDate: new Date().toISOString(),
+      },
+    })
+
+    await payload.updateGlobal({
+      slug: 'settings',
+      data: {
+        hkWallet: {
+          pendingPayout: hkWallet.pendingPayout + amount,
+          // balance: hkWallet.balance - amount,
+        },
+      },
+    })
+
+    return res.status(200).json({
+      message: 'Withdrawal request submitted. Transaction is pending approval.',
+      transaction: newTransaction,
+    })
+  } catch (error) {
+    return res.status(500).json({ error: 'Error processing withdrawal request.' })
+  }
+})
+
+router.post('/approve-cashout', async (req, res) => {
+  try {
+    const settings = await payload.findGlobal({
+      slug: 'settings',
+    })
+
+    const isPayoutLocked = settings.isPayoutLocked
+
+    if (isPayoutLocked) {
+      return res
+        .status(423)
+        .json({ message: 'Payout process is already in progress. Please wait.' })
+    }
+
+    await payload.updateGlobal({
+      slug: 'settings',
+      data: {
+        isPayoutLocked: true,
+      },
+    })
+
+    const { beforeTime } = req.body // Admin specifies time range
+    payload.logger.info(`Payout in process for all requests before ${beforeTime}`)
+    const pendingTransactions = await payload.find({
+      collection: 'transactions',
+      where: {
+        status: { equals: 'PENDING' },
+        type: { equals: 'CASH_OUT' },
+        transactionDate: { less_than: beforeTime },
+      },
+    })
+
+    if (pendingTransactions.docs.length === 0) {
+      await payload.updateGlobal({
+        slug: 'settings',
+        data: {
+          isPayoutLocked: false,
+        },
+      })
+
+      return res.status(200).json({ message: 'No pending transactions found.' })
+    }
+    let paidOut = 0
+
+    for (const transaction of pendingTransactions.docs) {
+      const { amount, toAccount } = transaction
+
+      // Call Fapshi API for payout
+      const data = JSON.stringify({
+        amount,
+        phone: toAccount,
+        message: 'HK Academy Payout',
+      })
+
+      const config = {
+        method: 'post',
+        url: `${process.env.FAPSHI_BASE_URL}/payout`,
+        headers: {
+          apiuser: process.env.FAPSHI_API_USER_CASHOUT,
+          apikey: process.env.FAPSHI_API_KEY_CASHOUT,
+          'Content-Type': 'application/json',
+        },
+        data: data,
+      }
+
+      const payoutResponse = await axios.request(config)
+
+      // Handle Fapshi response
+      if (payoutResponse.data && payoutResponse.data.message === 'Accepted') {
+        // Update transaction status to SUCCESSFUL
+        await payload.update({
+          collection: 'transactions',
+          id: transaction.id,
+          data: {
+            status: 'SUCCESSFUL',
+            transId: payoutResponse.data.transId,
+            transactionDate: new Date().toISOString(),
+          },
+        })
+
+        payload.logger.info(`Transaction ${transaction.id} completed successfully.`)
+        //Send notification by email of successful cashout transaction
+        paidOut = paidOut + Number(amount)
+      } else {
+        payload.logger.info(`Transaction ${transaction.id} failed to process.`)
+      }
+    }
+    const hkWallet = settings.hkWallet as {
+      balance: number
+      pendingPayout: number
+      total: number
+    }
+
+    await payload.updateGlobal({
+      slug: 'settings',
+      data: {
+        isPayoutLocked: false,
+        hkWallet: {
+          pendingPayout: hkWallet.pendingPayout - paidOut,
+          balance: hkWallet.balance - paidOut,
+          total: hkWallet.total,
+        },
+      },
+    })
+
+    payload.logger.info(`All transactions completed successfully`)
+    return res.status(200).json({ message: 'All Pending transactions processed.' })
+  } catch (error: any) {
+    return res.status(500).json({ error: (error.message = 'Error processing transaction') })
   }
 })
 

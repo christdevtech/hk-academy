@@ -48,6 +48,10 @@ const Transactions: CollectionConfig = {
       required: true,
     },
     {
+      name: 'revenue',
+      type: 'number',
+    },
+    {
       name: 'status',
       type: 'select',
       options: ['CREATED', 'PENDING', 'SUCCESSFUL', 'FAILED', 'EXPIRED'],
@@ -56,7 +60,7 @@ const Transactions: CollectionConfig = {
     {
       name: 'type',
       type: 'select',
-      options: ['PURCHASE', 'REFERRAL_COMMISSION', 'WALLET_CREDIT'],
+      options: ['PURCHASE', 'REFERRAL_COMMISSION', 'WALLET_CREDIT', 'CASH_OUT'],
       required: true,
     },
     {

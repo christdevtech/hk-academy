@@ -25,6 +25,16 @@ export const handleSuccessfulPayment: CollectionAfterChangeHook = async ({
     // const { user: userId, title: subscription } = transaction
 
     const subscription = typeof transaction.title !== 'string' && transaction.title
+    const revenue = transaction.revenue
+
+    payload.logger.info(`Revenue from this tranaction is ${revenue}`)
+
+    const settings = await payload.findGlobal({
+      slug: 'settings',
+    })
+
+    const hkWallet = settings.hkWallet as { balance: number; total: number }
+    payload.logger.info(`Wallet info: ${hkWallet}`)
 
     try {
       if (user) {
@@ -46,10 +56,21 @@ export const handleSuccessfulPayment: CollectionAfterChangeHook = async ({
           },
         })
 
+        await payload.updateGlobal({
+          slug: 'settings',
+          data: {
+            hkWallet: {
+              balance: hkWallet.balance + revenue,
+              total: hkWallet.total + revenue,
+            },
+          },
+        })
+
         // Create a new transaction for referral commission if applicable
         if (user.referredBy) {
           const referrerId =
             typeof user.referredBy === 'string' ? user.referredBy : user.referredBy.id
+          const referrerEmail = typeof user.referredBy !== 'string' && user.referredBy.email
 
           // Get the referral commission from the subscription's referral amount
           const referralAmount = typeof subscription !== 'string' && subscription.referralAmount
@@ -64,7 +85,7 @@ export const handleSuccessfulPayment: CollectionAfterChangeHook = async ({
               paymentMethod: 'SYSTEM_CREDIT',
               transactionDate: new Date().toISOString(),
               fromAccount: 'SYSTEM',
-              toAccount: referrerId,
+              toAccount: referrerEmail,
             },
           })
         } else {

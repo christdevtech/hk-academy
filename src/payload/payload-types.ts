@@ -8,16 +8,16 @@
 
 export interface Config {
   collections: {
+    users: User;
+    media: Media;
+    subscriptions: Subscription;
+    courses: Course;
+    transactions: Transaction;
     pages: Page;
     posts: Post;
     projects: Project;
-    subscriptions: Subscription;
-    courses: Course;
-    media: Media;
     categories: Category;
-    users: User;
     comments: Comment;
-    transactions: Transaction;
     redirects: Redirect;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -27,6 +27,107 @@ export interface Config {
     header: Header;
     footer: Footer;
   };
+}
+export interface User {
+  id: string;
+  name?: string | null;
+  roles?: ('admin' | 'user')[] | null;
+  referralCode?: string | null;
+  referredBy?: (string | null) | User;
+  referredUsers?: (string | User)[] | null;
+  subscriptions?: (string | Subscription)[] | null;
+  phoneNumber?: string | null;
+  accountBalance: number;
+  referralTotal: number;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  password: string | null;
+}
+export interface Subscription {
+  id: string;
+  title: string;
+  description?: string | null;
+  purchaseMessage?: string | null;
+  price?: number | null;
+  coupons?:
+    | {
+        code?: string | null;
+        value?: number | null;
+        expiryDate?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  referralAmount?: number | null;
+  endOfPromotion?: string | null;
+  courses?: (string | Course)[] | null;
+  slug?: string | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    image?: string | Media | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+export interface Course {
+  id: string;
+  title: string;
+  description: {
+    [k: string]: unknown;
+  }[];
+  videoUrl: string;
+  courseImage?: string | Media | null;
+  slug?: string | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    image?: string | Media | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+export interface Media {
+  id: string;
+  alt: string;
+  caption?:
+    | {
+        [k: string]: unknown;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+}
+export interface Transaction {
+  id: string;
+  title?: (string | null) | Subscription;
+  transId?: string | null;
+  externalId?: string | null;
+  user: string | User;
+  amount: number;
+  revenue?: number | null;
+  status: 'CREATED' | 'PENDING' | 'SUCCESSFUL' | 'FAILED' | 'EXPIRED';
+  type: 'PURCHASE' | 'REFERRAL_COMMISSION' | 'WALLET_CREDIT' | 'CASH_OUT';
+  paymentMethod: 'FAPSHI' | 'SYSTEM_CREDIT';
+  transactionDate?: string | null;
+  fromAccount: string;
+  toAccount: string;
+  updatedAt: string;
+  createdAt: string;
 }
 export interface Page {
   id: string;
@@ -164,23 +265,6 @@ export interface Page {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
-}
-export interface Media {
-  id: string;
-  alt: string;
-  caption?:
-    | {
-        [k: string]: unknown;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
 }
 export interface Category {
   id: string;
@@ -445,73 +529,6 @@ export interface Post {
   createdAt: string;
   _status?: ('draft' | 'published') | null;
 }
-export interface User {
-  id: string;
-  name?: string | null;
-  roles?: ('admin' | 'user')[] | null;
-  referralCode?: string | null;
-  referredBy?: (string | null) | User;
-  referredUsers?: (string | User)[] | null;
-  subscriptions?: (string | Subscription)[] | null;
-  phoneNumber?: string | null;
-  accountBalance?: number | null;
-  referralTotal?: number | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  password: string | null;
-}
-export interface Subscription {
-  id: string;
-  title: string;
-  description?: string | null;
-  purchaseMessage?: string | null;
-  price?: number | null;
-  coupons?:
-    | {
-        code?: string | null;
-        value?: number | null;
-        expiryDate?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  referralAmount?: number | null;
-  endOfPromotion?: string | null;
-  courses?: (string | Course)[] | null;
-  slug?: string | null;
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-    image?: string | Media | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-export interface Course {
-  id: string;
-  title: string;
-  description: {
-    [k: string]: unknown;
-  }[];
-  videoUrl: string;
-  courseImage?: string | Media | null;
-  slug?: string | null;
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-    image?: string | Media | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
 export interface Project {
   id: string;
   title: string;
@@ -664,22 +681,6 @@ export interface Comment {
   createdAt: string;
   _status?: ('draft' | 'published') | null;
 }
-export interface Transaction {
-  id: string;
-  title?: (string | null) | Subscription;
-  transId?: string | null;
-  externalId?: string | null;
-  user: string | User;
-  amount: number;
-  status: 'CREATED' | 'PENDING' | 'SUCCESSFUL' | 'FAILED' | 'EXPIRED';
-  type: 'PURCHASE' | 'REFERRAL_COMMISSION' | 'WALLET_CREDIT';
-  paymentMethod: 'FAPSHI' | 'SYSTEM_CREDIT';
-  transactionDate?: string | null;
-  fromAccount: string;
-  toAccount: string;
-  updatedAt: string;
-  createdAt: string;
-}
 export interface Redirect {
   id: string;
   from: string;
@@ -732,6 +733,12 @@ export interface Settings {
   baseSubscription?: (string | null) | Subscription;
   logoLight?: string | Media | null;
   logoDark?: string | Media | null;
+  hkWallet?: {
+    balance?: number | null;
+    pendingPayout?: number | null;
+    total?: number | null;
+  };
+  isPayoutLocked?: boolean | null;
   contactInformation?: {
     email?: string | null;
     phone?: string | null;
