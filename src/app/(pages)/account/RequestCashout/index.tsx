@@ -41,7 +41,7 @@ const RequestCashout = ({ user }: { user: User }) => {
     try {
       const response = await axios.request(config)
 
-      alert(response.data.message)
+     // alert(response.data.message)
       setIsLoading(false)
     } catch (error) {
       alert(error.response.data.message)
