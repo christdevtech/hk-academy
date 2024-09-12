@@ -39,7 +39,7 @@ const CreatePaymentLink = (user: User) => {
     try {
       // console.log(`Attempting to post ${data}`)
       const response = await axios.request(config)
-      window.open(`${response.data.link}`)
+      router.push(`${response.data.link}`)
       //setClicked(false)
     } catch (error) {
      // alert(error.response.data.message)
