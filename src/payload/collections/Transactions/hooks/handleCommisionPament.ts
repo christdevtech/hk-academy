@@ -1,5 +1,5 @@
-import { CollectionAfterChangeHook } from 'payload/types'
-import { Settings, Transaction } from '../../../payload-types'
+import type { CollectionAfterChangeHook } from 'payload/types'
+import type { Transaction } from '../../../payload-types'
 import payload from 'payload'
 
 export const handleCommissionPayment: CollectionAfterChangeHook = async ({ doc, operation }) => {

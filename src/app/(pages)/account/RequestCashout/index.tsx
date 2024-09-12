@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form'
 import { Input } from '../../../_components/Input'
 import classes from './index.module.scss'
 import axios from 'axios'
+import { useRouter } from 'next/navigation'
 type cashoutRequest = {
   amount: number
   phonenumber: string
@@ -21,6 +22,7 @@ const RequestCashout = ({ user }: { user: User }) => {
     register,
     formState: { errors },
   } = useForm()
+  const router = useRouter()
 
   if (user && user.accountBalance < 3000) {
     return null
@@ -39,10 +41,8 @@ const RequestCashout = ({ user }: { user: User }) => {
       data: data,
     }
     try {
-      const response = await axios.request(config)
-
-     // alert(response.data.message)
-      setIsLoading(false)
+      await axios.request(config)
+      router.refresh()
     } catch (error) {
       alert(error.response.data.message)
       setIsLoading(false)

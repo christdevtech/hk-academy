@@ -3,9 +3,11 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import { Button } from '../../../_components/Button'
+import { useRouter } from 'next/navigation'
 
 const ApprovePayout: React.FC = () => {
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
   const handlePayoutClick = async () => {
     setLoading(true) // Disable button immediately
@@ -25,11 +27,11 @@ const ApprovePayout: React.FC = () => {
 
     try {
       const response = await axios.request(config)
-
-      alert(response.data.message)
+      //Send an email of success to the admin
+      router.refresh()
     } catch (error) {
-      // console.log(error)
-      setLoading(false)
+      //notify the error handler
+      router.refresh()
     }
     setLoading(false) // Enable button after process completes
   }

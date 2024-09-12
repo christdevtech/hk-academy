@@ -67,8 +67,8 @@ type User {
   referredUsers: [User!]
   subscriptions: [Subscription!]
   phoneNumber: String
-  accountBalance: Float!
-  referralTotal: Float!
+  accountBalance: Float
+  referralTotal: Float
   updatedAt: DateTime
   createdAt: DateTime
   email: EmailAddress!
@@ -773,6 +773,7 @@ input User_accountBalance_operator {
   greater_than: Float
   less_than_equal: Float
   less_than: Float
+  exists: Boolean
 }
 
 input User_referralTotal_operator {
@@ -782,6 +783,7 @@ input User_referralTotal_operator {
   greater_than: Float
   less_than_equal: Float
   less_than: Float
+  exists: Boolean
 }
 
 input User_updatedAt_operator {
@@ -21790,8 +21792,8 @@ input mutationUserInput {
   referredUsers: [String]
   subscriptions: [String]
   phoneNumber: String
-  accountBalance: Float!
-  referralTotal: Float!
+  accountBalance: Float
+  referralTotal: Float
   updatedAt: String
   createdAt: String
   email: String!

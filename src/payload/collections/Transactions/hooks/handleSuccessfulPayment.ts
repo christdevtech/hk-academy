@@ -1,6 +1,6 @@
 import payload from 'payload'
 import type { CollectionAfterChangeHook } from 'payload/types'
-import type { Transaction, User, Subscription } from '../../../payload-types'
+import type { Transaction } from '../../../payload-types'
 
 export const handleSuccessfulPayment: CollectionAfterChangeHook = async ({
   doc,

@@ -19,6 +19,8 @@ const PORT = process.env.PORT || 3000
 
 app.use(cookieParser())
 
+app.use(express.json())
+
 const start = async (): Promise<void> => {
   await payload.init({
     secret: process.env.PAYLOAD_SECRET || '',
@@ -45,7 +47,7 @@ const start = async (): Promise<void> => {
   // Use the custom routes before Next.js handling
   app.use(customRoutes)
 
-  app.use('/api/payments', fapshiPayments)
+  app.use(fapshiPayments)
 
   if (process.env.NEXT_BUILD) {
     app.listen(PORT, async () => {

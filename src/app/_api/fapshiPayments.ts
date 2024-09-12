@@ -4,7 +4,6 @@ import type { AxiosRequestConfig } from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import payload from 'payload'
 import type { CreatePaymentLinkResponse } from '../constants'
-import { Transaction, User } from '../../payload/payload-types'
 
 const router = Router()
 // Endpoint to create payment link
@@ -178,6 +177,11 @@ router.post('/create-cashout', async (req, res) => {
       slug: 'settings',
     })
 
+    if (!settings || !settings.hkWallet) {
+      payload.logger.error('HK Wallet settings not found') // Log missing settings
+      return res.status(500).json({ message: 'HK Wallet settings not found' })
+    }
+
     const hkWallet = settings.hkWallet as {
       balance: number
       pendingPayout: number
@@ -185,21 +189,24 @@ router.post('/create-cashout', async (req, res) => {
     }
 
     if (!user) {
+      payload.logger.error(`User not found: ${userId}`) // Log user not found
       return res.status(404).json({ message: 'User not found' })
     }
 
     // Check if user has sufficient balance
+    payload.logger.info(`User balance: ${user.accountBalance}, requested amount: ${amount}`)
     if (user.accountBalance < amount) {
       return res.status(400).json({ message: 'Insufficient balance' })
     }
 
-    await payload.update({
+    const updatedUser = await payload.update({
       collection: 'users',
       id: userId,
       data: {
         accountBalance: Number(user.accountBalance) - amount,
       },
     })
+    payload.logger.info('Updated user balance:', updatedUser)
 
     // Create the pending transaction
     const newTransaction = await payload.create({
@@ -210,28 +217,32 @@ router.post('/create-cashout', async (req, res) => {
         status: 'PENDING',
         type: 'CASH_OUT',
         fromAccount: 'HK Academy',
-        toAccount: phoneNumber, // The destination phone number
+        toAccount: phoneNumber,
         paymentMethod: 'FAPSHI',
         transactionDate: new Date().toISOString(),
       },
     })
+    payload.logger.info('Created transaction:', newTransaction)
 
-    await payload.updateGlobal({
+    const updatedSettings = await payload.updateGlobal({
       slug: 'settings',
       data: {
         hkWallet: {
           pendingPayout: hkWallet.pendingPayout + amount,
-          // balance: hkWallet.balance - amount,
         },
       },
     })
+    payload.logger.info('Updated Pending Payout Amount:', updatedSettings)
 
     return res.status(200).json({
       message: 'Withdrawal request submitted. Transaction is pending approval.',
       transaction: newTransaction,
     })
   } catch (error) {
-    return res.status(500).json({ error: 'Error processing withdrawal request.' })
+    payload.logger.error(error)
+    return res
+      .status(500)
+      .json({ error: 'Error processing withdrawal request.', details: error.message })
   }
 })
 
@@ -256,7 +267,7 @@ router.post('/approve-cashout', async (req, res) => {
       },
     })
 
-    const { beforeTime } = req.body // Admin specifies time range
+    const { beforeTime } = req.body
     payload.logger.info(`Payout in process for all requests before ${beforeTime}`)
     const pendingTransactions = await payload.find({
       collection: 'transactions',
@@ -343,6 +354,7 @@ router.post('/approve-cashout', async (req, res) => {
     payload.logger.info(`All transactions completed successfully`)
     return res.status(200).json({ message: 'All Pending transactions processed.' })
   } catch (error: any) {
+    payload.logger.error(error)
     return res.status(500).json({ error: (error.message = 'Error processing transaction') })
   }
 })

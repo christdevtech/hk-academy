@@ -1,9 +1,7 @@
 'use client'
 import React, { useState } from 'react'
-import { useAuth } from '../../../_providers/Auth'
 import { fetchSettings } from '../../../_api/fetchGlobals'
 import type { Subscription, User } from '../../../../payload/payload-types'
-import { CreatePaymentLinkRequest, CreatePaymentLinkResponse } from '../../../constants'
 import axios from 'axios'
 import { Button } from '../../../_components/Button'
 import { useRouter } from 'next/navigation'
@@ -24,10 +22,10 @@ const CreatePaymentLink = (user: User) => {
       email: user.email,
       userId: user.id,
       message: baseSubscription.purchaseMessage,
-      redirectUrlBase: `${process.env.NEXT_PUBLIC_SERVER_URL}/api/payments/payment-success`,
+      redirectUrlBase: `${process.env.NEXT_PUBLIC_SERVER_URL}/payment-success`,
       subscriptionId: baseSubscription.id,
     }
-
+    console.log(data)
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -42,7 +40,7 @@ const CreatePaymentLink = (user: User) => {
       router.push(`${response.data.link}`)
       //setClicked(false)
     } catch (error) {
-     // alert(error.response.data.message)
+      console.log(error.response.data.message)
       setClicked(false)
     }
   }
