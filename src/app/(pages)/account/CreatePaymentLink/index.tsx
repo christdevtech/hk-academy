@@ -25,7 +25,7 @@ const CreatePaymentLink = (user: User) => {
       redirectUrlBase: `${process.env.NEXT_PUBLIC_SERVER_URL}/payment-success`,
       subscriptionId: baseSubscription.id,
     }
-    console.log(data)
+    // console.log(data)
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
@@ -40,7 +40,7 @@ const CreatePaymentLink = (user: User) => {
       router.push(`${response.data.link}`)
       //setClicked(false)
     } catch (error) {
-      console.log(error.response.data.message)
+      // console.log(error.response.data.message)
       setClicked(false)
     }
   }
