@@ -37,8 +37,8 @@ export interface User {
   referredUsers?: (string | User)[] | null;
   subscriptions?: (string | Subscription)[] | null;
   phoneNumber?: string | null;
-  accountBalance: number;
-  referralTotal: number;
+  accountBalance?: number | null;
+  referralTotal?: number | null;
   updatedAt: string;
   createdAt: string;
   email: string;
