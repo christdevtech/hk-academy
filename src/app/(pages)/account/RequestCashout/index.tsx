@@ -43,6 +43,7 @@ const RequestCashout = ({ user }: { user: User }) => {
     try {
       await axios.request(config)
       router.refresh()
+      setIsLoading(false)
     } catch (error) {
       alert(error.response.data.message)
       setIsLoading(false)

@@ -28,6 +28,7 @@ const ApprovePayout: React.FC = () => {
     try {
       const response = await axios.request(config)
       //Send an email of success to the admin
+      setLoading(false)
       router.refresh()
     } catch (error) {
       //notify the error handler
