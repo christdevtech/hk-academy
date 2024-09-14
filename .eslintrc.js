@@ -18,5 +18,6 @@ module.exports = {
     '@typescript-eslint/no-inferrable-types': 'off', // Allow explicit type annotations
     'prettier/prettier': ['off', { endOfLine: 'auto' }],
     '@typescript-eslint/no-implicit-any-catch': 'off',
+    'no-console': ['error', { allow: ['log'] }], // Allow console.log
   },
 }
