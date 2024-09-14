@@ -173,28 +173,28 @@ router.post('/create-cashout', async (req, res) => {
       id: userId,
     })
 
-    const settings = await payload.findGlobal({
+    const { minimumCashout } = await payload.findGlobal({
       slug: 'settings',
     })
-
-    if (!settings || !settings.hkWallet) {
-      payload.logger.error('HK Wallet settings not found') // Log missing settings
-      return res.status(500).json({ message: 'HK Wallet settings not found' })
-    }
-
-    const hkWallet = settings.hkWallet as {
-      balance: number
-      pendingPayout: number
-      total: number
-    }
 
     if (!user) {
       payload.logger.error(`User not found: ${userId}`) // Log user not found
       return res.status(404).json({ message: 'User not found' })
     }
 
+    // Check if user tries to cashout below minimum cashout amount
+    payload.logger.info(`Minimum Cashout Amount: ${minimumCashout}, requested amount: ${amount}`)
+
+    if (minimumCashout > amount) {
+      return res
+        .status(400)
+        .json({
+          message: `Cashout amount ${amount} is less than XAF ${minimumCashout} which is the minimum cashout amount`,
+        })
+    }
     // Check if user has sufficient balance
     payload.logger.info(`User balance: ${user.accountBalance}, requested amount: ${amount}`)
+
     if (user.accountBalance < amount) {
       return res.status(400).json({ message: 'Insufficient balance' })
     }
@@ -223,16 +223,6 @@ router.post('/create-cashout', async (req, res) => {
       },
     })
     payload.logger.info('Created transaction:', newTransaction)
-
-    const updatedSettings = await payload.updateGlobal({
-      slug: 'settings',
-      data: {
-        hkWallet: {
-          pendingPayout: hkWallet.pendingPayout + amount,
-        },
-      },
-    })
-    payload.logger.info('Updated Pending Payout Amount:', updatedSettings)
 
     return res.status(200).json({
       message: 'Withdrawal request submitted. Transaction is pending approval.',
@@ -345,7 +335,7 @@ router.post('/approve-cashout', async (req, res) => {
         isPayoutLocked: false,
         hkWallet: {
           pendingPayout: hkWallet.pendingPayout - paidOut,
-          balance: hkWallet.balance - paidOut,
+          balance: hkWallet.balance,
           total: hkWallet.total,
         },
       },

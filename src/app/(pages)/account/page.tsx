@@ -11,7 +11,7 @@ import AccountForm from './AccountForm'
 
 import classes from './index.module.scss'
 import CopyBox from '../../_components/CopyBox'
-import type { Subscription } from '../../../payload/payload-types'
+import type { Subscription, Transaction } from '../../../payload/payload-types'
 import RichText from '../../_components/RichText'
 import payload from 'payload'
 import { Media } from '../../_components/Media'
@@ -25,6 +25,22 @@ export default async function Account() {
     nullUserRedirect: `/login?error=${encodeURIComponent(
       'You must be logged in to access your account.',
     )}&redirect=${encodeURIComponent('/account')}`,
+  })
+  const pendingCashoutTransactions = await payload.find({
+    collection: 'transactions',
+    where: {
+      status: {
+        equals: 'PENDING',
+      },
+      type: {
+        equals: 'CASH_OUT',
+      },
+    },
+  })
+
+  const cashoutTransactions = pendingCashoutTransactions.docs.map(transaction => {
+    const trans = { ...transaction } as unknown
+    return trans as Transaction
   })
 
   const { hkWallet } = await fetchSettings()
@@ -76,9 +92,9 @@ export default async function Account() {
         ]}
       />
       <Gutter className={classes.account}>
-        <AccountForm />
         <HR />
         {subscriptions?.length > 0 && <h2>Subscriptions</h2>}
+        {subscriptions?.length > 0 && <AccountForm />}
 
         {subscriptions?.length > 0 ? (
           subscriptions.map((subscription, index) => {
@@ -142,11 +158,40 @@ export default async function Account() {
               <h2>HK Wallet Info</h2>
               <div className={classes.flex}>
                 <p>Balance: {hkWallet.balance} FCFA</p>
-                <p>Pending Payout: {hkWallet.pendingPayout} FCFA</p>
+                <p>Commision still in HKA Wallets: {hkWallet.pendingPayout} FCFA</p>
                 <p>Total Revenue: {hkWallet.total} FCFA</p>
-                <ApprovePayout />
               </div>
             </div>
+            <h2>Pending Cashout Transactions</h2>
+            {cashoutTransactions.length > 0 && <ApprovePayout />}
+            {cashoutTransactions.length > 0 ? (
+              <table>
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Amount</th>
+                    <th>Amount</th>
+                    <th>Withdrawal Account</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {cashoutTransactions.map(transaction => (
+                    <tr key={transaction.id}>
+                      <td>
+                        {typeof transaction.user === 'string'
+                          ? transaction.user
+                          : transaction.user.name}
+                      </td>
+                      <td>{transaction.amount}</td>
+                      <td>{transaction.status}</td>
+                      <td>{transaction.toAccount}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>No pending Cashout</p>
+            )}
             <HR />
           </>
         )}

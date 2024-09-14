@@ -74,6 +74,12 @@ export const Settings: GlobalConfig = {
       defaultValue: false,
     },
     {
+      name: 'minimumCashout',
+      type: 'number',
+      label: 'Minimum Cashout Amount',
+      defaultValue: 3000,
+    },
+    {
       name: 'contactInformation',
       label: 'Contact Information',
       type: 'group',

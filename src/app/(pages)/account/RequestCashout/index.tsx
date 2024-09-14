@@ -21,6 +21,7 @@ const RequestCashout = ({ user }: { user: User }) => {
     handleSubmit,
     register,
     formState: { errors },
+    reset,
   } = useForm()
   const router = useRouter()
 
@@ -43,6 +44,10 @@ const RequestCashout = ({ user }: { user: User }) => {
     try {
       await axios.request(config)
       router.refresh()
+      reset({
+        amount: '',
+        phonenumber: '',
+      })
       setIsLoading(false)
     } catch (error) {
       alert(error.response.data.message)

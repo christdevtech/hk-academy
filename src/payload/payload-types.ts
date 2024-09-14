@@ -739,6 +739,7 @@ export interface Settings {
     total?: number | null;
   };
   isPayoutLocked?: boolean | null;
+  minimumCashout?: number | null;
   contactInformation?: {
     email?: string | null;
     phone?: string | null;

@@ -13894,6 +13894,7 @@ type Settings {
   logoDark(where: Settings_LogoDark_where): Media
   hkWallet: Settings_HkWallet
   isPayoutLocked: Boolean
+  minimumCashout: Float
   contactInformation: Settings_ContactInformation
   socialLinks: [Settings_SocialLinks!]
   updatedAt: DateTime
@@ -14418,6 +14419,7 @@ type SettingsDocAccessFields {
   logoDark: SettingsDocAccessFields_logoDark
   hkWallet: SettingsDocAccessFields_hkWallet
   isPayoutLocked: SettingsDocAccessFields_isPayoutLocked
+  minimumCashout: SettingsDocAccessFields_minimumCashout
   contactInformation: SettingsDocAccessFields_contactInformation
   socialLinks: SettingsDocAccessFields_socialLinks
   updatedAt: SettingsDocAccessFields_updatedAt
@@ -14658,6 +14660,29 @@ type SettingsDocAccessFields_isPayoutLocked_Update {
 }
 
 type SettingsDocAccessFields_isPayoutLocked_Delete {
+  permission: Boolean!
+}
+
+type SettingsDocAccessFields_minimumCashout {
+  create: SettingsDocAccessFields_minimumCashout_Create
+  read: SettingsDocAccessFields_minimumCashout_Read
+  update: SettingsDocAccessFields_minimumCashout_Update
+  delete: SettingsDocAccessFields_minimumCashout_Delete
+}
+
+type SettingsDocAccessFields_minimumCashout_Create {
+  permission: Boolean!
+}
+
+type SettingsDocAccessFields_minimumCashout_Read {
+  permission: Boolean!
+}
+
+type SettingsDocAccessFields_minimumCashout_Update {
+  permission: Boolean!
+}
+
+type SettingsDocAccessFields_minimumCashout_Delete {
   permission: Boolean!
 }
 
@@ -20698,6 +20723,7 @@ type SettingsFields {
   logoDark: SettingsFields_logoDark
   hkWallet: SettingsFields_hkWallet
   isPayoutLocked: SettingsFields_isPayoutLocked
+  minimumCashout: SettingsFields_minimumCashout
   contactInformation: SettingsFields_contactInformation
   socialLinks: SettingsFields_socialLinks
   updatedAt: SettingsFields_updatedAt
@@ -20938,6 +20964,29 @@ type SettingsFields_isPayoutLocked_Update {
 }
 
 type SettingsFields_isPayoutLocked_Delete {
+  permission: Boolean!
+}
+
+type SettingsFields_minimumCashout {
+  create: SettingsFields_minimumCashout_Create
+  read: SettingsFields_minimumCashout_Read
+  update: SettingsFields_minimumCashout_Update
+  delete: SettingsFields_minimumCashout_Delete
+}
+
+type SettingsFields_minimumCashout_Create {
+  permission: Boolean!
+}
+
+type SettingsFields_minimumCashout_Read {
+  permission: Boolean!
+}
+
+type SettingsFields_minimumCashout_Update {
+  permission: Boolean!
+}
+
+type SettingsFields_minimumCashout_Delete {
   permission: Boolean!
 }
 
@@ -22660,6 +22709,7 @@ input mutationSettingsInput {
   logoDark: String
   hkWallet: mutationSettings_HkWalletInput
   isPayoutLocked: Boolean
+  minimumCashout: Float
   contactInformation: mutationSettings_ContactInformationInput
   socialLinks: [mutationSettings_SocialLinksInput]
   updatedAt: String

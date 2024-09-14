@@ -26,17 +26,19 @@ export const handleCommissionPayment: CollectionAfterChangeHook = async ({ doc, 
       slug: 'settings',
     })
 
-    const hkWallet = settings.hkWallet as { balance: number; total: number }
+    const hkWallet = settings.hkWallet as { balance: number; total: number; pendingPayout: number }
 
-    await payload.updateGlobal({
+    const updatedSettings = await payload.updateGlobal({
       slug: 'settings',
       data: {
         hkWallet: {
           balance: hkWallet.balance - transaction.amount,
           total: hkWallet.total - transaction.amount,
+          pendingPayout: hkWallet.pendingPayout + transaction.amount,
         },
       },
     })
+    payload.logger.info('Updated Wallet Info:', JSON.stringify(updatedSettings.hkWallet))
   } else {
     return doc
   }

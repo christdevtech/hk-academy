@@ -67,6 +67,8 @@ export const SETTINGS = `
       pendingPayout
       total
     }
+    isPayoutLocked
+    minimumCashout
     contactInformation{
       email
       phone

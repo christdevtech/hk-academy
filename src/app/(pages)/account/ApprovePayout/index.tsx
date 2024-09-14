@@ -27,11 +27,11 @@ const ApprovePayout: React.FC = () => {
 
     try {
       const response = await axios.request(config)
-      //Send an email of success to the admin
+      console.log(response)
       setLoading(false)
       router.refresh()
     } catch (error) {
-      //notify the error handler
+      console.log(error)
       router.refresh()
     }
     setLoading(false) // Enable button after process completes
@@ -42,7 +42,7 @@ const ApprovePayout: React.FC = () => {
       <Button
         onClick={handlePayoutClick}
         disabled={loading}
-        label={loading ? 'Processing...' : 'Approve Payout'}
+        label={loading ? 'Processing Payout Requests...' : 'Approve Cash Out Requests'}
         appearance="secondary"
       ></Button>
     </div>
