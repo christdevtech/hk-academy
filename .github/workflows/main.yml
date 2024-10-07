@@ -6,22 +6,40 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20.13.0'
+
+    - name: Copy .env file
+      run: echo "${{ secrets.ENV_FILE }}" > .env
+
     - name: Install dependencies
       run: yarn install
+
+    - name: Build application
+      run: yarn build
 
     - name: SSH into server and deploy
       env:
         SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+        SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+        SERVER_IP: ${{ secrets.SERVER_IP }}
+        SSH_PORT: ${{ secrets.SSH_PORT }}
       run: |
-        sshpass -p $SERVER_PASSWORD ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} <<EOF
+        sshpass -p $SERVER_PASSWORD ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USERNAME@$SERVER_IP <<EOF
           cd /var/www/hkacademy
-          git pull origin main
-          yarn install
           pm2 stop hkacademy
-          NODE_OPTIONS='--max-old-space-size=1804' yarn build
+          # Remove old build files
+          rm -rf .next build dist .env
+          # Copy new build files from GitHub runner to VPS
+          scp -r .next build dist .env $SSH_USERNAME@$SERVER_IP:/var/www/hkacademy
           pm2 start hkacademy
         EOF
