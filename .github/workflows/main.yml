@@ -8,42 +8,73 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20.13.0'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.13.0'
 
-    - name: Copy .env file
-      run: echo "${{ secrets.ENV_FILE }}" > .env
+      - name: Copy .env file
+        run: echo "${{ secrets.ENV_FILE }}" > .env
 
-    - name: Install dependencies
-      run: yarn install
+      - name: Install dependencies
+        run: yarn install
 
-    - name: Build application
-      run: yarn build
+      - name: Build application
+        run: yarn build
 
-    - name: SSH into server and deploy
-      env:
-        SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
-        SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-        SERVER_IP: ${{ secrets.SERVER_IP }}
-        SSH_PORT: ${{ secrets.SSH_PORT }}
-      run: |
-        sshpass -p $SERVER_PASSWORD ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USERNAME@$SERVER_IP <<EOF
-          cd /var/www/hkacademy
-          # pm2 stop hkacademy
-          # Remove old build files
-          rm -rf .next build dist .env
-          # Copy new build files from GitHub runner to VPS
-          mkdir -p .next build dist
-          scp -r $GITHUB_WORKSPACE/.next/* $SSH_USERNAME@$SERVER_IP:/var/www/hkacademy/.next/
-          scp -r $GITHUB_WORKSPACE/build/* $SSH_USERNAME@$SERVER_IP:/var/www/hkacademy/build/
-          scp -r $GITHUB_WORKSPACE/dist/* $SSH_USERNAME@$SERVER_IP:/var/www/hkacademy/dist/
-          echo "${{ secrets.ENV_FILE }}" > .env
-          pm2 start hkacademy
-        EOF
+      - name: Stop PM2 process on VPS
+        run: |
+          echo "${{ secrets.SSH_PASSWORD }}" | sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} "pm2 stop hkacademy"
+
+      - name: Delete specific files and folders on VPS
+        run: |
+          echo "${{ secrets.SSH_PASSWORD }}" | sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} "
+            rm -rf /var/www/hkacademy/dist /var/www/hkacademy/build /var/www/hkacademy/.next /var/www/hkacademy/.env"
+
+      - name: Deploy dist folder to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          source: dist/*
+          target: /var/www/hkacademy/dist/
+
+      - name: Deploy build folder to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          source: build/*
+          target: /var/www/hkacademy/build/
+
+      - name: Deploy .next folder to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          source: .next/*
+          target: /var/www/hkacademy/.next/
+
+      - name: Deploy .env file to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          source: .env
+          target: /var/www/hkacademy/
+          
+      - name: Start PM2 process on VPS
+        run: |
+          echo "${{ secrets.SSH_PASSWORD }}" | sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} "pm2 start hkacademy"
