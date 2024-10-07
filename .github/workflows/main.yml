@@ -34,9 +34,9 @@ jobs:
         SERVER_IP: ${{ secrets.SERVER_IP }}
         SSH_PORT: ${{ secrets.SSH_PORT }}
       run: |
-        sshpass -p $SERVER_PASSWORD ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USERNAME@$SERVER_IP <<EOF
+        sshpass -p $SERVER_PASSWORD ssh -t -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USERNAME@$SERVER_IP <<EOF
           cd /var/www/hkacademy
-          pm2 stop hkacademy
+          pm2 stop hkacademy --no-daemon
           # Remove old build files
           rm -rf .next build dist .env
           # Copy new build files from GitHub runner to VPS
