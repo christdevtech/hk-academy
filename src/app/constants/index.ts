@@ -79,3 +79,15 @@ export interface PaymentStatusResponse {
   dateInitiated: string
   dateConfirmed: string
 }
+
+export interface HkWallet {
+  balance?: number | null
+  pendingPayout?: number | null
+  total?: number | null
+}
+
+export interface VideoContent {
+  Array(description: { [k: string]: unknown })
+  videoUrl: string
+  id?: string | null
+}

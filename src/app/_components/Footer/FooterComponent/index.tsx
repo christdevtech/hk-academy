@@ -19,38 +19,49 @@ export const FooterComponent = ({ footer, settings }: { footer: Footer; settings
   const pathname = usePathname()
   return (
     <footer
-      className={[classes.footer, noHeaderFooterUrls.includes(pathname) && classes.hide]
+      className={[
+        'border-t-1 border-gray-700',
+        noHeaderFooterUrls.includes(pathname) && classes.hide,
+      ]
         .filter(Boolean)
         .join(' ')}
     >
-      <Gutter className={classes.main}>
-        <div className={classes.wrap}>
-          <div className={classes.col1}>
+      <Gutter className="py-16">
+        <div className={'flex align-center justify-center gap-8 flex-wrap'}>
+          <div className={'max-w-[70px]'}>
             <Link href="/">
               <Logo {...settings} />
             </Link>
           </div>
 
-          <nav className={classes.nav}>
-            <ThemeSelector />
-            {navItems.map(({ link }, i) => {
+          <nav className={'flex content-center items-center justify-center  gap-4 flex-wrap'}>
+            {navItems?.map(({ link }, i) => {
               return <CMSLink key={i} {...link} />
             })}
-            <Link href="/terms-and-conditions">Terms & Conditions</Link>
-            <Link href="/privacy-policy">Privacy Policy</Link>
+            <Link href="/terms-and-conditions" className="hover:text-blue-400">
+              Terms & Conditions
+            </Link>
+            <Link href="/privacy-policy" className="hover:text-blue-400">
+              Privacy Policy
+            </Link>
           </nav>
         </div>
 
-        <div className={classes.copyright}>
-          <p className="span">
+        <div className={'pt-4 flex flex-col gap-4'}>
+          <p className="text-center">
             &copy; {new Date().getFullYear()} HK Academy. All rights reserved. | Powered by{' '}
-            <Link href="https://christdev.com" target="_blank" rel="noopener noreferrer">
+            <Link
+              href="https://christdev.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-400"
+            >
               Christdev
             </Link>
           </p>
-          <div className={classes.socials}>
-            {settings.socialLinks &&
-              settings.socialLinks?.map((socialLink, index) => (
+          <div className={'flex align-center justify-center gap-8'}>
+            {settings?.socialLinks &&
+              settings?.socialLinks?.map((socialLink, index) => (
                 <Link href={socialLink.url} target="_blank" key={index}>
                   <Image
                     width={30}

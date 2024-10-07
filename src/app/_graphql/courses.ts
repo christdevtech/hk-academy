@@ -11,21 +11,40 @@ export const COURSES = `
 `
 
 export const COURSE_FIELDS = `
-id
-title
-description
-videoUrl
-courseImage{
-${MEDIA_FIELDS}
-}
+  id
+  slug
+  title
+  mainDescription
+  courseContent{
+    description
+    videoUrl
+    videoTitle
+  }
+  courseImage{
+    ${MEDIA_FIELDS}
+  }
+  relatedCourses{
+    slug
+    id
+    title
+    mainDescription
+    courseContent{
+      description
+      videoUrl
+      videoTitle
+    }
+    courseImage{
+      ${MEDIA_FIELDS}
+    }
+  }
 `
 
 export const COURSE = `
-  query Course($slug: string, $draft: boolean){
+  query Course($slug: String, $draft: Boolean){
       Courses(where: {slug:{equals:$slug}}, limit:1, draft: $draft) {
         docs{
-            ${COURSE_FIELDS}
-        }
+          ${COURSE_FIELDS}
+      }
     }
   }
 `

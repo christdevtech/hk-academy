@@ -18,14 +18,31 @@ export const ContentBlock: React.FC<
 
   return (
     <Gutter className={classes.content}>
-      <div className={classes.grid}>
+      <div className={'grid gap-12 grid-cols-12'}>
         {columns &&
           columns.length > 0 &&
           columns.map((col, index) => {
             const { enableLink, richText, link, size } = col
-
+            let sizeClass = 'col-start-1 col-end-12'
+            switch (size) {
+              case 'full':
+                sizeClass = 'col-span-12'
+                break
+              case 'half':
+                sizeClass = 'col-span-12 sm:col-span-6'
+                break
+              case 'twoThirds':
+                sizeClass = 'col-span-12 sm:col-span-12 md:col-span-7 lg:col-span-8'
+                break
+              case 'oneThird':
+                sizeClass = 'col-span-12 sm:col-span-12 md:col-span-5 lg:col-span-4'
+                break
+              default:
+                sizeClass = 'col-span-12'
+                break
+            }
             return (
-              <div key={index} className={[classes.column, classes[`column--${size}`]].join(' ')}>
+              <div key={index} className={sizeClass}>
                 <RichText content={richText} />
                 {enableLink && <CMSLink className={classes.link} {...link} />}
               </div>

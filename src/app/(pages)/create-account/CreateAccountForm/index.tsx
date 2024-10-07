@@ -5,12 +5,13 @@ import { useForm } from 'react-hook-form'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-import { Button } from '../../../_components/Button'
+// import { Button } from '../../../_components/Button'
 import { Input } from '../../../_components/Input'
 import { Message } from '../../../_components/Message'
 import { useAuth } from '../../../_providers/Auth'
 
 import classes from './index.module.scss'
+import { Button } from '@nextui-org/react'
 
 type FormData = {
   name: string
@@ -124,11 +125,14 @@ const CreateAccountForm: React.FC = () => {
       />
       <Button
         type="submit"
-        label={loading ? 'Processing' : 'Create Account'}
         disabled={loading}
-        appearance="primary"
+        isLoading={loading}
+        variant="solid"
         className={classes.submit}
-      />
+        size="lg"
+      >
+        {loading ? 'Processing' : 'Create Account'}
+      </Button>
       <div>
         {'Already have an account? '}
         <Link href={`/login${allParams}`}>Login</Link>

@@ -1,53 +1,65 @@
 type Query {
-  User(id: String!, draft: Boolean): User
-  Users(draft: Boolean, where: User_where, limit: Int, page: Int, sort: String): Users
+  User(id: String!): User
+  Users(where: User_where, limit: Int, page: Int, sort: String): Users
+  countUsers(where: User_where): countUsers
   docAccessUser(id: String!): usersDocAccess
   meUser: usersMe
   initializedUser: Boolean
-  Media(id: String!, draft: Boolean): Media
-  allMedia(draft: Boolean, where: Media_where, limit: Int, page: Int, sort: String): allMedia
+  Media(id: String!): Media
+  allMedia(where: Media_where, limit: Int, page: Int, sort: String): allMedia
+  countallMedia(where: Media_where): countallMedia
   docAccessMedia(id: String!): mediaDocAccess
   Subscription(id: String!, draft: Boolean): Subscription
   Subscriptions(draft: Boolean, where: Subscription_where, limit: Int, page: Int, sort: String): Subscriptions
+  countSubscriptions(draft: Boolean, where: Subscription_where): countSubscriptions
   docAccessSubscription(id: String!): subscriptionsDocAccess
   versionSubscription(id: String): SubscriptionVersion
   versionsSubscriptions(where: versionsSubscription_where, limit: Int, page: Int, sort: String): versionsSubscriptions
   Course(id: String!, draft: Boolean): Course
   Courses(draft: Boolean, where: Course_where, limit: Int, page: Int, sort: String): Courses
+  countCourses(draft: Boolean, where: Course_where): countCourses
   docAccessCourse(id: String!): coursesDocAccess
   versionCourse(id: String): CourseVersion
   versionsCourses(where: versionsCourse_where, limit: Int, page: Int, sort: String): versionsCourses
-  Transaction(id: String!, draft: Boolean): Transaction
-  Transactions(draft: Boolean, where: Transaction_where, limit: Int, page: Int, sort: String): Transactions
+  Transaction(id: String!): Transaction
+  Transactions(where: Transaction_where, limit: Int, page: Int, sort: String): Transactions
+  countTransactions(where: Transaction_where): countTransactions
   docAccessTransaction(id: String!): transactionsDocAccess
   Page(id: String!, draft: Boolean): Page
   Pages(draft: Boolean, where: Page_where, limit: Int, page: Int, sort: String): Pages
+  countPages(draft: Boolean, where: Page_where): countPages
   docAccessPage(id: String!): pagesDocAccess
   versionPage(id: String): PageVersion
   versionsPages(where: versionsPage_where, limit: Int, page: Int, sort: String): versionsPages
   Post(id: String!, draft: Boolean): Post
   Posts(draft: Boolean, where: Post_where, limit: Int, page: Int, sort: String): Posts
+  countPosts(draft: Boolean, where: Post_where): countPosts
   docAccessPost(id: String!): postsDocAccess
   versionPost(id: String): PostVersion
   versionsPosts(where: versionsPost_where, limit: Int, page: Int, sort: String): versionsPosts
   Project(id: String!, draft: Boolean): Project
   Projects(draft: Boolean, where: Project_where, limit: Int, page: Int, sort: String): Projects
+  countProjects(draft: Boolean, where: Project_where): countProjects
   docAccessProject(id: String!): projectsDocAccess
   versionProject(id: String): ProjectVersion
   versionsProjects(where: versionsProject_where, limit: Int, page: Int, sort: String): versionsProjects
-  Category(id: String!, draft: Boolean): Category
-  Categories(draft: Boolean, where: Category_where, limit: Int, page: Int, sort: String): Categories
+  Category(id: String!): Category
+  Categories(where: Category_where, limit: Int, page: Int, sort: String): Categories
+  countCategories(where: Category_where): countCategories
   docAccessCategory(id: String!): categoriesDocAccess
   Comment(id: String!, draft: Boolean): Comment
   Comments(draft: Boolean, where: Comment_where, limit: Int, page: Int, sort: String): Comments
+  countComments(draft: Boolean, where: Comment_where): countComments
   docAccessComment(id: String!): commentsDocAccess
   versionComment(id: String): CommentVersion
   versionsComments(where: versionsComment_where, limit: Int, page: Int, sort: String): versionsComments
-  Redirect(id: String!, draft: Boolean): Redirect
-  Redirects(draft: Boolean, where: Redirect_where, limit: Int, page: Int, sort: String): Redirects
+  Redirect(id: String!): Redirect
+  Redirects(where: Redirect_where, limit: Int, page: Int, sort: String): Redirects
+  countRedirects(where: Redirect_where): countRedirects
   docAccessRedirect(id: String!): redirectsDocAccess
-  PayloadPreference(id: String!, draft: Boolean): PayloadPreference
-  PayloadPreferences(draft: Boolean, where: PayloadPreference_where, limit: Int, page: Int, sort: String): PayloadPreferences
+  PayloadPreference(id: String!): PayloadPreference
+  PayloadPreferences(where: PayloadPreference_where, limit: Int, page: Int, sort: String): PayloadPreferences
+  countPayloadPreferences(where: PayloadPreference_where): countPayloadPreferences
   docAccessPayloadPreference(id: String!): payload_preferencesDocAccess
   Settings(draft: Boolean): Settings
   docAccessSettings: settingsDocAccess
@@ -65,7 +77,7 @@ type User {
   referralCode: String
   referredBy: User
   referredUsers: [User!]
-  subscriptions: [Subscription!]
+  subscriptions(draft: Boolean): [Subscription!]
   phoneNumber: String
   accountBalance: Float
   referralTotal: Float
@@ -95,7 +107,7 @@ type Subscription {
   coupons: [Subscription_Coupons!]
   referralAmount: Float
   endOfPromotion: DateTime
-  courses: [Course!]
+  courses(draft: Boolean): [Course!]
   slug: String
   meta: Subscription_Meta
   updatedAt: DateTime
@@ -118,9 +130,10 @@ scalar DateTime
 type Course {
   id: String
   title: String
-  description(depth: Int): JSON
-  videoUrl: String
+  mainDescription(depth: Int): JSON
+  courseContent: [Course_CourseContent!]
   courseImage(where: Course_CourseImage_where): Media
+  relatedCourses(draft: Boolean): [Course!]
   slug: String
   meta: Course_Meta
   updatedAt: DateTime
@@ -132,6 +145,13 @@ type Course {
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar JSON
+
+type Course_CourseContent {
+  description(depth: Int): JSON
+  videoUrl: String
+  videoTitle: String
+  id: String
+}
 
 type Media {
   id: String
@@ -145,6 +165,8 @@ type Media {
   filesize: Float
   width: Float
   height: Float
+  focalX: Float
+  focalY: Float
 }
 
 input Course_CourseImage_where {
@@ -158,6 +180,8 @@ input Course_CourseImage_where {
   filesize: Course_CourseImage_filesize_operator
   width: Course_CourseImage_width_operator
   height: Course_CourseImage_height_operator
+  focalX: Course_CourseImage_focalX_operator
+  focalY: Course_CourseImage_focalY_operator
   id: Course_CourseImage_id_operator
   AND: [Course_CourseImage_where_and]
   OR: [Course_CourseImage_where_or]
@@ -266,6 +290,26 @@ input Course_CourseImage_height_operator {
   exists: Boolean
 }
 
+input Course_CourseImage_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input Course_CourseImage_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input Course_CourseImage_id_operator {
   equals: String
   not_equals: String
@@ -288,6 +332,8 @@ input Course_CourseImage_where_and {
   filesize: Course_CourseImage_filesize_operator
   width: Course_CourseImage_width_operator
   height: Course_CourseImage_height_operator
+  focalX: Course_CourseImage_focalX_operator
+  focalY: Course_CourseImage_focalY_operator
   id: Course_CourseImage_id_operator
   AND: [Course_CourseImage_where_and]
   OR: [Course_CourseImage_where_or]
@@ -304,6 +350,8 @@ input Course_CourseImage_where_or {
   filesize: Course_CourseImage_filesize_operator
   width: Course_CourseImage_width_operator
   height: Course_CourseImage_height_operator
+  focalX: Course_CourseImage_focalX_operator
+  focalY: Course_CourseImage_focalY_operator
   id: Course_CourseImage_id_operator
   AND: [Course_CourseImage_where_and]
   OR: [Course_CourseImage_where_or]
@@ -326,6 +374,8 @@ input Course_Meta_Image_where {
   filesize: Course_Meta_Image_filesize_operator
   width: Course_Meta_Image_width_operator
   height: Course_Meta_Image_height_operator
+  focalX: Course_Meta_Image_focalX_operator
+  focalY: Course_Meta_Image_focalY_operator
   id: Course_Meta_Image_id_operator
   AND: [Course_Meta_Image_where_and]
   OR: [Course_Meta_Image_where_or]
@@ -434,6 +484,26 @@ input Course_Meta_Image_height_operator {
   exists: Boolean
 }
 
+input Course_Meta_Image_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input Course_Meta_Image_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input Course_Meta_Image_id_operator {
   equals: String
   not_equals: String
@@ -456,6 +526,8 @@ input Course_Meta_Image_where_and {
   filesize: Course_Meta_Image_filesize_operator
   width: Course_Meta_Image_width_operator
   height: Course_Meta_Image_height_operator
+  focalX: Course_Meta_Image_focalX_operator
+  focalY: Course_Meta_Image_focalY_operator
   id: Course_Meta_Image_id_operator
   AND: [Course_Meta_Image_where_and]
   OR: [Course_Meta_Image_where_or]
@@ -472,6 +544,8 @@ input Course_Meta_Image_where_or {
   filesize: Course_Meta_Image_filesize_operator
   width: Course_Meta_Image_width_operator
   height: Course_Meta_Image_height_operator
+  focalX: Course_Meta_Image_focalX_operator
+  focalY: Course_Meta_Image_focalY_operator
   id: Course_Meta_Image_id_operator
   AND: [Course_Meta_Image_where_and]
   OR: [Course_Meta_Image_where_or]
@@ -499,6 +573,8 @@ input Subscription_Meta_Image_where {
   filesize: Subscription_Meta_Image_filesize_operator
   width: Subscription_Meta_Image_width_operator
   height: Subscription_Meta_Image_height_operator
+  focalX: Subscription_Meta_Image_focalX_operator
+  focalY: Subscription_Meta_Image_focalY_operator
   id: Subscription_Meta_Image_id_operator
   AND: [Subscription_Meta_Image_where_and]
   OR: [Subscription_Meta_Image_where_or]
@@ -607,6 +683,26 @@ input Subscription_Meta_Image_height_operator {
   exists: Boolean
 }
 
+input Subscription_Meta_Image_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input Subscription_Meta_Image_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input Subscription_Meta_Image_id_operator {
   equals: String
   not_equals: String
@@ -629,6 +725,8 @@ input Subscription_Meta_Image_where_and {
   filesize: Subscription_Meta_Image_filesize_operator
   width: Subscription_Meta_Image_width_operator
   height: Subscription_Meta_Image_height_operator
+  focalX: Subscription_Meta_Image_focalX_operator
+  focalY: Subscription_Meta_Image_focalY_operator
   id: Subscription_Meta_Image_id_operator
   AND: [Subscription_Meta_Image_where_and]
   OR: [Subscription_Meta_Image_where_or]
@@ -645,6 +743,8 @@ input Subscription_Meta_Image_where_or {
   filesize: Subscription_Meta_Image_filesize_operator
   width: Subscription_Meta_Image_width_operator
   height: Subscription_Meta_Image_height_operator
+  focalX: Subscription_Meta_Image_focalX_operator
+  focalY: Subscription_Meta_Image_focalY_operator
   id: Subscription_Meta_Image_id_operator
   AND: [Subscription_Meta_Image_where_and]
   OR: [Subscription_Meta_Image_where_or]
@@ -863,6 +963,10 @@ input User_where_or {
   id: User_id_operator
   AND: [User_where_and]
   OR: [User_where_or]
+}
+
+type countUsers {
+  totalDocs: Int
 }
 
 type usersDocAccess {
@@ -1222,6 +1326,7 @@ type UsersUnlockDocAccess {
 type usersMe {
   collection: String
   exp: Int
+  strategy: String
   token: String
   user: User
 }
@@ -1251,6 +1356,8 @@ input Media_where {
   filesize: Media_filesize_operator
   width: Media_width_operator
   height: Media_height_operator
+  focalX: Media_focalX_operator
+  focalY: Media_focalY_operator
   id: Media_id_operator
   AND: [Media_where_and]
   OR: [Media_where_or]
@@ -1359,6 +1466,26 @@ input Media_height_operator {
   exists: Boolean
 }
 
+input Media_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input Media_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input Media_id_operator {
   equals: String
   not_equals: String
@@ -1381,6 +1508,8 @@ input Media_where_and {
   filesize: Media_filesize_operator
   width: Media_width_operator
   height: Media_height_operator
+  focalX: Media_focalX_operator
+  focalY: Media_focalY_operator
   id: Media_id_operator
   AND: [Media_where_and]
   OR: [Media_where_or]
@@ -1397,9 +1526,15 @@ input Media_where_or {
   filesize: Media_filesize_operator
   width: Media_width_operator
   height: Media_height_operator
+  focalX: Media_focalX_operator
+  focalY: Media_focalY_operator
   id: Media_id_operator
   AND: [Media_where_and]
   OR: [Media_where_or]
+}
+
+type countallMedia {
+  totalDocs: Int
 }
 
 type mediaDocAccess {
@@ -1421,6 +1556,8 @@ type MediaDocAccessFields {
   filesize: MediaDocAccessFields_filesize
   width: MediaDocAccessFields_width
   height: MediaDocAccessFields_height
+  focalX: MediaDocAccessFields_focalX
+  focalY: MediaDocAccessFields_focalY
 }
 
 type MediaDocAccessFields_alt {
@@ -1650,6 +1787,52 @@ type MediaDocAccessFields_height_Update {
 }
 
 type MediaDocAccessFields_height_Delete {
+  permission: Boolean!
+}
+
+type MediaDocAccessFields_focalX {
+  create: MediaDocAccessFields_focalX_Create
+  read: MediaDocAccessFields_focalX_Read
+  update: MediaDocAccessFields_focalX_Update
+  delete: MediaDocAccessFields_focalX_Delete
+}
+
+type MediaDocAccessFields_focalX_Create {
+  permission: Boolean!
+}
+
+type MediaDocAccessFields_focalX_Read {
+  permission: Boolean!
+}
+
+type MediaDocAccessFields_focalX_Update {
+  permission: Boolean!
+}
+
+type MediaDocAccessFields_focalX_Delete {
+  permission: Boolean!
+}
+
+type MediaDocAccessFields_focalY {
+  create: MediaDocAccessFields_focalY_Create
+  read: MediaDocAccessFields_focalY_Read
+  update: MediaDocAccessFields_focalY_Update
+  delete: MediaDocAccessFields_focalY_Delete
+}
+
+type MediaDocAccessFields_focalY_Create {
+  permission: Boolean!
+}
+
+type MediaDocAccessFields_focalY_Read {
+  permission: Boolean!
+}
+
+type MediaDocAccessFields_focalY_Update {
+  permission: Boolean!
+}
+
+type MediaDocAccessFields_focalY_Delete {
   permission: Boolean!
 }
 
@@ -1952,6 +2135,10 @@ input Subscription_where_or {
   id: Subscription_id_operator
   AND: [Subscription_where_and]
   OR: [Subscription_where_or]
+}
+
+type countSubscriptions {
+  totalDocs: Int
 }
 
 type subscriptionsDocAccess {
@@ -2311,34 +2498,9 @@ type SubscriptionsDocAccessFields_meta_Delete {
 }
 
 type SubscriptionsDocAccessFields_meta_Fields {
-  overview: SubscriptionsDocAccessFields_meta_overview
   title: SubscriptionsDocAccessFields_meta_title
   description: SubscriptionsDocAccessFields_meta_description
   image: SubscriptionsDocAccessFields_meta_image
-  preview: SubscriptionsDocAccessFields_meta_preview
-}
-
-type SubscriptionsDocAccessFields_meta_overview {
-  create: SubscriptionsDocAccessFields_meta_overview_Create
-  read: SubscriptionsDocAccessFields_meta_overview_Read
-  update: SubscriptionsDocAccessFields_meta_overview_Update
-  delete: SubscriptionsDocAccessFields_meta_overview_Delete
-}
-
-type SubscriptionsDocAccessFields_meta_overview_Create {
-  permission: Boolean!
-}
-
-type SubscriptionsDocAccessFields_meta_overview_Read {
-  permission: Boolean!
-}
-
-type SubscriptionsDocAccessFields_meta_overview_Update {
-  permission: Boolean!
-}
-
-type SubscriptionsDocAccessFields_meta_overview_Delete {
-  permission: Boolean!
 }
 
 type SubscriptionsDocAccessFields_meta_title {
@@ -2407,29 +2569,6 @@ type SubscriptionsDocAccessFields_meta_image_Update {
 }
 
 type SubscriptionsDocAccessFields_meta_image_Delete {
-  permission: Boolean!
-}
-
-type SubscriptionsDocAccessFields_meta_preview {
-  create: SubscriptionsDocAccessFields_meta_preview_Create
-  read: SubscriptionsDocAccessFields_meta_preview_Read
-  update: SubscriptionsDocAccessFields_meta_preview_Update
-  delete: SubscriptionsDocAccessFields_meta_preview_Delete
-}
-
-type SubscriptionsDocAccessFields_meta_preview_Create {
-  permission: Boolean!
-}
-
-type SubscriptionsDocAccessFields_meta_preview_Read {
-  permission: Boolean!
-}
-
-type SubscriptionsDocAccessFields_meta_preview_Update {
-  permission: Boolean!
-}
-
-type SubscriptionsDocAccessFields_meta_preview_Delete {
   permission: Boolean!
 }
 
@@ -2528,7 +2667,7 @@ type SubscriptionsReadVersionsDocAccess {
 }
 
 type SubscriptionVersion {
-  parent: Subscription
+  parent(draft: Boolean): Subscription
   version: SubscriptionVersion_Version
   createdAt: DateTime
   updatedAt: DateTime
@@ -2544,7 +2683,7 @@ type SubscriptionVersion_Version {
   coupons: [SubscriptionVersion_Version_Coupons!]
   referralAmount: Float
   endOfPromotion: DateTime
-  courses: [Course!]
+  courses(draft: Boolean): [Course!]
   slug: String
   meta: SubscriptionVersion_Version_Meta
   updatedAt: DateTime
@@ -2576,6 +2715,8 @@ input SubscriptionVersion_Version_Meta_Image_where {
   filesize: SubscriptionVersion_Version_Meta_Image_filesize_operator
   width: SubscriptionVersion_Version_Meta_Image_width_operator
   height: SubscriptionVersion_Version_Meta_Image_height_operator
+  focalX: SubscriptionVersion_Version_Meta_Image_focalX_operator
+  focalY: SubscriptionVersion_Version_Meta_Image_focalY_operator
   id: SubscriptionVersion_Version_Meta_Image_id_operator
   AND: [SubscriptionVersion_Version_Meta_Image_where_and]
   OR: [SubscriptionVersion_Version_Meta_Image_where_or]
@@ -2684,6 +2825,26 @@ input SubscriptionVersion_Version_Meta_Image_height_operator {
   exists: Boolean
 }
 
+input SubscriptionVersion_Version_Meta_Image_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input SubscriptionVersion_Version_Meta_Image_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input SubscriptionVersion_Version_Meta_Image_id_operator {
   equals: String
   not_equals: String
@@ -2706,6 +2867,8 @@ input SubscriptionVersion_Version_Meta_Image_where_and {
   filesize: SubscriptionVersion_Version_Meta_Image_filesize_operator
   width: SubscriptionVersion_Version_Meta_Image_width_operator
   height: SubscriptionVersion_Version_Meta_Image_height_operator
+  focalX: SubscriptionVersion_Version_Meta_Image_focalX_operator
+  focalY: SubscriptionVersion_Version_Meta_Image_focalY_operator
   id: SubscriptionVersion_Version_Meta_Image_id_operator
   AND: [SubscriptionVersion_Version_Meta_Image_where_and]
   OR: [SubscriptionVersion_Version_Meta_Image_where_or]
@@ -2722,6 +2885,8 @@ input SubscriptionVersion_Version_Meta_Image_where_or {
   filesize: SubscriptionVersion_Version_Meta_Image_filesize_operator
   width: SubscriptionVersion_Version_Meta_Image_width_operator
   height: SubscriptionVersion_Version_Meta_Image_height_operator
+  focalX: SubscriptionVersion_Version_Meta_Image_focalX_operator
+  focalY: SubscriptionVersion_Version_Meta_Image_focalY_operator
   id: SubscriptionVersion_Version_Meta_Image_id_operator
   AND: [SubscriptionVersion_Version_Meta_Image_where_and]
   OR: [SubscriptionVersion_Version_Meta_Image_where_or]
@@ -3078,9 +3243,13 @@ type Courses {
 
 input Course_where {
   title: Course_title_operator
-  description: Course_description_operator
-  videoUrl: Course_videoUrl_operator
+  mainDescription: Course_mainDescription_operator
+  courseContent__description: Course_courseContent__description_operator
+  courseContent__videoUrl: Course_courseContent__videoUrl_operator
+  courseContent__videoTitle: Course_courseContent__videoTitle_operator
+  courseContent__id: Course_courseContent__id_operator
   courseImage: Course_courseImage_operator
+  relatedCourses: Course_relatedCourses_operator
   slug: Course_slug_operator
   meta__title: Course_meta__title_operator
   meta__description: Course_meta__description_operator
@@ -3103,14 +3272,21 @@ input Course_title_operator {
   all: [String]
 }
 
-input Course_description_operator {
+input Course_mainDescription_operator {
   equals: JSON
   not_equals: JSON
   like: JSON
   contains: JSON
 }
 
-input Course_videoUrl_operator {
+input Course_courseContent__description_operator {
+  equals: JSON
+  not_equals: JSON
+  like: JSON
+  contains: JSON
+}
+
+input Course_courseContent__videoUrl_operator {
   equals: String
   not_equals: String
   like: String
@@ -3120,9 +3296,40 @@ input Course_videoUrl_operator {
   all: [String]
 }
 
+input Course_courseContent__videoTitle_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input Course_courseContent__id_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
 input Course_courseImage_operator {
   equals: String
   not_equals: String
+  exists: Boolean
+}
+
+input Course_relatedCourses_operator {
+  equals: JSON
+  not_equals: JSON
+  in: [JSON]
+  not_in: [JSON]
+  all: [JSON]
   exists: Boolean
 }
 
@@ -3211,9 +3418,13 @@ input Course_id_operator {
 
 input Course_where_and {
   title: Course_title_operator
-  description: Course_description_operator
-  videoUrl: Course_videoUrl_operator
+  mainDescription: Course_mainDescription_operator
+  courseContent__description: Course_courseContent__description_operator
+  courseContent__videoUrl: Course_courseContent__videoUrl_operator
+  courseContent__videoTitle: Course_courseContent__videoTitle_operator
+  courseContent__id: Course_courseContent__id_operator
   courseImage: Course_courseImage_operator
+  relatedCourses: Course_relatedCourses_operator
   slug: Course_slug_operator
   meta__title: Course_meta__title_operator
   meta__description: Course_meta__description_operator
@@ -3228,9 +3439,13 @@ input Course_where_and {
 
 input Course_where_or {
   title: Course_title_operator
-  description: Course_description_operator
-  videoUrl: Course_videoUrl_operator
+  mainDescription: Course_mainDescription_operator
+  courseContent__description: Course_courseContent__description_operator
+  courseContent__videoUrl: Course_courseContent__videoUrl_operator
+  courseContent__videoTitle: Course_courseContent__videoTitle_operator
+  courseContent__id: Course_courseContent__id_operator
   courseImage: Course_courseImage_operator
+  relatedCourses: Course_relatedCourses_operator
   slug: Course_slug_operator
   meta__title: Course_meta__title_operator
   meta__description: Course_meta__description_operator
@@ -3241,6 +3456,10 @@ input Course_where_or {
   id: Course_id_operator
   AND: [Course_where_and]
   OR: [Course_where_or]
+}
+
+type countCourses {
+  totalDocs: Int
 }
 
 type coursesDocAccess {
@@ -3254,9 +3473,10 @@ type coursesDocAccess {
 
 type CoursesDocAccessFields {
   title: CoursesDocAccessFields_title
-  description: CoursesDocAccessFields_description
-  videoUrl: CoursesDocAccessFields_videoUrl
+  mainDescription: CoursesDocAccessFields_mainDescription
+  courseContent: CoursesDocAccessFields_courseContent
   courseImage: CoursesDocAccessFields_courseImage
+  relatedCourses: CoursesDocAccessFields_relatedCourses
   slug: CoursesDocAccessFields_slug
   meta: CoursesDocAccessFields_meta
   updatedAt: CoursesDocAccessFields_updatedAt
@@ -3287,49 +3507,149 @@ type CoursesDocAccessFields_title_Delete {
   permission: Boolean!
 }
 
-type CoursesDocAccessFields_description {
-  create: CoursesDocAccessFields_description_Create
-  read: CoursesDocAccessFields_description_Read
-  update: CoursesDocAccessFields_description_Update
-  delete: CoursesDocAccessFields_description_Delete
+type CoursesDocAccessFields_mainDescription {
+  create: CoursesDocAccessFields_mainDescription_Create
+  read: CoursesDocAccessFields_mainDescription_Read
+  update: CoursesDocAccessFields_mainDescription_Update
+  delete: CoursesDocAccessFields_mainDescription_Delete
 }
 
-type CoursesDocAccessFields_description_Create {
+type CoursesDocAccessFields_mainDescription_Create {
   permission: Boolean!
 }
 
-type CoursesDocAccessFields_description_Read {
+type CoursesDocAccessFields_mainDescription_Read {
   permission: Boolean!
 }
 
-type CoursesDocAccessFields_description_Update {
+type CoursesDocAccessFields_mainDescription_Update {
   permission: Boolean!
 }
 
-type CoursesDocAccessFields_description_Delete {
+type CoursesDocAccessFields_mainDescription_Delete {
   permission: Boolean!
 }
 
-type CoursesDocAccessFields_videoUrl {
-  create: CoursesDocAccessFields_videoUrl_Create
-  read: CoursesDocAccessFields_videoUrl_Read
-  update: CoursesDocAccessFields_videoUrl_Update
-  delete: CoursesDocAccessFields_videoUrl_Delete
+type CoursesDocAccessFields_courseContent {
+  create: CoursesDocAccessFields_courseContent_Create
+  read: CoursesDocAccessFields_courseContent_Read
+  update: CoursesDocAccessFields_courseContent_Update
+  delete: CoursesDocAccessFields_courseContent_Delete
+  fields: CoursesDocAccessFields_courseContent_Fields
 }
 
-type CoursesDocAccessFields_videoUrl_Create {
+type CoursesDocAccessFields_courseContent_Create {
   permission: Boolean!
 }
 
-type CoursesDocAccessFields_videoUrl_Read {
+type CoursesDocAccessFields_courseContent_Read {
   permission: Boolean!
 }
 
-type CoursesDocAccessFields_videoUrl_Update {
+type CoursesDocAccessFields_courseContent_Update {
   permission: Boolean!
 }
 
-type CoursesDocAccessFields_videoUrl_Delete {
+type CoursesDocAccessFields_courseContent_Delete {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_courseContent_Fields {
+  description: CoursesDocAccessFields_courseContent_description
+  videoUrl: CoursesDocAccessFields_courseContent_videoUrl
+  videoTitle: CoursesDocAccessFields_courseContent_videoTitle
+  id: CoursesDocAccessFields_courseContent_id
+}
+
+type CoursesDocAccessFields_courseContent_description {
+  create: CoursesDocAccessFields_courseContent_description_Create
+  read: CoursesDocAccessFields_courseContent_description_Read
+  update: CoursesDocAccessFields_courseContent_description_Update
+  delete: CoursesDocAccessFields_courseContent_description_Delete
+}
+
+type CoursesDocAccessFields_courseContent_description_Create {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_courseContent_description_Read {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_courseContent_description_Update {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_courseContent_description_Delete {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_courseContent_videoUrl {
+  create: CoursesDocAccessFields_courseContent_videoUrl_Create
+  read: CoursesDocAccessFields_courseContent_videoUrl_Read
+  update: CoursesDocAccessFields_courseContent_videoUrl_Update
+  delete: CoursesDocAccessFields_courseContent_videoUrl_Delete
+}
+
+type CoursesDocAccessFields_courseContent_videoUrl_Create {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_courseContent_videoUrl_Read {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_courseContent_videoUrl_Update {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_courseContent_videoUrl_Delete {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_courseContent_videoTitle {
+  create: CoursesDocAccessFields_courseContent_videoTitle_Create
+  read: CoursesDocAccessFields_courseContent_videoTitle_Read
+  update: CoursesDocAccessFields_courseContent_videoTitle_Update
+  delete: CoursesDocAccessFields_courseContent_videoTitle_Delete
+}
+
+type CoursesDocAccessFields_courseContent_videoTitle_Create {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_courseContent_videoTitle_Read {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_courseContent_videoTitle_Update {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_courseContent_videoTitle_Delete {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_courseContent_id {
+  create: CoursesDocAccessFields_courseContent_id_Create
+  read: CoursesDocAccessFields_courseContent_id_Read
+  update: CoursesDocAccessFields_courseContent_id_Update
+  delete: CoursesDocAccessFields_courseContent_id_Delete
+}
+
+type CoursesDocAccessFields_courseContent_id_Create {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_courseContent_id_Read {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_courseContent_id_Update {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_courseContent_id_Delete {
   permission: Boolean!
 }
 
@@ -3353,6 +3673,29 @@ type CoursesDocAccessFields_courseImage_Update {
 }
 
 type CoursesDocAccessFields_courseImage_Delete {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_relatedCourses {
+  create: CoursesDocAccessFields_relatedCourses_Create
+  read: CoursesDocAccessFields_relatedCourses_Read
+  update: CoursesDocAccessFields_relatedCourses_Update
+  delete: CoursesDocAccessFields_relatedCourses_Delete
+}
+
+type CoursesDocAccessFields_relatedCourses_Create {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_relatedCourses_Read {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_relatedCourses_Update {
+  permission: Boolean!
+}
+
+type CoursesDocAccessFields_relatedCourses_Delete {
   permission: Boolean!
 }
 
@@ -3404,34 +3747,9 @@ type CoursesDocAccessFields_meta_Delete {
 }
 
 type CoursesDocAccessFields_meta_Fields {
-  overview: CoursesDocAccessFields_meta_overview
   title: CoursesDocAccessFields_meta_title
   description: CoursesDocAccessFields_meta_description
   image: CoursesDocAccessFields_meta_image
-  preview: CoursesDocAccessFields_meta_preview
-}
-
-type CoursesDocAccessFields_meta_overview {
-  create: CoursesDocAccessFields_meta_overview_Create
-  read: CoursesDocAccessFields_meta_overview_Read
-  update: CoursesDocAccessFields_meta_overview_Update
-  delete: CoursesDocAccessFields_meta_overview_Delete
-}
-
-type CoursesDocAccessFields_meta_overview_Create {
-  permission: Boolean!
-}
-
-type CoursesDocAccessFields_meta_overview_Read {
-  permission: Boolean!
-}
-
-type CoursesDocAccessFields_meta_overview_Update {
-  permission: Boolean!
-}
-
-type CoursesDocAccessFields_meta_overview_Delete {
-  permission: Boolean!
 }
 
 type CoursesDocAccessFields_meta_title {
@@ -3500,29 +3818,6 @@ type CoursesDocAccessFields_meta_image_Update {
 }
 
 type CoursesDocAccessFields_meta_image_Delete {
-  permission: Boolean!
-}
-
-type CoursesDocAccessFields_meta_preview {
-  create: CoursesDocAccessFields_meta_preview_Create
-  read: CoursesDocAccessFields_meta_preview_Read
-  update: CoursesDocAccessFields_meta_preview_Update
-  delete: CoursesDocAccessFields_meta_preview_Delete
-}
-
-type CoursesDocAccessFields_meta_preview_Create {
-  permission: Boolean!
-}
-
-type CoursesDocAccessFields_meta_preview_Read {
-  permission: Boolean!
-}
-
-type CoursesDocAccessFields_meta_preview_Update {
-  permission: Boolean!
-}
-
-type CoursesDocAccessFields_meta_preview_Delete {
   permission: Boolean!
 }
 
@@ -3621,7 +3916,7 @@ type CoursesReadVersionsDocAccess {
 }
 
 type CourseVersion {
-  parent: Course
+  parent(draft: Boolean): Course
   version: CourseVersion_Version
   createdAt: DateTime
   updatedAt: DateTime
@@ -3631,14 +3926,22 @@ type CourseVersion {
 
 type CourseVersion_Version {
   title: String
-  description(depth: Int): JSON
-  videoUrl: String
+  mainDescription(depth: Int): JSON
+  courseContent: [CourseVersion_Version_CourseContent!]
   courseImage(where: CourseVersion_Version_CourseImage_where): Media
+  relatedCourses(draft: Boolean): [Course!]
   slug: String
   meta: CourseVersion_Version_Meta
   updatedAt: DateTime
   createdAt: DateTime
   _status: CourseVersion_Version__status
+}
+
+type CourseVersion_Version_CourseContent {
+  description(depth: Int): JSON
+  videoUrl: String
+  videoTitle: String
+  id: String
 }
 
 input CourseVersion_Version_CourseImage_where {
@@ -3652,6 +3955,8 @@ input CourseVersion_Version_CourseImage_where {
   filesize: CourseVersion_Version_CourseImage_filesize_operator
   width: CourseVersion_Version_CourseImage_width_operator
   height: CourseVersion_Version_CourseImage_height_operator
+  focalX: CourseVersion_Version_CourseImage_focalX_operator
+  focalY: CourseVersion_Version_CourseImage_focalY_operator
   id: CourseVersion_Version_CourseImage_id_operator
   AND: [CourseVersion_Version_CourseImage_where_and]
   OR: [CourseVersion_Version_CourseImage_where_or]
@@ -3760,6 +4065,26 @@ input CourseVersion_Version_CourseImage_height_operator {
   exists: Boolean
 }
 
+input CourseVersion_Version_CourseImage_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input CourseVersion_Version_CourseImage_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input CourseVersion_Version_CourseImage_id_operator {
   equals: String
   not_equals: String
@@ -3782,6 +4107,8 @@ input CourseVersion_Version_CourseImage_where_and {
   filesize: CourseVersion_Version_CourseImage_filesize_operator
   width: CourseVersion_Version_CourseImage_width_operator
   height: CourseVersion_Version_CourseImage_height_operator
+  focalX: CourseVersion_Version_CourseImage_focalX_operator
+  focalY: CourseVersion_Version_CourseImage_focalY_operator
   id: CourseVersion_Version_CourseImage_id_operator
   AND: [CourseVersion_Version_CourseImage_where_and]
   OR: [CourseVersion_Version_CourseImage_where_or]
@@ -3798,6 +4125,8 @@ input CourseVersion_Version_CourseImage_where_or {
   filesize: CourseVersion_Version_CourseImage_filesize_operator
   width: CourseVersion_Version_CourseImage_width_operator
   height: CourseVersion_Version_CourseImage_height_operator
+  focalX: CourseVersion_Version_CourseImage_focalX_operator
+  focalY: CourseVersion_Version_CourseImage_focalY_operator
   id: CourseVersion_Version_CourseImage_id_operator
   AND: [CourseVersion_Version_CourseImage_where_and]
   OR: [CourseVersion_Version_CourseImage_where_or]
@@ -3820,6 +4149,8 @@ input CourseVersion_Version_Meta_Image_where {
   filesize: CourseVersion_Version_Meta_Image_filesize_operator
   width: CourseVersion_Version_Meta_Image_width_operator
   height: CourseVersion_Version_Meta_Image_height_operator
+  focalX: CourseVersion_Version_Meta_Image_focalX_operator
+  focalY: CourseVersion_Version_Meta_Image_focalY_operator
   id: CourseVersion_Version_Meta_Image_id_operator
   AND: [CourseVersion_Version_Meta_Image_where_and]
   OR: [CourseVersion_Version_Meta_Image_where_or]
@@ -3928,6 +4259,26 @@ input CourseVersion_Version_Meta_Image_height_operator {
   exists: Boolean
 }
 
+input CourseVersion_Version_Meta_Image_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input CourseVersion_Version_Meta_Image_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input CourseVersion_Version_Meta_Image_id_operator {
   equals: String
   not_equals: String
@@ -3950,6 +4301,8 @@ input CourseVersion_Version_Meta_Image_where_and {
   filesize: CourseVersion_Version_Meta_Image_filesize_operator
   width: CourseVersion_Version_Meta_Image_width_operator
   height: CourseVersion_Version_Meta_Image_height_operator
+  focalX: CourseVersion_Version_Meta_Image_focalX_operator
+  focalY: CourseVersion_Version_Meta_Image_focalY_operator
   id: CourseVersion_Version_Meta_Image_id_operator
   AND: [CourseVersion_Version_Meta_Image_where_and]
   OR: [CourseVersion_Version_Meta_Image_where_or]
@@ -3966,6 +4319,8 @@ input CourseVersion_Version_Meta_Image_where_or {
   filesize: CourseVersion_Version_Meta_Image_filesize_operator
   width: CourseVersion_Version_Meta_Image_width_operator
   height: CourseVersion_Version_Meta_Image_height_operator
+  focalX: CourseVersion_Version_Meta_Image_focalX_operator
+  focalY: CourseVersion_Version_Meta_Image_focalY_operator
   id: CourseVersion_Version_Meta_Image_id_operator
   AND: [CourseVersion_Version_Meta_Image_where_and]
   OR: [CourseVersion_Version_Meta_Image_where_or]
@@ -3993,9 +4348,13 @@ type versionsCourses {
 input versionsCourse_where {
   parent: versionsCourse_parent_operator
   version__title: versionsCourse_version__title_operator
-  version__description: versionsCourse_version__description_operator
-  version__videoUrl: versionsCourse_version__videoUrl_operator
+  version__mainDescription: versionsCourse_version__mainDescription_operator
+  version__courseContent__description: versionsCourse_version__courseContent__description_operator
+  version__courseContent__videoUrl: versionsCourse_version__courseContent__videoUrl_operator
+  version__courseContent__videoTitle: versionsCourse_version__courseContent__videoTitle_operator
+  version__courseContent__id: versionsCourse_version__courseContent__id_operator
   version__courseImage: versionsCourse_version__courseImage_operator
+  version__relatedCourses: versionsCourse_version__relatedCourses_operator
   version__slug: versionsCourse_version__slug_operator
   version__meta__title: versionsCourse_version__meta__title_operator
   version__meta__description: versionsCourse_version__meta__description_operator
@@ -4030,14 +4389,21 @@ input versionsCourse_version__title_operator {
   all: [String]
 }
 
-input versionsCourse_version__description_operator {
+input versionsCourse_version__mainDescription_operator {
   equals: JSON
   not_equals: JSON
   like: JSON
   contains: JSON
 }
 
-input versionsCourse_version__videoUrl_operator {
+input versionsCourse_version__courseContent__description_operator {
+  equals: JSON
+  not_equals: JSON
+  like: JSON
+  contains: JSON
+}
+
+input versionsCourse_version__courseContent__videoUrl_operator {
   equals: String
   not_equals: String
   like: String
@@ -4047,9 +4413,40 @@ input versionsCourse_version__videoUrl_operator {
   all: [String]
 }
 
+input versionsCourse_version__courseContent__videoTitle_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
+input versionsCourse_version__courseContent__id_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+  exists: Boolean
+}
+
 input versionsCourse_version__courseImage_operator {
   equals: String
   not_equals: String
+  exists: Boolean
+}
+
+input versionsCourse_version__relatedCourses_operator {
+  equals: JSON
+  not_equals: JSON
+  in: [JSON]
+  not_in: [JSON]
+  all: [JSON]
   exists: Boolean
 }
 
@@ -4167,9 +4564,13 @@ input versionsCourse_id_operator {
 input versionsCourse_where_and {
   parent: versionsCourse_parent_operator
   version__title: versionsCourse_version__title_operator
-  version__description: versionsCourse_version__description_operator
-  version__videoUrl: versionsCourse_version__videoUrl_operator
+  version__mainDescription: versionsCourse_version__mainDescription_operator
+  version__courseContent__description: versionsCourse_version__courseContent__description_operator
+  version__courseContent__videoUrl: versionsCourse_version__courseContent__videoUrl_operator
+  version__courseContent__videoTitle: versionsCourse_version__courseContent__videoTitle_operator
+  version__courseContent__id: versionsCourse_version__courseContent__id_operator
   version__courseImage: versionsCourse_version__courseImage_operator
+  version__relatedCourses: versionsCourse_version__relatedCourses_operator
   version__slug: versionsCourse_version__slug_operator
   version__meta__title: versionsCourse_version__meta__title_operator
   version__meta__description: versionsCourse_version__meta__description_operator
@@ -4188,9 +4589,13 @@ input versionsCourse_where_and {
 input versionsCourse_where_or {
   parent: versionsCourse_parent_operator
   version__title: versionsCourse_version__title_operator
-  version__description: versionsCourse_version__description_operator
-  version__videoUrl: versionsCourse_version__videoUrl_operator
+  version__mainDescription: versionsCourse_version__mainDescription_operator
+  version__courseContent__description: versionsCourse_version__courseContent__description_operator
+  version__courseContent__videoUrl: versionsCourse_version__courseContent__videoUrl_operator
+  version__courseContent__videoTitle: versionsCourse_version__courseContent__videoTitle_operator
+  version__courseContent__id: versionsCourse_version__courseContent__id_operator
   version__courseImage: versionsCourse_version__courseImage_operator
+  version__relatedCourses: versionsCourse_version__relatedCourses_operator
   version__slug: versionsCourse_version__slug_operator
   version__meta__title: versionsCourse_version__meta__title_operator
   version__meta__description: versionsCourse_version__meta__description_operator
@@ -4208,7 +4613,7 @@ input versionsCourse_where_or {
 
 type Transaction {
   id: String
-  title: Subscription
+  title(draft: Boolean): Subscription
   transId: String
   externalId: String
   user: User!
@@ -4482,6 +4887,10 @@ input Transaction_where_or {
   id: Transaction_id_operator
   AND: [Transaction_where_and]
   OR: [Transaction_where_or]
+}
+
+type countTransactions {
+  totalDocs: Int
 }
 
 type transactionsDocAccess {
@@ -4887,7 +5296,7 @@ type Page_Hero_Links {
 type Page_Hero_Links_Link {
   type: Page_Hero_Links_Link_type
   newTab: Boolean
-  reference: Page_Hero_Links_Link_Reference_Relationship
+  reference(draft: Boolean): Page_Hero_Links_Link_Reference_Relationship
   url: String
   label: String
   appearance: Page_Hero_Links_Link_appearance
@@ -4926,6 +5335,8 @@ input Page_Hero_Media_where {
   filesize: Page_Hero_Media_filesize_operator
   width: Page_Hero_Media_width_operator
   height: Page_Hero_Media_height_operator
+  focalX: Page_Hero_Media_focalX_operator
+  focalY: Page_Hero_Media_focalY_operator
   id: Page_Hero_Media_id_operator
   AND: [Page_Hero_Media_where_and]
   OR: [Page_Hero_Media_where_or]
@@ -5034,6 +5445,26 @@ input Page_Hero_Media_height_operator {
   exists: Boolean
 }
 
+input Page_Hero_Media_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input Page_Hero_Media_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input Page_Hero_Media_id_operator {
   equals: String
   not_equals: String
@@ -5056,6 +5487,8 @@ input Page_Hero_Media_where_and {
   filesize: Page_Hero_Media_filesize_operator
   width: Page_Hero_Media_width_operator
   height: Page_Hero_Media_height_operator
+  focalX: Page_Hero_Media_focalX_operator
+  focalY: Page_Hero_Media_focalY_operator
   id: Page_Hero_Media_id_operator
   AND: [Page_Hero_Media_where_and]
   OR: [Page_Hero_Media_where_or]
@@ -5072,6 +5505,8 @@ input Page_Hero_Media_where_or {
   filesize: Page_Hero_Media_filesize_operator
   width: Page_Hero_Media_width_operator
   height: Page_Hero_Media_height_operator
+  focalX: Page_Hero_Media_focalX_operator
+  focalY: Page_Hero_Media_focalY_operator
   id: Page_Hero_Media_id_operator
   AND: [Page_Hero_Media_where_and]
   OR: [Page_Hero_Media_where_or]
@@ -5096,7 +5531,7 @@ type Cta_Links {
 type Cta_Links_Link {
   type: Cta_Links_Link_type
   newTab: Boolean
-  reference: Cta_Links_Link_Reference_Relationship
+  reference(draft: Boolean): Cta_Links_Link_Reference_Relationship
   url: String
   label: String
   appearance: Cta_Links_Link_appearance
@@ -5149,7 +5584,7 @@ enum Content_Columns_size {
 type Content_Columns_Link {
   type: Content_Columns_Link_type
   newTab: Boolean
-  reference: Content_Columns_Link_Reference_Relationship
+  reference(draft: Boolean): Content_Columns_Link_Reference_Relationship
   url: String
   label: String
   appearance: Content_Columns_Link_appearance
@@ -5202,6 +5637,8 @@ input MediaBlock_Media_where {
   filesize: MediaBlock_Media_filesize_operator
   width: MediaBlock_Media_width_operator
   height: MediaBlock_Media_height_operator
+  focalX: MediaBlock_Media_focalX_operator
+  focalY: MediaBlock_Media_focalY_operator
   id: MediaBlock_Media_id_operator
   AND: [MediaBlock_Media_where_and]
   OR: [MediaBlock_Media_where_or]
@@ -5310,6 +5747,26 @@ input MediaBlock_Media_height_operator {
   exists: Boolean
 }
 
+input MediaBlock_Media_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input MediaBlock_Media_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input MediaBlock_Media_id_operator {
   equals: String
   not_equals: String
@@ -5332,6 +5789,8 @@ input MediaBlock_Media_where_and {
   filesize: MediaBlock_Media_filesize_operator
   width: MediaBlock_Media_width_operator
   height: MediaBlock_Media_height_operator
+  focalX: MediaBlock_Media_focalX_operator
+  focalY: MediaBlock_Media_focalY_operator
   id: MediaBlock_Media_id_operator
   AND: [MediaBlock_Media_where_and]
   OR: [MediaBlock_Media_where_or]
@@ -5348,6 +5807,8 @@ input MediaBlock_Media_where_or {
   filesize: MediaBlock_Media_filesize_operator
   width: MediaBlock_Media_width_operator
   height: MediaBlock_Media_height_operator
+  focalX: MediaBlock_Media_focalX_operator
+  focalY: MediaBlock_Media_focalY_operator
   id: MediaBlock_Media_id_operator
   AND: [MediaBlock_Media_where_and]
   OR: [MediaBlock_Media_where_or]
@@ -5359,8 +5820,8 @@ type Archive {
   relationTo: Archive_relationTo
   categories: [Category!]
   limit: Float
-  selectedDocs: [Archive_SelectedDocs_Relationship!]
-  populatedDocs: [Archive_PopulatedDocs_Relationship!]
+  selectedDocs(draft: Boolean): [Archive_SelectedDocs_Relationship!]
+  populatedDocs(draft: Boolean): [Archive_PopulatedDocs_Relationship!]
   populatedDocsTotal: Float
   id: String
   blockName: String
@@ -5416,7 +5877,7 @@ type Post {
   layout: [Post_Layout!]!
   enablePremiumContent: Boolean
   premiumContent: [Post_PremiumContent!]
-  relatedPosts: [Post!]
+  relatedPosts(draft: Boolean): [Post!]
   slug: String
   meta: Post_Meta
   updatedAt: DateTime
@@ -5452,7 +5913,7 @@ type Post_Hero_Links {
 type Post_Hero_Links_Link {
   type: Post_Hero_Links_Link_type
   newTab: Boolean
-  reference: Post_Hero_Links_Link_Reference_Relationship
+  reference(draft: Boolean): Post_Hero_Links_Link_Reference_Relationship
   url: String
   label: String
   appearance: Post_Hero_Links_Link_appearance
@@ -5491,6 +5952,8 @@ input Post_Hero_Media_where {
   filesize: Post_Hero_Media_filesize_operator
   width: Post_Hero_Media_width_operator
   height: Post_Hero_Media_height_operator
+  focalX: Post_Hero_Media_focalX_operator
+  focalY: Post_Hero_Media_focalY_operator
   id: Post_Hero_Media_id_operator
   AND: [Post_Hero_Media_where_and]
   OR: [Post_Hero_Media_where_or]
@@ -5599,6 +6062,26 @@ input Post_Hero_Media_height_operator {
   exists: Boolean
 }
 
+input Post_Hero_Media_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input Post_Hero_Media_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input Post_Hero_Media_id_operator {
   equals: String
   not_equals: String
@@ -5621,6 +6104,8 @@ input Post_Hero_Media_where_and {
   filesize: Post_Hero_Media_filesize_operator
   width: Post_Hero_Media_width_operator
   height: Post_Hero_Media_height_operator
+  focalX: Post_Hero_Media_focalX_operator
+  focalY: Post_Hero_Media_focalY_operator
   id: Post_Hero_Media_id_operator
   AND: [Post_Hero_Media_where_and]
   OR: [Post_Hero_Media_where_or]
@@ -5637,6 +6122,8 @@ input Post_Hero_Media_where_or {
   filesize: Post_Hero_Media_filesize_operator
   width: Post_Hero_Media_width_operator
   height: Post_Hero_Media_height_operator
+  focalX: Post_Hero_Media_focalX_operator
+  focalY: Post_Hero_Media_focalY_operator
   id: Post_Hero_Media_id_operator
   AND: [Post_Hero_Media_where_and]
   OR: [Post_Hero_Media_where_or]
@@ -5663,6 +6150,8 @@ input Post_Meta_Image_where {
   filesize: Post_Meta_Image_filesize_operator
   width: Post_Meta_Image_width_operator
   height: Post_Meta_Image_height_operator
+  focalX: Post_Meta_Image_focalX_operator
+  focalY: Post_Meta_Image_focalY_operator
   id: Post_Meta_Image_id_operator
   AND: [Post_Meta_Image_where_and]
   OR: [Post_Meta_Image_where_or]
@@ -5771,6 +6260,26 @@ input Post_Meta_Image_height_operator {
   exists: Boolean
 }
 
+input Post_Meta_Image_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input Post_Meta_Image_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input Post_Meta_Image_id_operator {
   equals: String
   not_equals: String
@@ -5793,6 +6302,8 @@ input Post_Meta_Image_where_and {
   filesize: Post_Meta_Image_filesize_operator
   width: Post_Meta_Image_width_operator
   height: Post_Meta_Image_height_operator
+  focalX: Post_Meta_Image_focalX_operator
+  focalY: Post_Meta_Image_focalY_operator
   id: Post_Meta_Image_id_operator
   AND: [Post_Meta_Image_where_and]
   OR: [Post_Meta_Image_where_or]
@@ -5809,6 +6320,8 @@ input Post_Meta_Image_where_or {
   filesize: Post_Meta_Image_filesize_operator
   width: Post_Meta_Image_width_operator
   height: Post_Meta_Image_height_operator
+  focalX: Post_Meta_Image_focalX_operator
+  focalY: Post_Meta_Image_focalY_operator
   id: Post_Meta_Image_id_operator
   AND: [Post_Meta_Image_where_and]
   OR: [Post_Meta_Image_where_or]
@@ -5826,7 +6339,7 @@ type Project {
   publishedAt: DateTime
   hero: Project_Hero
   layout: [Project_Layout!]!
-  relatedProjects: [Project!]
+  relatedProjects(draft: Boolean): [Project!]
   slug: String
   meta: Project_Meta
   updatedAt: DateTime
@@ -5857,7 +6370,7 @@ type Project_Hero_Links {
 type Project_Hero_Links_Link {
   type: Project_Hero_Links_Link_type
   newTab: Boolean
-  reference: Project_Hero_Links_Link_Reference_Relationship
+  reference(draft: Boolean): Project_Hero_Links_Link_Reference_Relationship
   url: String
   label: String
   appearance: Project_Hero_Links_Link_appearance
@@ -5896,6 +6409,8 @@ input Project_Hero_Media_where {
   filesize: Project_Hero_Media_filesize_operator
   width: Project_Hero_Media_width_operator
   height: Project_Hero_Media_height_operator
+  focalX: Project_Hero_Media_focalX_operator
+  focalY: Project_Hero_Media_focalY_operator
   id: Project_Hero_Media_id_operator
   AND: [Project_Hero_Media_where_and]
   OR: [Project_Hero_Media_where_or]
@@ -6004,6 +6519,26 @@ input Project_Hero_Media_height_operator {
   exists: Boolean
 }
 
+input Project_Hero_Media_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input Project_Hero_Media_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input Project_Hero_Media_id_operator {
   equals: String
   not_equals: String
@@ -6026,6 +6561,8 @@ input Project_Hero_Media_where_and {
   filesize: Project_Hero_Media_filesize_operator
   width: Project_Hero_Media_width_operator
   height: Project_Hero_Media_height_operator
+  focalX: Project_Hero_Media_focalX_operator
+  focalY: Project_Hero_Media_focalY_operator
   id: Project_Hero_Media_id_operator
   AND: [Project_Hero_Media_where_and]
   OR: [Project_Hero_Media_where_or]
@@ -6042,6 +6579,8 @@ input Project_Hero_Media_where_or {
   filesize: Project_Hero_Media_filesize_operator
   width: Project_Hero_Media_width_operator
   height: Project_Hero_Media_height_operator
+  focalX: Project_Hero_Media_focalX_operator
+  focalY: Project_Hero_Media_focalY_operator
   id: Project_Hero_Media_id_operator
   AND: [Project_Hero_Media_where_and]
   OR: [Project_Hero_Media_where_or]
@@ -6066,6 +6605,8 @@ input Project_Meta_Image_where {
   filesize: Project_Meta_Image_filesize_operator
   width: Project_Meta_Image_width_operator
   height: Project_Meta_Image_height_operator
+  focalX: Project_Meta_Image_focalX_operator
+  focalY: Project_Meta_Image_focalY_operator
   id: Project_Meta_Image_id_operator
   AND: [Project_Meta_Image_where_and]
   OR: [Project_Meta_Image_where_or]
@@ -6174,6 +6715,26 @@ input Project_Meta_Image_height_operator {
   exists: Boolean
 }
 
+input Project_Meta_Image_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input Project_Meta_Image_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input Project_Meta_Image_id_operator {
   equals: String
   not_equals: String
@@ -6196,6 +6757,8 @@ input Project_Meta_Image_where_and {
   filesize: Project_Meta_Image_filesize_operator
   width: Project_Meta_Image_width_operator
   height: Project_Meta_Image_height_operator
+  focalX: Project_Meta_Image_focalX_operator
+  focalY: Project_Meta_Image_focalY_operator
   id: Project_Meta_Image_id_operator
   AND: [Project_Meta_Image_where_and]
   OR: [Project_Meta_Image_where_or]
@@ -6212,6 +6775,8 @@ input Project_Meta_Image_where_or {
   filesize: Project_Meta_Image_filesize_operator
   width: Project_Meta_Image_width_operator
   height: Project_Meta_Image_height_operator
+  focalX: Project_Meta_Image_focalX_operator
+  focalY: Project_Meta_Image_focalY_operator
   id: Project_Meta_Image_id_operator
   AND: [Project_Meta_Image_where_and]
   OR: [Project_Meta_Image_where_or]
@@ -6251,6 +6816,8 @@ input Page_Meta_Image_where {
   filesize: Page_Meta_Image_filesize_operator
   width: Page_Meta_Image_width_operator
   height: Page_Meta_Image_height_operator
+  focalX: Page_Meta_Image_focalX_operator
+  focalY: Page_Meta_Image_focalY_operator
   id: Page_Meta_Image_id_operator
   AND: [Page_Meta_Image_where_and]
   OR: [Page_Meta_Image_where_or]
@@ -6359,6 +6926,26 @@ input Page_Meta_Image_height_operator {
   exists: Boolean
 }
 
+input Page_Meta_Image_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input Page_Meta_Image_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input Page_Meta_Image_id_operator {
   equals: String
   not_equals: String
@@ -6381,6 +6968,8 @@ input Page_Meta_Image_where_and {
   filesize: Page_Meta_Image_filesize_operator
   width: Page_Meta_Image_width_operator
   height: Page_Meta_Image_height_operator
+  focalX: Page_Meta_Image_focalX_operator
+  focalY: Page_Meta_Image_focalY_operator
   id: Page_Meta_Image_id_operator
   AND: [Page_Meta_Image_where_and]
   OR: [Page_Meta_Image_where_or]
@@ -6397,6 +6986,8 @@ input Page_Meta_Image_where_or {
   filesize: Page_Meta_Image_filesize_operator
   width: Page_Meta_Image_width_operator
   height: Page_Meta_Image_height_operator
+  focalX: Page_Meta_Image_focalX_operator
+  focalY: Page_Meta_Image_focalY_operator
   id: Page_Meta_Image_id_operator
   AND: [Page_Meta_Image_where_and]
   OR: [Page_Meta_Image_where_or]
@@ -6713,6 +7304,10 @@ input Page_where_or {
   id: Page_id_operator
   AND: [Page_where_and]
   OR: [Page_where_or]
+}
+
+type countPages {
+  totalDocs: Int
 }
 
 type pagesDocAccess {
@@ -7200,34 +7795,9 @@ type PagesDocAccessFields_meta_Delete {
 }
 
 type PagesDocAccessFields_meta_Fields {
-  overview: PagesDocAccessFields_meta_overview
   title: PagesDocAccessFields_meta_title
   description: PagesDocAccessFields_meta_description
   image: PagesDocAccessFields_meta_image
-  preview: PagesDocAccessFields_meta_preview
-}
-
-type PagesDocAccessFields_meta_overview {
-  create: PagesDocAccessFields_meta_overview_Create
-  read: PagesDocAccessFields_meta_overview_Read
-  update: PagesDocAccessFields_meta_overview_Update
-  delete: PagesDocAccessFields_meta_overview_Delete
-}
-
-type PagesDocAccessFields_meta_overview_Create {
-  permission: Boolean!
-}
-
-type PagesDocAccessFields_meta_overview_Read {
-  permission: Boolean!
-}
-
-type PagesDocAccessFields_meta_overview_Update {
-  permission: Boolean!
-}
-
-type PagesDocAccessFields_meta_overview_Delete {
-  permission: Boolean!
 }
 
 type PagesDocAccessFields_meta_title {
@@ -7296,29 +7866,6 @@ type PagesDocAccessFields_meta_image_Update {
 }
 
 type PagesDocAccessFields_meta_image_Delete {
-  permission: Boolean!
-}
-
-type PagesDocAccessFields_meta_preview {
-  create: PagesDocAccessFields_meta_preview_Create
-  read: PagesDocAccessFields_meta_preview_Read
-  update: PagesDocAccessFields_meta_preview_Update
-  delete: PagesDocAccessFields_meta_preview_Delete
-}
-
-type PagesDocAccessFields_meta_preview_Create {
-  permission: Boolean!
-}
-
-type PagesDocAccessFields_meta_preview_Read {
-  permission: Boolean!
-}
-
-type PagesDocAccessFields_meta_preview_Update {
-  permission: Boolean!
-}
-
-type PagesDocAccessFields_meta_preview_Delete {
   permission: Boolean!
 }
 
@@ -7417,7 +7964,7 @@ type PagesReadVersionsDocAccess {
 }
 
 type PageVersion {
-  parent: Page
+  parent(draft: Boolean): Page
   version: PageVersion_Version
   createdAt: DateTime
   updatedAt: DateTime
@@ -7460,7 +8007,7 @@ type PageVersion_Version_Hero_Links {
 type PageVersion_Version_Hero_Links_Link {
   type: PageVersion_Version_Hero_Links_Link_type
   newTab: Boolean
-  reference: PageVersion_Version_Hero_Links_Link_Reference_Relationship
+  reference(draft: Boolean): PageVersion_Version_Hero_Links_Link_Reference_Relationship
   url: String
   label: String
   appearance: PageVersion_Version_Hero_Links_Link_appearance
@@ -7499,6 +8046,8 @@ input PageVersion_Version_Hero_Media_where {
   filesize: PageVersion_Version_Hero_Media_filesize_operator
   width: PageVersion_Version_Hero_Media_width_operator
   height: PageVersion_Version_Hero_Media_height_operator
+  focalX: PageVersion_Version_Hero_Media_focalX_operator
+  focalY: PageVersion_Version_Hero_Media_focalY_operator
   id: PageVersion_Version_Hero_Media_id_operator
   AND: [PageVersion_Version_Hero_Media_where_and]
   OR: [PageVersion_Version_Hero_Media_where_or]
@@ -7607,6 +8156,26 @@ input PageVersion_Version_Hero_Media_height_operator {
   exists: Boolean
 }
 
+input PageVersion_Version_Hero_Media_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input PageVersion_Version_Hero_Media_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input PageVersion_Version_Hero_Media_id_operator {
   equals: String
   not_equals: String
@@ -7629,6 +8198,8 @@ input PageVersion_Version_Hero_Media_where_and {
   filesize: PageVersion_Version_Hero_Media_filesize_operator
   width: PageVersion_Version_Hero_Media_width_operator
   height: PageVersion_Version_Hero_Media_height_operator
+  focalX: PageVersion_Version_Hero_Media_focalX_operator
+  focalY: PageVersion_Version_Hero_Media_focalY_operator
   id: PageVersion_Version_Hero_Media_id_operator
   AND: [PageVersion_Version_Hero_Media_where_and]
   OR: [PageVersion_Version_Hero_Media_where_or]
@@ -7645,6 +8216,8 @@ input PageVersion_Version_Hero_Media_where_or {
   filesize: PageVersion_Version_Hero_Media_filesize_operator
   width: PageVersion_Version_Hero_Media_width_operator
   height: PageVersion_Version_Hero_Media_height_operator
+  focalX: PageVersion_Version_Hero_Media_focalX_operator
+  focalY: PageVersion_Version_Hero_Media_focalY_operator
   id: PageVersion_Version_Hero_Media_id_operator
   AND: [PageVersion_Version_Hero_Media_where_and]
   OR: [PageVersion_Version_Hero_Media_where_or]
@@ -7669,6 +8242,8 @@ input PageVersion_Version_Meta_Image_where {
   filesize: PageVersion_Version_Meta_Image_filesize_operator
   width: PageVersion_Version_Meta_Image_width_operator
   height: PageVersion_Version_Meta_Image_height_operator
+  focalX: PageVersion_Version_Meta_Image_focalX_operator
+  focalY: PageVersion_Version_Meta_Image_focalY_operator
   id: PageVersion_Version_Meta_Image_id_operator
   AND: [PageVersion_Version_Meta_Image_where_and]
   OR: [PageVersion_Version_Meta_Image_where_or]
@@ -7777,6 +8352,26 @@ input PageVersion_Version_Meta_Image_height_operator {
   exists: Boolean
 }
 
+input PageVersion_Version_Meta_Image_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input PageVersion_Version_Meta_Image_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input PageVersion_Version_Meta_Image_id_operator {
   equals: String
   not_equals: String
@@ -7799,6 +8394,8 @@ input PageVersion_Version_Meta_Image_where_and {
   filesize: PageVersion_Version_Meta_Image_filesize_operator
   width: PageVersion_Version_Meta_Image_width_operator
   height: PageVersion_Version_Meta_Image_height_operator
+  focalX: PageVersion_Version_Meta_Image_focalX_operator
+  focalY: PageVersion_Version_Meta_Image_focalY_operator
   id: PageVersion_Version_Meta_Image_id_operator
   AND: [PageVersion_Version_Meta_Image_where_and]
   OR: [PageVersion_Version_Meta_Image_where_or]
@@ -7815,6 +8412,8 @@ input PageVersion_Version_Meta_Image_where_or {
   filesize: PageVersion_Version_Meta_Image_filesize_operator
   width: PageVersion_Version_Meta_Image_width_operator
   height: PageVersion_Version_Meta_Image_height_operator
+  focalX: PageVersion_Version_Meta_Image_focalX_operator
+  focalY: PageVersion_Version_Meta_Image_focalY_operator
   id: PageVersion_Version_Meta_Image_id_operator
   AND: [PageVersion_Version_Meta_Image_where_and]
   OR: [PageVersion_Version_Meta_Image_where_or]
@@ -8563,6 +9162,10 @@ input Post_where_or {
   OR: [Post_where_or]
 }
 
+type countPosts {
+  totalDocs: Int
+}
+
 type postsDocAccess {
   fields: PostsDocAccessFields
   create: PostsCreateDocAccess
@@ -9244,34 +9847,9 @@ type PostsDocAccessFields_meta_Delete {
 }
 
 type PostsDocAccessFields_meta_Fields {
-  overview: PostsDocAccessFields_meta_overview
   title: PostsDocAccessFields_meta_title
   description: PostsDocAccessFields_meta_description
   image: PostsDocAccessFields_meta_image
-  preview: PostsDocAccessFields_meta_preview
-}
-
-type PostsDocAccessFields_meta_overview {
-  create: PostsDocAccessFields_meta_overview_Create
-  read: PostsDocAccessFields_meta_overview_Read
-  update: PostsDocAccessFields_meta_overview_Update
-  delete: PostsDocAccessFields_meta_overview_Delete
-}
-
-type PostsDocAccessFields_meta_overview_Create {
-  permission: Boolean!
-}
-
-type PostsDocAccessFields_meta_overview_Read {
-  permission: Boolean!
-}
-
-type PostsDocAccessFields_meta_overview_Update {
-  permission: Boolean!
-}
-
-type PostsDocAccessFields_meta_overview_Delete {
-  permission: Boolean!
 }
 
 type PostsDocAccessFields_meta_title {
@@ -9340,29 +9918,6 @@ type PostsDocAccessFields_meta_image_Update {
 }
 
 type PostsDocAccessFields_meta_image_Delete {
-  permission: Boolean!
-}
-
-type PostsDocAccessFields_meta_preview {
-  create: PostsDocAccessFields_meta_preview_Create
-  read: PostsDocAccessFields_meta_preview_Read
-  update: PostsDocAccessFields_meta_preview_Update
-  delete: PostsDocAccessFields_meta_preview_Delete
-}
-
-type PostsDocAccessFields_meta_preview_Create {
-  permission: Boolean!
-}
-
-type PostsDocAccessFields_meta_preview_Read {
-  permission: Boolean!
-}
-
-type PostsDocAccessFields_meta_preview_Update {
-  permission: Boolean!
-}
-
-type PostsDocAccessFields_meta_preview_Delete {
   permission: Boolean!
 }
 
@@ -9461,7 +10016,7 @@ type PostsReadVersionsDocAccess {
 }
 
 type PostVersion {
-  parent: Post
+  parent(draft: Boolean): Post
   version: PostVersion_Version
   createdAt: DateTime
   updatedAt: DateTime
@@ -9479,7 +10034,7 @@ type PostVersion_Version {
   layout: [PostVersion_Version_Layout!]!
   enablePremiumContent: Boolean
   premiumContent: [PostVersion_Version_PremiumContent!]
-  relatedPosts: [Post!]
+  relatedPosts(draft: Boolean): [Post!]
   slug: String
   meta: PostVersion_Version_Meta
   updatedAt: DateTime
@@ -9515,7 +10070,7 @@ type PostVersion_Version_Hero_Links {
 type PostVersion_Version_Hero_Links_Link {
   type: PostVersion_Version_Hero_Links_Link_type
   newTab: Boolean
-  reference: PostVersion_Version_Hero_Links_Link_Reference_Relationship
+  reference(draft: Boolean): PostVersion_Version_Hero_Links_Link_Reference_Relationship
   url: String
   label: String
   appearance: PostVersion_Version_Hero_Links_Link_appearance
@@ -9554,6 +10109,8 @@ input PostVersion_Version_Hero_Media_where {
   filesize: PostVersion_Version_Hero_Media_filesize_operator
   width: PostVersion_Version_Hero_Media_width_operator
   height: PostVersion_Version_Hero_Media_height_operator
+  focalX: PostVersion_Version_Hero_Media_focalX_operator
+  focalY: PostVersion_Version_Hero_Media_focalY_operator
   id: PostVersion_Version_Hero_Media_id_operator
   AND: [PostVersion_Version_Hero_Media_where_and]
   OR: [PostVersion_Version_Hero_Media_where_or]
@@ -9662,6 +10219,26 @@ input PostVersion_Version_Hero_Media_height_operator {
   exists: Boolean
 }
 
+input PostVersion_Version_Hero_Media_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input PostVersion_Version_Hero_Media_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input PostVersion_Version_Hero_Media_id_operator {
   equals: String
   not_equals: String
@@ -9684,6 +10261,8 @@ input PostVersion_Version_Hero_Media_where_and {
   filesize: PostVersion_Version_Hero_Media_filesize_operator
   width: PostVersion_Version_Hero_Media_width_operator
   height: PostVersion_Version_Hero_Media_height_operator
+  focalX: PostVersion_Version_Hero_Media_focalX_operator
+  focalY: PostVersion_Version_Hero_Media_focalY_operator
   id: PostVersion_Version_Hero_Media_id_operator
   AND: [PostVersion_Version_Hero_Media_where_and]
   OR: [PostVersion_Version_Hero_Media_where_or]
@@ -9700,6 +10279,8 @@ input PostVersion_Version_Hero_Media_where_or {
   filesize: PostVersion_Version_Hero_Media_filesize_operator
   width: PostVersion_Version_Hero_Media_width_operator
   height: PostVersion_Version_Hero_Media_height_operator
+  focalX: PostVersion_Version_Hero_Media_focalX_operator
+  focalY: PostVersion_Version_Hero_Media_focalY_operator
   id: PostVersion_Version_Hero_Media_id_operator
   AND: [PostVersion_Version_Hero_Media_where_and]
   OR: [PostVersion_Version_Hero_Media_where_or]
@@ -9726,6 +10307,8 @@ input PostVersion_Version_Meta_Image_where {
   filesize: PostVersion_Version_Meta_Image_filesize_operator
   width: PostVersion_Version_Meta_Image_width_operator
   height: PostVersion_Version_Meta_Image_height_operator
+  focalX: PostVersion_Version_Meta_Image_focalX_operator
+  focalY: PostVersion_Version_Meta_Image_focalY_operator
   id: PostVersion_Version_Meta_Image_id_operator
   AND: [PostVersion_Version_Meta_Image_where_and]
   OR: [PostVersion_Version_Meta_Image_where_or]
@@ -9834,6 +10417,26 @@ input PostVersion_Version_Meta_Image_height_operator {
   exists: Boolean
 }
 
+input PostVersion_Version_Meta_Image_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input PostVersion_Version_Meta_Image_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input PostVersion_Version_Meta_Image_id_operator {
   equals: String
   not_equals: String
@@ -9856,6 +10459,8 @@ input PostVersion_Version_Meta_Image_where_and {
   filesize: PostVersion_Version_Meta_Image_filesize_operator
   width: PostVersion_Version_Meta_Image_width_operator
   height: PostVersion_Version_Meta_Image_height_operator
+  focalX: PostVersion_Version_Meta_Image_focalX_operator
+  focalY: PostVersion_Version_Meta_Image_focalY_operator
   id: PostVersion_Version_Meta_Image_id_operator
   AND: [PostVersion_Version_Meta_Image_where_and]
   OR: [PostVersion_Version_Meta_Image_where_or]
@@ -9872,6 +10477,8 @@ input PostVersion_Version_Meta_Image_where_or {
   filesize: PostVersion_Version_Meta_Image_filesize_operator
   width: PostVersion_Version_Meta_Image_width_operator
   height: PostVersion_Version_Meta_Image_height_operator
+  focalX: PostVersion_Version_Meta_Image_focalX_operator
+  focalY: PostVersion_Version_Meta_Image_focalY_operator
   id: PostVersion_Version_Meta_Image_id_operator
   AND: [PostVersion_Version_Meta_Image_where_and]
   OR: [PostVersion_Version_Meta_Image_where_or]
@@ -10644,6 +11251,10 @@ input Project_where_or {
   OR: [Project_where_or]
 }
 
+type countProjects {
+  totalDocs: Int
+}
+
 type projectsDocAccess {
   fields: ProjectsDocAccessFields
   create: ProjectsCreateDocAccess
@@ -11177,34 +11788,9 @@ type ProjectsDocAccessFields_meta_Delete {
 }
 
 type ProjectsDocAccessFields_meta_Fields {
-  overview: ProjectsDocAccessFields_meta_overview
   title: ProjectsDocAccessFields_meta_title
   description: ProjectsDocAccessFields_meta_description
   image: ProjectsDocAccessFields_meta_image
-  preview: ProjectsDocAccessFields_meta_preview
-}
-
-type ProjectsDocAccessFields_meta_overview {
-  create: ProjectsDocAccessFields_meta_overview_Create
-  read: ProjectsDocAccessFields_meta_overview_Read
-  update: ProjectsDocAccessFields_meta_overview_Update
-  delete: ProjectsDocAccessFields_meta_overview_Delete
-}
-
-type ProjectsDocAccessFields_meta_overview_Create {
-  permission: Boolean!
-}
-
-type ProjectsDocAccessFields_meta_overview_Read {
-  permission: Boolean!
-}
-
-type ProjectsDocAccessFields_meta_overview_Update {
-  permission: Boolean!
-}
-
-type ProjectsDocAccessFields_meta_overview_Delete {
-  permission: Boolean!
 }
 
 type ProjectsDocAccessFields_meta_title {
@@ -11273,29 +11859,6 @@ type ProjectsDocAccessFields_meta_image_Update {
 }
 
 type ProjectsDocAccessFields_meta_image_Delete {
-  permission: Boolean!
-}
-
-type ProjectsDocAccessFields_meta_preview {
-  create: ProjectsDocAccessFields_meta_preview_Create
-  read: ProjectsDocAccessFields_meta_preview_Read
-  update: ProjectsDocAccessFields_meta_preview_Update
-  delete: ProjectsDocAccessFields_meta_preview_Delete
-}
-
-type ProjectsDocAccessFields_meta_preview_Create {
-  permission: Boolean!
-}
-
-type ProjectsDocAccessFields_meta_preview_Read {
-  permission: Boolean!
-}
-
-type ProjectsDocAccessFields_meta_preview_Update {
-  permission: Boolean!
-}
-
-type ProjectsDocAccessFields_meta_preview_Delete {
   permission: Boolean!
 }
 
@@ -11394,7 +11957,7 @@ type ProjectsReadVersionsDocAccess {
 }
 
 type ProjectVersion {
-  parent: Project
+  parent(draft: Boolean): Project
   version: ProjectVersion_Version
   createdAt: DateTime
   updatedAt: DateTime
@@ -11408,7 +11971,7 @@ type ProjectVersion_Version {
   publishedAt: DateTime
   hero: ProjectVersion_Version_Hero
   layout: [ProjectVersion_Version_Layout!]!
-  relatedProjects: [Project!]
+  relatedProjects(draft: Boolean): [Project!]
   slug: String
   meta: ProjectVersion_Version_Meta
   updatedAt: DateTime
@@ -11439,7 +12002,7 @@ type ProjectVersion_Version_Hero_Links {
 type ProjectVersion_Version_Hero_Links_Link {
   type: ProjectVersion_Version_Hero_Links_Link_type
   newTab: Boolean
-  reference: ProjectVersion_Version_Hero_Links_Link_Reference_Relationship
+  reference(draft: Boolean): ProjectVersion_Version_Hero_Links_Link_Reference_Relationship
   url: String
   label: String
   appearance: ProjectVersion_Version_Hero_Links_Link_appearance
@@ -11478,6 +12041,8 @@ input ProjectVersion_Version_Hero_Media_where {
   filesize: ProjectVersion_Version_Hero_Media_filesize_operator
   width: ProjectVersion_Version_Hero_Media_width_operator
   height: ProjectVersion_Version_Hero_Media_height_operator
+  focalX: ProjectVersion_Version_Hero_Media_focalX_operator
+  focalY: ProjectVersion_Version_Hero_Media_focalY_operator
   id: ProjectVersion_Version_Hero_Media_id_operator
   AND: [ProjectVersion_Version_Hero_Media_where_and]
   OR: [ProjectVersion_Version_Hero_Media_where_or]
@@ -11586,6 +12151,26 @@ input ProjectVersion_Version_Hero_Media_height_operator {
   exists: Boolean
 }
 
+input ProjectVersion_Version_Hero_Media_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input ProjectVersion_Version_Hero_Media_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input ProjectVersion_Version_Hero_Media_id_operator {
   equals: String
   not_equals: String
@@ -11608,6 +12193,8 @@ input ProjectVersion_Version_Hero_Media_where_and {
   filesize: ProjectVersion_Version_Hero_Media_filesize_operator
   width: ProjectVersion_Version_Hero_Media_width_operator
   height: ProjectVersion_Version_Hero_Media_height_operator
+  focalX: ProjectVersion_Version_Hero_Media_focalX_operator
+  focalY: ProjectVersion_Version_Hero_Media_focalY_operator
   id: ProjectVersion_Version_Hero_Media_id_operator
   AND: [ProjectVersion_Version_Hero_Media_where_and]
   OR: [ProjectVersion_Version_Hero_Media_where_or]
@@ -11624,6 +12211,8 @@ input ProjectVersion_Version_Hero_Media_where_or {
   filesize: ProjectVersion_Version_Hero_Media_filesize_operator
   width: ProjectVersion_Version_Hero_Media_width_operator
   height: ProjectVersion_Version_Hero_Media_height_operator
+  focalX: ProjectVersion_Version_Hero_Media_focalX_operator
+  focalY: ProjectVersion_Version_Hero_Media_focalY_operator
   id: ProjectVersion_Version_Hero_Media_id_operator
   AND: [ProjectVersion_Version_Hero_Media_where_and]
   OR: [ProjectVersion_Version_Hero_Media_where_or]
@@ -11648,6 +12237,8 @@ input ProjectVersion_Version_Meta_Image_where {
   filesize: ProjectVersion_Version_Meta_Image_filesize_operator
   width: ProjectVersion_Version_Meta_Image_width_operator
   height: ProjectVersion_Version_Meta_Image_height_operator
+  focalX: ProjectVersion_Version_Meta_Image_focalX_operator
+  focalY: ProjectVersion_Version_Meta_Image_focalY_operator
   id: ProjectVersion_Version_Meta_Image_id_operator
   AND: [ProjectVersion_Version_Meta_Image_where_and]
   OR: [ProjectVersion_Version_Meta_Image_where_or]
@@ -11756,6 +12347,26 @@ input ProjectVersion_Version_Meta_Image_height_operator {
   exists: Boolean
 }
 
+input ProjectVersion_Version_Meta_Image_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input ProjectVersion_Version_Meta_Image_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input ProjectVersion_Version_Meta_Image_id_operator {
   equals: String
   not_equals: String
@@ -11778,6 +12389,8 @@ input ProjectVersion_Version_Meta_Image_where_and {
   filesize: ProjectVersion_Version_Meta_Image_filesize_operator
   width: ProjectVersion_Version_Meta_Image_width_operator
   height: ProjectVersion_Version_Meta_Image_height_operator
+  focalX: ProjectVersion_Version_Meta_Image_focalX_operator
+  focalY: ProjectVersion_Version_Meta_Image_focalY_operator
   id: ProjectVersion_Version_Meta_Image_id_operator
   AND: [ProjectVersion_Version_Meta_Image_where_and]
   OR: [ProjectVersion_Version_Meta_Image_where_or]
@@ -11794,6 +12407,8 @@ input ProjectVersion_Version_Meta_Image_where_or {
   filesize: ProjectVersion_Version_Meta_Image_filesize_operator
   width: ProjectVersion_Version_Meta_Image_width_operator
   height: ProjectVersion_Version_Meta_Image_height_operator
+  focalX: ProjectVersion_Version_Meta_Image_focalX_operator
+  focalY: ProjectVersion_Version_Meta_Image_focalY_operator
   id: ProjectVersion_Version_Meta_Image_id_operator
   AND: [ProjectVersion_Version_Meta_Image_where_and]
   OR: [ProjectVersion_Version_Meta_Image_where_or]
@@ -12336,6 +12951,10 @@ input Category_where_or {
   OR: [Category_where_or]
 }
 
+type countCategories {
+  totalDocs: Int
+}
+
 type categoriesDocAccess {
   fields: CategoriesDocAccessFields
   create: CategoriesCreateDocAccess
@@ -12591,7 +13210,7 @@ type Comment {
   id: String
   user: User
   populatedUser: Comment_PopulatedUser
-  doc: Post
+  doc(draft: Boolean): Post
   comment: String
   updatedAt: DateTime
   createdAt: DateTime
@@ -12757,6 +13376,10 @@ input Comment_where_or {
   id: Comment_id_operator
   AND: [Comment_where_and]
   OR: [Comment_where_or]
+}
+
+type countComments {
+  totalDocs: Int
 }
 
 type commentsDocAccess {
@@ -13017,7 +13640,7 @@ type CommentsReadVersionsDocAccess {
 }
 
 type CommentVersion {
-  parent: Comment
+  parent(draft: Boolean): Comment
   version: CommentVersion_Version
   createdAt: DateTime
   updatedAt: DateTime
@@ -13028,7 +13651,7 @@ type CommentVersion {
 type CommentVersion_Version {
   user: User
   populatedUser: CommentVersion_Version_PopulatedUser
-  doc: Post
+  doc(draft: Boolean): Post
   comment: String
   updatedAt: DateTime
   createdAt: DateTime
@@ -13255,7 +13878,7 @@ type Redirect {
 
 type Redirect_To {
   type: Redirect_To_type
-  reference: Redirect_To_Reference_Relationship
+  reference(draft: Boolean): Redirect_To_Reference_Relationship
   url: String
 }
 
@@ -13400,6 +14023,10 @@ input Redirect_where_or {
   id: Redirect_id_operator
   AND: [Redirect_where_and]
   OR: [Redirect_where_or]
+}
+
+type countRedirects {
+  totalDocs: Int
 }
 
 type redirectsDocAccess {
@@ -13735,6 +14362,10 @@ input PayloadPreference_where_or {
   OR: [PayloadPreference_where_or]
 }
 
+type countPayloadPreferences {
+  totalDocs: Int
+}
+
 type payload_preferencesDocAccess {
   fields: PayloadPreferencesDocAccessFields
   create: PayloadPreferencesCreateDocAccess
@@ -13887,9 +14518,9 @@ type PayloadPreferencesDeleteDocAccess {
 }
 
 type Settings {
-  postsPage: Page
-  projectsPage: Page
-  baseSubscription: Subscription
+  postsPage(draft: Boolean): Page
+  projectsPage(draft: Boolean): Page
+  baseSubscription(draft: Boolean): Subscription
   logoLight(where: Settings_LogoLight_where): Media
   logoDark(where: Settings_LogoDark_where): Media
   hkWallet: Settings_HkWallet
@@ -13912,6 +14543,8 @@ input Settings_LogoLight_where {
   filesize: Settings_LogoLight_filesize_operator
   width: Settings_LogoLight_width_operator
   height: Settings_LogoLight_height_operator
+  focalX: Settings_LogoLight_focalX_operator
+  focalY: Settings_LogoLight_focalY_operator
   id: Settings_LogoLight_id_operator
   AND: [Settings_LogoLight_where_and]
   OR: [Settings_LogoLight_where_or]
@@ -14020,6 +14653,26 @@ input Settings_LogoLight_height_operator {
   exists: Boolean
 }
 
+input Settings_LogoLight_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input Settings_LogoLight_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input Settings_LogoLight_id_operator {
   equals: String
   not_equals: String
@@ -14042,6 +14695,8 @@ input Settings_LogoLight_where_and {
   filesize: Settings_LogoLight_filesize_operator
   width: Settings_LogoLight_width_operator
   height: Settings_LogoLight_height_operator
+  focalX: Settings_LogoLight_focalX_operator
+  focalY: Settings_LogoLight_focalY_operator
   id: Settings_LogoLight_id_operator
   AND: [Settings_LogoLight_where_and]
   OR: [Settings_LogoLight_where_or]
@@ -14058,6 +14713,8 @@ input Settings_LogoLight_where_or {
   filesize: Settings_LogoLight_filesize_operator
   width: Settings_LogoLight_width_operator
   height: Settings_LogoLight_height_operator
+  focalX: Settings_LogoLight_focalX_operator
+  focalY: Settings_LogoLight_focalY_operator
   id: Settings_LogoLight_id_operator
   AND: [Settings_LogoLight_where_and]
   OR: [Settings_LogoLight_where_or]
@@ -14074,6 +14731,8 @@ input Settings_LogoDark_where {
   filesize: Settings_LogoDark_filesize_operator
   width: Settings_LogoDark_width_operator
   height: Settings_LogoDark_height_operator
+  focalX: Settings_LogoDark_focalX_operator
+  focalY: Settings_LogoDark_focalY_operator
   id: Settings_LogoDark_id_operator
   AND: [Settings_LogoDark_where_and]
   OR: [Settings_LogoDark_where_or]
@@ -14182,6 +14841,26 @@ input Settings_LogoDark_height_operator {
   exists: Boolean
 }
 
+input Settings_LogoDark_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input Settings_LogoDark_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input Settings_LogoDark_id_operator {
   equals: String
   not_equals: String
@@ -14204,6 +14883,8 @@ input Settings_LogoDark_where_and {
   filesize: Settings_LogoDark_filesize_operator
   width: Settings_LogoDark_width_operator
   height: Settings_LogoDark_height_operator
+  focalX: Settings_LogoDark_focalX_operator
+  focalY: Settings_LogoDark_focalY_operator
   id: Settings_LogoDark_id_operator
   AND: [Settings_LogoDark_where_and]
   OR: [Settings_LogoDark_where_or]
@@ -14220,6 +14901,8 @@ input Settings_LogoDark_where_or {
   filesize: Settings_LogoDark_filesize_operator
   width: Settings_LogoDark_width_operator
   height: Settings_LogoDark_height_operator
+  focalX: Settings_LogoDark_focalX_operator
+  focalY: Settings_LogoDark_focalY_operator
   id: Settings_LogoDark_id_operator
   AND: [Settings_LogoDark_where_and]
   OR: [Settings_LogoDark_where_or]
@@ -14254,6 +14937,8 @@ input Settings_SocialLinks_Icon_where {
   filesize: Settings_SocialLinks_Icon_filesize_operator
   width: Settings_SocialLinks_Icon_width_operator
   height: Settings_SocialLinks_Icon_height_operator
+  focalX: Settings_SocialLinks_Icon_focalX_operator
+  focalY: Settings_SocialLinks_Icon_focalY_operator
   id: Settings_SocialLinks_Icon_id_operator
   AND: [Settings_SocialLinks_Icon_where_and]
   OR: [Settings_SocialLinks_Icon_where_or]
@@ -14362,6 +15047,26 @@ input Settings_SocialLinks_Icon_height_operator {
   exists: Boolean
 }
 
+input Settings_SocialLinks_Icon_focalX_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
+input Settings_SocialLinks_Icon_focalY_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+  exists: Boolean
+}
+
 input Settings_SocialLinks_Icon_id_operator {
   equals: String
   not_equals: String
@@ -14384,6 +15089,8 @@ input Settings_SocialLinks_Icon_where_and {
   filesize: Settings_SocialLinks_Icon_filesize_operator
   width: Settings_SocialLinks_Icon_width_operator
   height: Settings_SocialLinks_Icon_height_operator
+  focalX: Settings_SocialLinks_Icon_focalX_operator
+  focalY: Settings_SocialLinks_Icon_focalY_operator
   id: Settings_SocialLinks_Icon_id_operator
   AND: [Settings_SocialLinks_Icon_where_and]
   OR: [Settings_SocialLinks_Icon_where_or]
@@ -14400,6 +15107,8 @@ input Settings_SocialLinks_Icon_where_or {
   filesize: Settings_SocialLinks_Icon_filesize_operator
   width: Settings_SocialLinks_Icon_width_operator
   height: Settings_SocialLinks_Icon_height_operator
+  focalX: Settings_SocialLinks_Icon_focalX_operator
+  focalY: Settings_SocialLinks_Icon_focalY_operator
   id: Settings_SocialLinks_Icon_id_operator
   AND: [Settings_SocialLinks_Icon_where_and]
   OR: [Settings_SocialLinks_Icon_where_or]
@@ -14954,7 +15663,7 @@ type Header_NavItems {
 type Header_NavItems_Link {
   type: Header_NavItems_Link_type
   newTab: Boolean
-  reference: Header_NavItems_Link_Reference_Relationship
+  reference(draft: Boolean): Header_NavItems_Link_Reference_Relationship
   url: String
   label: String
 }
@@ -15256,7 +15965,7 @@ type Footer_NavItems {
 type Footer_NavItems_Link {
   type: Footer_NavItems_Link_type
   newTab: Boolean
-  reference: Footer_NavItems_Link_Reference_Relationship
+  reference(draft: Boolean): Footer_NavItems_Link_Reference_Relationship
   url: String
   label: String
 }
@@ -15931,6 +16640,8 @@ type MediaFields {
   filesize: MediaFields_filesize
   width: MediaFields_width
   height: MediaFields_height
+  focalX: MediaFields_focalX
+  focalY: MediaFields_focalY
 }
 
 type MediaFields_alt {
@@ -16160,6 +16871,52 @@ type MediaFields_height_Update {
 }
 
 type MediaFields_height_Delete {
+  permission: Boolean!
+}
+
+type MediaFields_focalX {
+  create: MediaFields_focalX_Create
+  read: MediaFields_focalX_Read
+  update: MediaFields_focalX_Update
+  delete: MediaFields_focalX_Delete
+}
+
+type MediaFields_focalX_Create {
+  permission: Boolean!
+}
+
+type MediaFields_focalX_Read {
+  permission: Boolean!
+}
+
+type MediaFields_focalX_Update {
+  permission: Boolean!
+}
+
+type MediaFields_focalX_Delete {
+  permission: Boolean!
+}
+
+type MediaFields_focalY {
+  create: MediaFields_focalY_Create
+  read: MediaFields_focalY_Read
+  update: MediaFields_focalY_Update
+  delete: MediaFields_focalY_Delete
+}
+
+type MediaFields_focalY_Create {
+  permission: Boolean!
+}
+
+type MediaFields_focalY_Read {
+  permission: Boolean!
+}
+
+type MediaFields_focalY_Update {
+  permission: Boolean!
+}
+
+type MediaFields_focalY_Delete {
   permission: Boolean!
 }
 
@@ -16540,34 +17297,9 @@ type SubscriptionsFields_meta_Delete {
 }
 
 type SubscriptionsFields_meta_Fields {
-  overview: SubscriptionsFields_meta_overview
   title: SubscriptionsFields_meta_title
   description: SubscriptionsFields_meta_description
   image: SubscriptionsFields_meta_image
-  preview: SubscriptionsFields_meta_preview
-}
-
-type SubscriptionsFields_meta_overview {
-  create: SubscriptionsFields_meta_overview_Create
-  read: SubscriptionsFields_meta_overview_Read
-  update: SubscriptionsFields_meta_overview_Update
-  delete: SubscriptionsFields_meta_overview_Delete
-}
-
-type SubscriptionsFields_meta_overview_Create {
-  permission: Boolean!
-}
-
-type SubscriptionsFields_meta_overview_Read {
-  permission: Boolean!
-}
-
-type SubscriptionsFields_meta_overview_Update {
-  permission: Boolean!
-}
-
-type SubscriptionsFields_meta_overview_Delete {
-  permission: Boolean!
 }
 
 type SubscriptionsFields_meta_title {
@@ -16636,29 +17368,6 @@ type SubscriptionsFields_meta_image_Update {
 }
 
 type SubscriptionsFields_meta_image_Delete {
-  permission: Boolean!
-}
-
-type SubscriptionsFields_meta_preview {
-  create: SubscriptionsFields_meta_preview_Create
-  read: SubscriptionsFields_meta_preview_Read
-  update: SubscriptionsFields_meta_preview_Update
-  delete: SubscriptionsFields_meta_preview_Delete
-}
-
-type SubscriptionsFields_meta_preview_Create {
-  permission: Boolean!
-}
-
-type SubscriptionsFields_meta_preview_Read {
-  permission: Boolean!
-}
-
-type SubscriptionsFields_meta_preview_Update {
-  permission: Boolean!
-}
-
-type SubscriptionsFields_meta_preview_Delete {
   permission: Boolean!
 }
 
@@ -16767,9 +17476,10 @@ type coursesAccess {
 
 type CoursesFields {
   title: CoursesFields_title
-  description: CoursesFields_description
-  videoUrl: CoursesFields_videoUrl
+  mainDescription: CoursesFields_mainDescription
+  courseContent: CoursesFields_courseContent
   courseImage: CoursesFields_courseImage
+  relatedCourses: CoursesFields_relatedCourses
   slug: CoursesFields_slug
   meta: CoursesFields_meta
   updatedAt: CoursesFields_updatedAt
@@ -16800,49 +17510,149 @@ type CoursesFields_title_Delete {
   permission: Boolean!
 }
 
-type CoursesFields_description {
-  create: CoursesFields_description_Create
-  read: CoursesFields_description_Read
-  update: CoursesFields_description_Update
-  delete: CoursesFields_description_Delete
+type CoursesFields_mainDescription {
+  create: CoursesFields_mainDescription_Create
+  read: CoursesFields_mainDescription_Read
+  update: CoursesFields_mainDescription_Update
+  delete: CoursesFields_mainDescription_Delete
 }
 
-type CoursesFields_description_Create {
+type CoursesFields_mainDescription_Create {
   permission: Boolean!
 }
 
-type CoursesFields_description_Read {
+type CoursesFields_mainDescription_Read {
   permission: Boolean!
 }
 
-type CoursesFields_description_Update {
+type CoursesFields_mainDescription_Update {
   permission: Boolean!
 }
 
-type CoursesFields_description_Delete {
+type CoursesFields_mainDescription_Delete {
   permission: Boolean!
 }
 
-type CoursesFields_videoUrl {
-  create: CoursesFields_videoUrl_Create
-  read: CoursesFields_videoUrl_Read
-  update: CoursesFields_videoUrl_Update
-  delete: CoursesFields_videoUrl_Delete
+type CoursesFields_courseContent {
+  create: CoursesFields_courseContent_Create
+  read: CoursesFields_courseContent_Read
+  update: CoursesFields_courseContent_Update
+  delete: CoursesFields_courseContent_Delete
+  fields: CoursesFields_courseContent_Fields
 }
 
-type CoursesFields_videoUrl_Create {
+type CoursesFields_courseContent_Create {
   permission: Boolean!
 }
 
-type CoursesFields_videoUrl_Read {
+type CoursesFields_courseContent_Read {
   permission: Boolean!
 }
 
-type CoursesFields_videoUrl_Update {
+type CoursesFields_courseContent_Update {
   permission: Boolean!
 }
 
-type CoursesFields_videoUrl_Delete {
+type CoursesFields_courseContent_Delete {
+  permission: Boolean!
+}
+
+type CoursesFields_courseContent_Fields {
+  description: CoursesFields_courseContent_description
+  videoUrl: CoursesFields_courseContent_videoUrl
+  videoTitle: CoursesFields_courseContent_videoTitle
+  id: CoursesFields_courseContent_id
+}
+
+type CoursesFields_courseContent_description {
+  create: CoursesFields_courseContent_description_Create
+  read: CoursesFields_courseContent_description_Read
+  update: CoursesFields_courseContent_description_Update
+  delete: CoursesFields_courseContent_description_Delete
+}
+
+type CoursesFields_courseContent_description_Create {
+  permission: Boolean!
+}
+
+type CoursesFields_courseContent_description_Read {
+  permission: Boolean!
+}
+
+type CoursesFields_courseContent_description_Update {
+  permission: Boolean!
+}
+
+type CoursesFields_courseContent_description_Delete {
+  permission: Boolean!
+}
+
+type CoursesFields_courseContent_videoUrl {
+  create: CoursesFields_courseContent_videoUrl_Create
+  read: CoursesFields_courseContent_videoUrl_Read
+  update: CoursesFields_courseContent_videoUrl_Update
+  delete: CoursesFields_courseContent_videoUrl_Delete
+}
+
+type CoursesFields_courseContent_videoUrl_Create {
+  permission: Boolean!
+}
+
+type CoursesFields_courseContent_videoUrl_Read {
+  permission: Boolean!
+}
+
+type CoursesFields_courseContent_videoUrl_Update {
+  permission: Boolean!
+}
+
+type CoursesFields_courseContent_videoUrl_Delete {
+  permission: Boolean!
+}
+
+type CoursesFields_courseContent_videoTitle {
+  create: CoursesFields_courseContent_videoTitle_Create
+  read: CoursesFields_courseContent_videoTitle_Read
+  update: CoursesFields_courseContent_videoTitle_Update
+  delete: CoursesFields_courseContent_videoTitle_Delete
+}
+
+type CoursesFields_courseContent_videoTitle_Create {
+  permission: Boolean!
+}
+
+type CoursesFields_courseContent_videoTitle_Read {
+  permission: Boolean!
+}
+
+type CoursesFields_courseContent_videoTitle_Update {
+  permission: Boolean!
+}
+
+type CoursesFields_courseContent_videoTitle_Delete {
+  permission: Boolean!
+}
+
+type CoursesFields_courseContent_id {
+  create: CoursesFields_courseContent_id_Create
+  read: CoursesFields_courseContent_id_Read
+  update: CoursesFields_courseContent_id_Update
+  delete: CoursesFields_courseContent_id_Delete
+}
+
+type CoursesFields_courseContent_id_Create {
+  permission: Boolean!
+}
+
+type CoursesFields_courseContent_id_Read {
+  permission: Boolean!
+}
+
+type CoursesFields_courseContent_id_Update {
+  permission: Boolean!
+}
+
+type CoursesFields_courseContent_id_Delete {
   permission: Boolean!
 }
 
@@ -16866,6 +17676,29 @@ type CoursesFields_courseImage_Update {
 }
 
 type CoursesFields_courseImage_Delete {
+  permission: Boolean!
+}
+
+type CoursesFields_relatedCourses {
+  create: CoursesFields_relatedCourses_Create
+  read: CoursesFields_relatedCourses_Read
+  update: CoursesFields_relatedCourses_Update
+  delete: CoursesFields_relatedCourses_Delete
+}
+
+type CoursesFields_relatedCourses_Create {
+  permission: Boolean!
+}
+
+type CoursesFields_relatedCourses_Read {
+  permission: Boolean!
+}
+
+type CoursesFields_relatedCourses_Update {
+  permission: Boolean!
+}
+
+type CoursesFields_relatedCourses_Delete {
   permission: Boolean!
 }
 
@@ -16917,34 +17750,9 @@ type CoursesFields_meta_Delete {
 }
 
 type CoursesFields_meta_Fields {
-  overview: CoursesFields_meta_overview
   title: CoursesFields_meta_title
   description: CoursesFields_meta_description
   image: CoursesFields_meta_image
-  preview: CoursesFields_meta_preview
-}
-
-type CoursesFields_meta_overview {
-  create: CoursesFields_meta_overview_Create
-  read: CoursesFields_meta_overview_Read
-  update: CoursesFields_meta_overview_Update
-  delete: CoursesFields_meta_overview_Delete
-}
-
-type CoursesFields_meta_overview_Create {
-  permission: Boolean!
-}
-
-type CoursesFields_meta_overview_Read {
-  permission: Boolean!
-}
-
-type CoursesFields_meta_overview_Update {
-  permission: Boolean!
-}
-
-type CoursesFields_meta_overview_Delete {
-  permission: Boolean!
 }
 
 type CoursesFields_meta_title {
@@ -17013,29 +17821,6 @@ type CoursesFields_meta_image_Update {
 }
 
 type CoursesFields_meta_image_Delete {
-  permission: Boolean!
-}
-
-type CoursesFields_meta_preview {
-  create: CoursesFields_meta_preview_Create
-  read: CoursesFields_meta_preview_Read
-  update: CoursesFields_meta_preview_Update
-  delete: CoursesFields_meta_preview_Delete
-}
-
-type CoursesFields_meta_preview_Create {
-  permission: Boolean!
-}
-
-type CoursesFields_meta_preview_Read {
-  permission: Boolean!
-}
-
-type CoursesFields_meta_preview_Update {
-  permission: Boolean!
-}
-
-type CoursesFields_meta_preview_Delete {
   permission: Boolean!
 }
 
@@ -17985,34 +18770,9 @@ type PagesFields_meta_Delete {
 }
 
 type PagesFields_meta_Fields {
-  overview: PagesFields_meta_overview
   title: PagesFields_meta_title
   description: PagesFields_meta_description
   image: PagesFields_meta_image
-  preview: PagesFields_meta_preview
-}
-
-type PagesFields_meta_overview {
-  create: PagesFields_meta_overview_Create
-  read: PagesFields_meta_overview_Read
-  update: PagesFields_meta_overview_Update
-  delete: PagesFields_meta_overview_Delete
-}
-
-type PagesFields_meta_overview_Create {
-  permission: Boolean!
-}
-
-type PagesFields_meta_overview_Read {
-  permission: Boolean!
-}
-
-type PagesFields_meta_overview_Update {
-  permission: Boolean!
-}
-
-type PagesFields_meta_overview_Delete {
-  permission: Boolean!
 }
 
 type PagesFields_meta_title {
@@ -18081,29 +18841,6 @@ type PagesFields_meta_image_Update {
 }
 
 type PagesFields_meta_image_Delete {
-  permission: Boolean!
-}
-
-type PagesFields_meta_preview {
-  create: PagesFields_meta_preview_Create
-  read: PagesFields_meta_preview_Read
-  update: PagesFields_meta_preview_Update
-  delete: PagesFields_meta_preview_Delete
-}
-
-type PagesFields_meta_preview_Create {
-  permission: Boolean!
-}
-
-type PagesFields_meta_preview_Read {
-  permission: Boolean!
-}
-
-type PagesFields_meta_preview_Update {
-  permission: Boolean!
-}
-
-type PagesFields_meta_preview_Delete {
   permission: Boolean!
 }
 
@@ -18882,34 +19619,9 @@ type PostsFields_meta_Delete {
 }
 
 type PostsFields_meta_Fields {
-  overview: PostsFields_meta_overview
   title: PostsFields_meta_title
   description: PostsFields_meta_description
   image: PostsFields_meta_image
-  preview: PostsFields_meta_preview
-}
-
-type PostsFields_meta_overview {
-  create: PostsFields_meta_overview_Create
-  read: PostsFields_meta_overview_Read
-  update: PostsFields_meta_overview_Update
-  delete: PostsFields_meta_overview_Delete
-}
-
-type PostsFields_meta_overview_Create {
-  permission: Boolean!
-}
-
-type PostsFields_meta_overview_Read {
-  permission: Boolean!
-}
-
-type PostsFields_meta_overview_Update {
-  permission: Boolean!
-}
-
-type PostsFields_meta_overview_Delete {
-  permission: Boolean!
 }
 
 type PostsFields_meta_title {
@@ -18978,29 +19690,6 @@ type PostsFields_meta_image_Update {
 }
 
 type PostsFields_meta_image_Delete {
-  permission: Boolean!
-}
-
-type PostsFields_meta_preview {
-  create: PostsFields_meta_preview_Create
-  read: PostsFields_meta_preview_Read
-  update: PostsFields_meta_preview_Update
-  delete: PostsFields_meta_preview_Delete
-}
-
-type PostsFields_meta_preview_Create {
-  permission: Boolean!
-}
-
-type PostsFields_meta_preview_Read {
-  permission: Boolean!
-}
-
-type PostsFields_meta_preview_Update {
-  permission: Boolean!
-}
-
-type PostsFields_meta_preview_Delete {
   permission: Boolean!
 }
 
@@ -19631,34 +20320,9 @@ type ProjectsFields_meta_Delete {
 }
 
 type ProjectsFields_meta_Fields {
-  overview: ProjectsFields_meta_overview
   title: ProjectsFields_meta_title
   description: ProjectsFields_meta_description
   image: ProjectsFields_meta_image
-  preview: ProjectsFields_meta_preview
-}
-
-type ProjectsFields_meta_overview {
-  create: ProjectsFields_meta_overview_Create
-  read: ProjectsFields_meta_overview_Read
-  update: ProjectsFields_meta_overview_Update
-  delete: ProjectsFields_meta_overview_Delete
-}
-
-type ProjectsFields_meta_overview_Create {
-  permission: Boolean!
-}
-
-type ProjectsFields_meta_overview_Read {
-  permission: Boolean!
-}
-
-type ProjectsFields_meta_overview_Update {
-  permission: Boolean!
-}
-
-type ProjectsFields_meta_overview_Delete {
-  permission: Boolean!
 }
 
 type ProjectsFields_meta_title {
@@ -19727,29 +20391,6 @@ type ProjectsFields_meta_image_Update {
 }
 
 type ProjectsFields_meta_image_Delete {
-  permission: Boolean!
-}
-
-type ProjectsFields_meta_preview {
-  create: ProjectsFields_meta_preview_Create
-  read: ProjectsFields_meta_preview_Read
-  update: ProjectsFields_meta_preview_Update
-  delete: ProjectsFields_meta_preview_Delete
-}
-
-type ProjectsFields_meta_preview_Create {
-  permission: Boolean!
-}
-
-type ProjectsFields_meta_preview_Read {
-  permission: Boolean!
-}
-
-type ProjectsFields_meta_preview_Update {
-  permission: Boolean!
-}
-
-type ProjectsFields_meta_preview_Delete {
   permission: Boolean!
 }
 
@@ -21779,18 +22420,18 @@ type FooterUpdateAccess {
 }
 
 type Mutation {
-  createUser(data: mutationUserInput!, draft: Boolean): User
-  updateUser(id: String!, autosave: Boolean, data: mutationUserUpdateInput!, draft: Boolean): User
+  createUser(data: mutationUserInput!): User
+  updateUser(id: String!, autosave: Boolean, data: mutationUserUpdateInput!): User
   deleteUser(id: String!): User
-  refreshTokenUser(token: String): usersRefreshedUser
+  refreshTokenUser: usersRefreshedUser
   logoutUser: String
   unlockUser(email: String!): Boolean!
   loginUser(email: String, password: String): usersLoginResult
   forgotPasswordUser(disableEmail: Boolean, email: String!, expiration: Int): Boolean!
   resetPasswordUser(password: String, token: String): usersResetPassword
   verifyEmailUser(token: String): Boolean
-  createMedia(data: mutationMediaInput!, draft: Boolean): Media
-  updateMedia(id: String!, autosave: Boolean, data: mutationMediaUpdateInput!, draft: Boolean): Media
+  createMedia(data: mutationMediaInput!): Media
+  updateMedia(id: String!, autosave: Boolean, data: mutationMediaUpdateInput!): Media
   deleteMedia(id: String!): Media
   createSubscription(data: mutationSubscriptionInput!, draft: Boolean): Subscription
   updateSubscription(id: String!, autosave: Boolean, data: mutationSubscriptionUpdateInput!, draft: Boolean): Subscription
@@ -21800,8 +22441,8 @@ type Mutation {
   updateCourse(id: String!, autosave: Boolean, data: mutationCourseUpdateInput!, draft: Boolean): Course
   deleteCourse(id: String!): Course
   restoreVersionCourse(id: String): Course
-  createTransaction(data: mutationTransactionInput!, draft: Boolean): Transaction
-  updateTransaction(id: String!, autosave: Boolean, data: mutationTransactionUpdateInput!, draft: Boolean): Transaction
+  createTransaction(data: mutationTransactionInput!): Transaction
+  updateTransaction(id: String!, autosave: Boolean, data: mutationTransactionUpdateInput!): Transaction
   deleteTransaction(id: String!): Transaction
   createPage(data: mutationPageInput!, draft: Boolean): Page
   updatePage(id: String!, autosave: Boolean, data: mutationPageUpdateInput!, draft: Boolean): Page
@@ -21815,18 +22456,18 @@ type Mutation {
   updateProject(id: String!, autosave: Boolean, data: mutationProjectUpdateInput!, draft: Boolean): Project
   deleteProject(id: String!): Project
   restoreVersionProject(id: String): Project
-  createCategory(data: mutationCategoryInput!, draft: Boolean): Category
-  updateCategory(id: String!, autosave: Boolean, data: mutationCategoryUpdateInput!, draft: Boolean): Category
+  createCategory(data: mutationCategoryInput!): Category
+  updateCategory(id: String!, autosave: Boolean, data: mutationCategoryUpdateInput!): Category
   deleteCategory(id: String!): Category
   createComment(data: mutationCommentInput!, draft: Boolean): Comment
   updateComment(id: String!, autosave: Boolean, data: mutationCommentUpdateInput!, draft: Boolean): Comment
   deleteComment(id: String!): Comment
   restoreVersionComment(id: String): Comment
-  createRedirect(data: mutationRedirectInput!, draft: Boolean): Redirect
-  updateRedirect(id: String!, autosave: Boolean, data: mutationRedirectUpdateInput!, draft: Boolean): Redirect
+  createRedirect(data: mutationRedirectInput!): Redirect
+  updateRedirect(id: String!, autosave: Boolean, data: mutationRedirectUpdateInput!): Redirect
   deleteRedirect(id: String!): Redirect
-  createPayloadPreference(data: mutationPayloadPreferenceInput!, draft: Boolean): PayloadPreference
-  updatePayloadPreference(id: String!, autosave: Boolean, data: mutationPayloadPreferenceUpdateInput!, draft: Boolean): PayloadPreference
+  createPayloadPreference(data: mutationPayloadPreferenceInput!): PayloadPreference
+  updatePayloadPreference(id: String!, autosave: Boolean, data: mutationPayloadPreferenceUpdateInput!): PayloadPreference
   deletePayloadPreference(id: String!): PayloadPreference
   updateSettings(data: mutationSettingsInput!, draft: Boolean): Settings
   updateHeader(data: mutationHeaderInput!, draft: Boolean): Header
@@ -21890,6 +22531,7 @@ enum UserUpdate_roles_MutationInput {
 type usersRefreshedUser {
   exp: Int
   refreshedToken: String
+  strategy: String
   user: usersJWT
 }
 
@@ -21920,6 +22562,8 @@ input mutationMediaInput {
   filesize: Float
   width: Float
   height: Float
+  focalX: Float
+  focalY: Float
 }
 
 input mutationMediaUpdateInput {
@@ -21933,6 +22577,8 @@ input mutationMediaUpdateInput {
   filesize: Float
   width: Float
   height: Float
+  focalX: Float
+  focalY: Float
 }
 
 input mutationSubscriptionInput {
@@ -22005,14 +22651,22 @@ enum SubscriptionUpdate__status_MutationInput {
 
 input mutationCourseInput {
   title: String!
-  description: JSON!
-  videoUrl: String!
+  mainDescription: JSON!
+  courseContent: [mutationCourse_CourseContentInput]
   courseImage: String
+  relatedCourses: [String]
   slug: String
   meta: mutationCourse_MetaInput
   updatedAt: String
   createdAt: String
   _status: Course__status_MutationInput
+}
+
+input mutationCourse_CourseContentInput {
+  description: JSON!
+  videoUrl: String!
+  videoTitle: String
+  id: String
 }
 
 input mutationCourse_MetaInput {
@@ -22028,14 +22682,22 @@ enum Course__status_MutationInput {
 
 input mutationCourseUpdateInput {
   title: String
-  description: JSON
-  videoUrl: String
+  mainDescription: JSON
+  courseContent: [mutationCourseUpdate_CourseContentInput]
   courseImage: String
+  relatedCourses: [String]
   slug: String
   meta: mutationCourseUpdate_MetaInput
   updatedAt: String
   createdAt: String
   _status: CourseUpdate__status_MutationInput
+}
+
+input mutationCourseUpdate_CourseContentInput {
+  description: JSON!
+  videoUrl: String!
+  videoTitle: String
+  id: String
 }
 
 input mutationCourseUpdate_MetaInput {

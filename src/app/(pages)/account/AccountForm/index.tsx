@@ -4,12 +4,12 @@ import React, { Fragment, useCallback, useEffect, useRef, useState } from 'react
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 
-import { Button } from '../../../_components/Button'
 import { Input } from '../../../_components/Input'
 import { Message } from '../../../_components/Message'
 import { useAuth } from '../../../_providers/Auth'
 
 import classes from './index.module.scss'
+import { Button, Card, CardBody, CardHeader, Divider } from '@nextui-org/react'
 
 type FormData = {
   email: string
@@ -94,78 +94,82 @@ const AccountForm: React.FC = () => {
   }, [user, router, reset, changePassword])
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
-      <Message error={error} success={success} className={classes.message} />
-      {!changePassword ? (
-        <Fragment>
-          <p>
-            {'Change your account details below, or '}
-            <button
-              type="button"
-              className={classes.changePassword}
-              onClick={() => setChangePassword(!changePassword)}
-            >
-              click here
-            </button>
-            {' to change your password.'}
-          </p>
-          <Input
-            name="email"
-            label="Email Address"
-            required
-            register={register}
-            error={errors.email}
-            type="email"
-          />
-          <Input name="name" label="Name" register={register} error={errors.name} />
+    <Card className="container w-full">
+      <CardHeader className="p-8">
+        <h4 className="font-bold text-2xl md:text-4xl">Manage Your Account</h4>
+      </CardHeader>
+      <Divider orientation="horizontal" />
+      <CardBody className="p-8">
+        <form onSubmit={handleSubmit(onSubmit)} className={`${classes.form} max-w-full`}>
+          <Message error={error} success={success} className={classes.message} />
+          {!changePassword ? (
+            <Fragment>
+              <p>
+                {'Change your account details below, or '}
+                <button
+                  type="button"
+                  className={classes.changePassword}
+                  onClick={() => setChangePassword(!changePassword)}
+                >
+                  click here
+                </button>
+                {' to change your password.'}
+              </p>
+              <Input
+                name="email"
+                label="Email Address"
+                required
+                register={register}
+                error={errors.email}
+                type="email"
+              />
+              <Input name="name" label="Name" register={register} error={errors.name} />
 
-          <Input
-            name="phoneNumber"
-            label="Phone Number"
-            register={register}
-            error={errors.phoneNumber}
-          />
-        </Fragment>
-      ) : (
-        <Fragment>
-          <p>
-            {'Change your password below, or '}
-            <button
-              type="button"
-              className={classes.changePassword}
-              onClick={() => setChangePassword(!changePassword)}
-            >
-              cancel
-            </button>
-            .
-          </p>
-          <Input
-            name="password"
-            type="password"
-            label="Password"
-            required
-            register={register}
-            error={errors.password}
-          />
-          <Input
-            name="passwordConfirm"
-            type="password"
-            label="Confirm Password"
-            required
-            register={register}
-            validate={value => value === password.current || 'The passwords do not match'}
-            error={errors.passwordConfirm}
-          />
-        </Fragment>
-      )}
-      <Button
-        type="submit"
-        label={isLoading ? 'Processing' : changePassword ? 'Change Password' : 'Update Account'}
-        disabled={isLoading}
-        appearance="secondary"
-        className={classes.submit}
-      />
-    </form>
+              <Input
+                name="phoneNumber"
+                label="Phone Number"
+                register={register}
+                error={errors.phoneNumber}
+              />
+            </Fragment>
+          ) : (
+            <Fragment>
+              <p>
+                {'Change your password below, or '}
+                <button
+                  type="button"
+                  className={classes.changePassword}
+                  onClick={() => setChangePassword(!changePassword)}
+                >
+                  cancel
+                </button>
+                .
+              </p>
+              <Input
+                name="password"
+                type="password"
+                label="Password"
+                required
+                register={register}
+                error={errors.password}
+              />
+              <Input
+                name="passwordConfirm"
+                type="password"
+                label="Confirm Password"
+                required
+                register={register}
+                validate={value => value === password.current || 'The passwords do not match'}
+                error={errors.passwordConfirm}
+              />
+            </Fragment>
+          )}
+          <Button type="submit" isLoading={isLoading} color="primary" className={classes.submit}>
+            {isLoading ? 'Processing' : changePassword ? 'Change Password' : 'Update Account'}
+          </Button>
+        </form>
+      </CardBody>
+    </Card>
   )
 }
 

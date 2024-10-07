@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { fetchSettings } from '../../../_api/fetchGlobals'
 import type { Subscription, User } from '../../../../payload/payload-types'
 import axios from 'axios'
-import { Button } from '../../../_components/Button'
+import { Button } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
 
 const CreatePaymentLink = (user: User) => {
@@ -38,19 +38,21 @@ const CreatePaymentLink = (user: User) => {
       // console.log(`Attempting to post ${data}`)
       const response = await axios.request(config)
       router.push(`${response.data.link}`)
-      //setClicked(false)
+      setClicked(false)
     } catch (error) {
-      // console.log(error.response.data.message)
+      console.log(error)
       setClicked(false)
     }
   }
   return (
     <div>
       <Button
-        appearance="secondary"
-        label={clicked ? 'Processing...' : 'Subscribe Now!'}
         onClick={() => onCreatePaymentLink()}
-      ></Button>
+        isLoading={clicked}
+        color={clicked ? 'default' : 'primary'}
+      >
+        {clicked ? 'Processing...' : 'Subscribe Now!'}
+      </Button>
     </div>
   )
 }

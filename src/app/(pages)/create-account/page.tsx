@@ -28,7 +28,7 @@ export default async function CreateAccount() {
           {' '}
           <Logo {...settings} />{' '}
         </Link>
-        <h1>Create Account</h1>
+        <h1 className="text-3xl font-bold py-8">Create Account</h1>
         <RenderParams />
         <CreateAccountForm />
       </div>

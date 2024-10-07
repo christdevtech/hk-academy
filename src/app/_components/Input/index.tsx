@@ -27,16 +27,16 @@ export const Input: React.FC<Props> = ({
   disabled,
 }) => {
   return (
-    <div className={classes.inputWrap}>
+    <div className={`${classes.inputWrap}`}>
       <label htmlFor="name" className={classes.label}>
         {label}
         {required ? <span className={classes.asterisk}>&nbsp;*</span> : ''}
       </label>
       {type === 'textarea' ? (
         <textarea
-          className={[classes.input, classes.textarea, error && classes.error]
+          className={`${[classes.input, classes.textarea, error && classes.error]
             .filter(Boolean)
-            .join(' ')}
+            .join(' ')}  bg-slate-800`}
           rows={3}
           placeholder={placeholder}
           {...register(name, {
@@ -47,7 +47,9 @@ export const Input: React.FC<Props> = ({
         />
       ) : (
         <input
-          className={[classes.input, error && classes.error].filter(Boolean).join(' ')}
+          className={`${[classes.input, error && classes.error]
+            .filter(Boolean)
+            .join(' ')} bg-slate-500`}
           type={type}
           placeholder={placeholder}
           {...register(name, {

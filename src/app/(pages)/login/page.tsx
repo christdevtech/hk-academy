@@ -26,7 +26,7 @@ export default async function Login() {
           <Logo {...settings} />
         </Link>
         <RenderParams className={classes.params} />
-        <h1>Log in</h1>
+        <h1 className="text-3xl font-bold my-8">Log in</h1>
         <LoginForm />
       </div>
     </Gutter>

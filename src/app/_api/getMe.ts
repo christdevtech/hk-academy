@@ -28,11 +28,9 @@ export const getMe = async (args?: {
     }),
   })
 
-  const {
-    user,
-  }: {
-    user: User
-  } = await meUserReq.json()
+  const response = await meUserReq.json()
+  // console.log('User Req Response from getMe.ts:', response.data.meUser.user) // Log the response
+  const user = response?.data.meUser.user || null
 
   if (userRedirect && meUserReq.ok && user) {
     redirect(userRedirect)

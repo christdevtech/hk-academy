@@ -1,4 +1,6 @@
-import { MEDIA_FIELDS } from './media'
+// import { MEDIA_FIELDS } from './media'
+
+import { COURSE_FIELDS } from './courses'
 
 export const ME_QUERY = `query {
   meUser {
@@ -14,7 +16,16 @@ export const ME_QUERY = `query {
         name
         email
         accountBalance
-        subscriptions
+        subscriptions{
+          id
+          title
+          description
+          referralAmount
+          endOfPromotion
+          courses{
+            ${COURSE_FIELDS}
+          }
+        }
       }
       subscriptions{
         id
@@ -23,19 +34,7 @@ export const ME_QUERY = `query {
         referralAmount
         endOfPromotion
         courses{
-          id
-          title
-          description
-          videoUrl
-          courseImage{
-            mimeType
-            filename
-            width
-            height
-            alt
-            caption
-            url
-          }
+          ${COURSE_FIELDS}
         }
       }
     }

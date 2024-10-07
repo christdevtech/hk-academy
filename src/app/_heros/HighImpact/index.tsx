@@ -11,7 +11,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({ richText, media, links,
   return (
     <Gutter bg={typeof media !== 'string' && media} className={classes.hero}>
       <div className={classes.content} style={{ color: `${textcolor} !important` }}>
-        <RichText content={richText} className={classes.text} />
+        <RichText content={richText} className={`${classes.text} drop-shadow-xl`} />
         {Array.isArray(links) && links.length > 0 && (
           <ul className={classes.links}>
             {links.map(({ link }, i) => {

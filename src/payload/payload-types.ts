@@ -28,6 +28,10 @@ export interface Config {
     footer: Footer;
   };
 }
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
 export interface User {
   id: string;
   name?: string | null;
@@ -50,6 +54,10 @@ export interface User {
   lockUntil?: string | null;
   password: string | null;
 }
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subscriptions".
+ */
 export interface Subscription {
   id: string;
   title: string;
@@ -77,14 +85,28 @@ export interface Subscription {
   createdAt: string;
   _status?: ('draft' | 'published') | null;
 }
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courses".
+ */
 export interface Course {
   id: string;
   title: string;
-  description: {
+  mainDescription: {
     [k: string]: unknown;
   }[];
-  videoUrl: string;
+  courseContent?:
+    | {
+        description: {
+          [k: string]: unknown;
+        }[];
+        videoUrl: string;
+        videoTitle?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   courseImage?: string | Media | null;
+  relatedCourses?: (string | Course)[] | null;
   slug?: string | null;
   meta?: {
     title?: string | null;
@@ -95,6 +117,10 @@ export interface Course {
   createdAt: string;
   _status?: ('draft' | 'published') | null;
 }
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
 export interface Media {
   id: string;
   alt: string;
@@ -111,7 +137,13 @@ export interface Media {
   filesize?: number | null;
   width?: number | null;
   height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "transactions".
+ */
 export interface Transaction {
   id: string;
   title?: (string | null) | Subscription;
@@ -129,6 +161,10 @@ export interface Transaction {
   updatedAt: string;
   createdAt: string;
 }
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
 export interface Page {
   id: string;
   title: string;
@@ -266,6 +302,10 @@ export interface Page {
   createdAt: string;
   _status?: ('draft' | 'published') | null;
 }
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
 export interface Category {
   id: string;
   title?: string | null;
@@ -281,6 +321,10 @@ export interface Category {
   updatedAt: string;
   createdAt: string;
 }
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
 export interface Post {
   id: string;
   title: string;
@@ -529,6 +573,10 @@ export interface Post {
   createdAt: string;
   _status?: ('draft' | 'published') | null;
 }
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects".
+ */
 export interface Project {
   id: string;
   title: string;
@@ -668,6 +716,10 @@ export interface Project {
   createdAt: string;
   _status?: ('draft' | 'published') | null;
 }
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "comments".
+ */
 export interface Comment {
   id: string;
   user?: (string | null) | User;
@@ -681,6 +733,10 @@ export interface Comment {
   createdAt: string;
   _status?: ('draft' | 'published') | null;
 }
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects".
+ */
 export interface Redirect {
   id: string;
   from: string;
@@ -700,6 +756,10 @@ export interface Redirect {
   updatedAt: string;
   createdAt: string;
 }
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-preferences".
+ */
 export interface PayloadPreference {
   id: string;
   user: {
@@ -719,6 +779,10 @@ export interface PayloadPreference {
   updatedAt: string;
   createdAt: string;
 }
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-migrations".
+ */
 export interface PayloadMigration {
   id: string;
   name?: string | null;
@@ -726,6 +790,10 @@ export interface PayloadMigration {
   updatedAt: string;
   createdAt: string;
 }
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "settings".
+ */
 export interface Settings {
   id: string;
   postsPage?: (string | null) | Page;
@@ -755,6 +823,10 @@ export interface Settings {
   updatedAt?: string | null;
   createdAt?: string | null;
 }
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "header".
+ */
 export interface Header {
   id: string;
   navItems?:
@@ -775,6 +847,10 @@ export interface Header {
   updatedAt?: string | null;
   createdAt?: string | null;
 }
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer".
+ */
 export interface Footer {
   id: string;
   navItems?:

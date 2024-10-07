@@ -10,8 +10,8 @@ const Courses: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug'],
     preview: doc => {
-      return `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/next/preview?url=${encodeURIComponent(
-        `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/subscriptions/${doc.slug}`,
+      return `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/api/preview?url=${encodeURIComponent(
+        `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/courses/${doc.slug}`,
       )}&secret=${process.env.PAYLOAD_PUBLIC_DRAFT_SECRET}`
     },
   },
@@ -31,18 +31,45 @@ const Courses: CollectionConfig = {
       required: true,
     },
     richText({
-      name: 'description',
-      label: 'Description',
+      name: 'mainDescription',
+      label: 'Course Description',
     }),
     {
-      name: 'videoUrl',
-      type: 'text',
-      required: true,
+      name: 'courseContent',
+      type: 'array',
+      fields: [
+        richText({
+          name: 'description',
+          label: 'Description',
+        }),
+        {
+          name: 'videoUrl',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'videoTitle',
+          type: 'text',
+        },
+      ],
     },
     {
       name: 'courseImage',
       type: 'upload',
       relationTo: 'media',
+    },
+    {
+      name: 'relatedCourses',
+      type: 'relationship',
+      relationTo: 'courses',
+      hasMany: true,
+      filterOptions: ({ id }) => {
+        return {
+          id: {
+            not_in: [id],
+          },
+        }
+      },
     },
     slugField(),
   ],

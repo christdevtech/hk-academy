@@ -7,7 +7,7 @@ import { handleCommissionPayment } from './hooks/handleCommisionPament'
 const Transactions: CollectionConfig = {
   slug: 'transactions',
   admin: {
-    useAsTitle: 'user',
+    useAsTitle: 'paymentMethod',
     defaultColumns: ['user', 'amount', 'status', 'type'],
   },
   access: {

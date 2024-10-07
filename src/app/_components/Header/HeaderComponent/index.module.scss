@@ -1,83 +1,83 @@
 @use '../../../_css/queries.scss' as *;
 
-.header {
-  padding: var(--base) 0;
-  box-shadow:  0 0 calc(var(--base) / 2) rgba($color: var(--theme-elevation-1000), $alpha: 0.1);
-  color: var(--theme-elevation-1000);
-  background-color:var(--theme-elevation-0); 
-}
+// .header {
+//   padding: var(--base) 0;
+//   box-shadow:  0 0 calc(var(--base) / 2) rgba($color: var(--theme-elevation-1000), $alpha: 0.1);
+//   color: var(--theme-elevation-1000);
+//   background-color:var(--theme-elevation-0); 
+// }
 
-.wrap {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: calc(var(--base) / 2) var(--base);
+// .wrap {
+//   display: flex;
+//   justify-content: space-between;
+//   flex-wrap: wrap;
+//   gap: calc(var(--base) / 2) var(--base);
 
-  .mobileNav{
-  display: none;
-  }
-   @include small-break {
+//   .mobileNav{
+//   display: none;
+//   }
+//    @include small-break {
 
-    nav{
-      display: none;
-    }
-    justify-content: space-between;
-    align-items: center;
-    .mobileNav{
-      display: block;
-    }
-    .mobileMenu {
+//     nav{
+//       display: none;
+//     }
+//     justify-content: space-between;
+//     align-items: center;
+//     .mobileNav{
+//       display: block;
+//     }
+//     .mobileMenu {
 
-    position: fixed; 
-    top: 0;
-    left: 0;
-    width: 80%; 
-    height: 100dvh;
-    color: var(--theme-elevation-1000);
-    background-color:var(--theme-elevation-0); 
-    transform: translateX(-100%); 
-    transition: transform 0.3s ease-in-out; 
-    z-index: 1000; 
-    display: flex;
-    flex-flow: column;
-    gap: calc(var(--base) / 2);
-    padding-top: calc(var(--base) / 2);
+//     position: fixed; 
+//     top: 0;
+//     left: 0;
+//     width: 80%; 
+//     height: 100dvh;
+//     color: var(--theme-elevation-1000);
+//     background-color:var(--theme-elevation-0); 
+//     transform: translateX(-100%); 
+//     transition: transform 0.3s ease-in-out; 
+//     z-index: 1000; 
+//     display: flex;
+//     flex-flow: column;
+//     gap: calc(var(--base) / 2);
+//     padding-top: calc(var(--base) / 2);
 
-    &.open {
-      transform: translateX(0); 
-    }
+//     &.open {
+//       transform: translateX(0); 
+//     }
 
     
     
 
-    .mobileMenuItem{
-        padding: 1rem;
-        background-color: var(--theme-elevation-200);
-        margin: 0 calc(
-          var(--base) / 2
-        );
-      }
+//     .mobileMenuItem{
+//         padding: 1rem;
+//         background-color: var(--theme-elevation-200);
+//         margin: 0 calc(
+//           var(--base) / 2
+//         );
+//       }
 
-    a {
-      text-decoration: none;
-      color: var(--theme-elevation-1000); 
-    }
-  }
+//     a {
+//       text-decoration: none;
+//       color: var(--theme-elevation-1000); 
+//     }
+//   }
     
-  }
-}
+//   }
+// }
 
-.logo {
-  width: 150px;
-}
+// .logo {
+//   width: 150px;
+// }
 
 .hide{
-  display: none;
+  display: none !important;
 }
 
 
-:global([data-theme="dark"]) {
-  .hamburgerToggle {
-    filter: invert(100%);
-  }
-}
+// :global([data-theme="dark"]) {
+//   .hamburgerToggle {
+//     filter: invert(100%);
+//   }
+// }

@@ -9,9 +9,9 @@ import classes from '../Logo/index.module.scss'
 const Logo: React.FC<Settings> = settings => {
   const { theme } = useTheme()
 
-  const logoDark = typeof settings.logoDark !== 'string' && settings.logoDark
+  const logoDark = typeof settings?.logoDark !== 'string' && settings.logoDark
 
-  const logoLight = typeof settings.logoLight !== 'string' && settings.logoLight
+  const logoLight = typeof settings?.logoLight !== 'string' && settings?.logoLight
 
   return (
     <>
@@ -19,8 +19,8 @@ const Logo: React.FC<Settings> = settings => {
         ? logoDark && (
             <Image
               src={logoDark.url}
-              height={50}
-              width={100}
+              height={90}
+              width={90}
               alt={logoDark.alt}
               className={classes.logo}
             />
@@ -28,8 +28,8 @@ const Logo: React.FC<Settings> = settings => {
         : logoLight && (
             <Image
               src={logoLight.url}
-              height={50}
-              width={100}
+              height={90}
+              width={90}
               alt={logoLight.alt}
               className={classes.logo}
             />

@@ -1,65 +1,65 @@
 @import '../../_css/common';
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: var(--base) calc(var(--base) * 2);
+// .grid {
+//   display: grid;
+//   grid-template-columns: repeat(12, 1fr);
+//   gap: var(--base) calc(var(--base) * 2);
 
-  // @include mid-break {
-  //   grid-template-columns: repeat(6, 1fr);
-  //   gap: var(--base) var(--base);
-  // }
+//   // @include mid-break {
+//   //   grid-template-columns: repeat(6, 1fr);
+//   //   gap: var(--base) var(--base);
+//   // }
 
-  @include small-break {
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--base) var(--base);
-  }
-}
+//   @include small-break {
+//     grid-template-columns: repeat(4, 1fr);
+//     gap: var(--base) var(--base);
+//   }
+// }
 
-.column--oneThird {
-  grid-column-end: span 4;
+// .column--oneThird {
+//   grid-column-end: span 4;
 
-  @include mid-break {
-    grid-column-end: span 6;
-  }
+//   @include mid-break {
+//     grid-column-end: span 6;
+//   }
 
-}
+// }
 
-.column--half {
-  grid-column-end: span 6;
-}
+// .column--half {
+//   grid-column-end: span 6;
+// }
 
-.column--twoThirds {
-  grid-column-end: span 8;
-}
+// .column--twoThirds {
+//   grid-column-end: span 8;
+// }
 
-.column--full {
-  grid-column-end: span 12;
+// .column--full {
+//   grid-column-end: span 12;
 
-  @include mid-break {
-     &.column{
+//   @include mid-break {
+//      &.column{
 
-      grid-column-end: span 12;
-    }
-  }
+//       grid-column-end: span 12;
+//     }
+//   }
 
-  @include small-break {
-    &.column{
+//   @include small-break {
+//     &.column{
 
-      grid-column-end: span 12;
-    }
-  }
-}
+//       grid-column-end: span 12;
+//     }
+//   }
+// }
 
-.column {
-  @include mid-break {
-    grid-column-end: span 6;
-  }
+// .column {
+//   @include mid-break {
+//     grid-column-end: span 6;
+//   }
 
-  @include small-break {
-    grid-column-end: span 6;
-  }
-}
+//   @include small-break {
+//     grid-column-end: span 6;
+//   }
+// }
 
 .link {
   margin-top: var(--base);

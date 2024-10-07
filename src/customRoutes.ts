@@ -15,7 +15,7 @@ router.get('/referral/:code', (req: Request, res: Response) => {
   res.cookie('referral', referralCode, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
 
   // Optionally, you can redirect the user to the homepage or a specific page
-  res.redirect('/')
+  res.redirect('/create-account')
 })
 
 export default router

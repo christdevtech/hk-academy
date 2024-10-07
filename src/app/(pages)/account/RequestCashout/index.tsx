@@ -1,15 +1,13 @@
 'use client'
 import React, { useState } from 'react'
-import { getMe } from '../../../_api/getMe'
 import { User } from '../../../../payload/payload-types'
-import { HR } from '../../../_components/HR'
 
-import { Button } from '../../../_components/Button'
+// import { Button } from '../../../_components/Button'
 import { useForm } from 'react-hook-form'
 import { Input } from '../../../_components/Input'
-import classes from './index.module.scss'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
+import { Button } from '@nextui-org/react'
 type cashoutRequest = {
   amount: number
   phonenumber: string
@@ -56,37 +54,35 @@ const RequestCashout = ({ user }: { user: User }) => {
   }
 
   return (
-    <div>
-      <h2>RequestCashout</h2>
-      <form onSubmit={handleSubmit(createCashout)} className={classes.form}>
-        <Input
-          label="Withdrawal Amount"
-          type="text"
-          name="amount"
-          placeholder={user.accountBalance.toString()}
-          required
-          register={register}
-          error={errors.amount}
-        />
-        <Input
-          label="Phone Number"
-          type="text"
-          name="phoneNumber"
-          placeholder={user.phoneNumber.toString()}
-          required
-          register={register}
-          error={errors.phoneNumber}
-        />
-        <Button
-          type="submit"
-          label={isLoading ? 'Processing' : 'Request Cashout'}
-          disabled={isLoading}
-          appearance="secondary"
-          className={classes.submit}
-        />
-      </form>
-
-      <HR />
+    <div className="grid grid-cols-1 lg:grid-cols-2">
+      <div>
+        <h2 className="text-2xl font-bold md:text-4xl mt-8 mb-4">Request Cashout</h2>
+        <form onSubmit={handleSubmit(createCashout)} className="flex flex-col gap-4">
+          <div className="flex flex-col content-start gap-4">
+            <Input
+              label="Withdrawal Amount"
+              type="text"
+              name="amount"
+              placeholder={user.accountBalance.toString()}
+              required
+              register={register}
+              error={errors.amount}
+            />
+            <Input
+              label="Phone Number"
+              type="text"
+              name="phoneNumber"
+              placeholder={user.phoneNumber.toString()}
+              required
+              register={register}
+              error={errors.phoneNumber}
+            />
+          </div>
+          <Button type="submit" isLoading={isLoading} color={isLoading ? 'success' : 'default'}>
+            {isLoading ? 'Processing' : 'Request Cashout'}
+          </Button>
+        </form>
+      </div>
     </div>
   )
 }

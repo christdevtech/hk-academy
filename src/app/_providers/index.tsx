@@ -3,14 +3,16 @@
 import React from 'react'
 
 import { AuthProvider } from '../_providers/Auth'
-import { ThemeProvider } from './Theme'
+import { NextUIProvider } from '@nextui-org/react'
 
 export const Providers: React.FC<{
   children: React.ReactNode
 }> = ({ children }) => {
   return (
-    <ThemeProvider>
-      <AuthProvider>{children}</AuthProvider>
-    </ThemeProvider>
+    <NextUIProvider>
+      <main className="dark text-foreground bg-background">
+        <AuthProvider>{children}</AuthProvider>
+      </main>
+    </NextUIProvider>
   )
 }

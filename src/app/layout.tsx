@@ -14,18 +14,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <InitTheme />
+        {/* <InitTheme /> */}
         <link rel="icon" href="/favicon.ico" sizes="32x32" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
       <body>
         <Providers>
-          <AdminBar />
           {/* @ts-expect-error */}
           <Header />
           {children}
           {/* @ts-expect-error */}
           <Footer />
+          <AdminBar />
         </Providers>
       </body>
     </html>
