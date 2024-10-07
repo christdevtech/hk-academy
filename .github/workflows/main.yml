@@ -28,11 +28,11 @@ jobs:
 
       - name: Stop PM2 process on VPS
         run: |
-          echo "${{ secrets.SSH_PASSWORD }}" | sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} "pm2 stop hkacademy"
+          echo "${{ secrets.SERVER_PASSWORD }}" | sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} "pm2 stop hkacademy"
 
       - name: Delete specific files and folders on VPS
         run: |
-          echo "${{ secrets.SSH_PASSWORD }}" | sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} "
+          echo "${{ secrets.SERVER_PASSWORD }}" | sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} "
             rm -rf /var/www/hkacademy/dist /var/www/hkacademy/build /var/www/hkacademy/.next /var/www/hkacademy/.env"
 
       - name: Deploy dist folder to VPS
@@ -41,7 +41,7 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
+          password: ${{ secrets.SERVER_PASSWORD }}
           source: dist/*
           target: /var/www/hkacademy/dist/
 
@@ -51,7 +51,7 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
+          password: ${{ secrets.SERVER_PASSWORD }}
           source: build/*
           target: /var/www/hkacademy/build/
 
@@ -61,7 +61,7 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
+          password: ${{ secrets.SERVER_PASSWORD }}
           source: .next/*
           target: /var/www/hkacademy/.next/
 
@@ -71,10 +71,10 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
+          password: ${{ secrets.SERVER_PASSWORD }}
           source: .env
           target: /var/www/hkacademy/
-          
+
       - name: Start PM2 process on VPS
         run: |
-          echo "${{ secrets.SSH_PASSWORD }}" | sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} "pm2 start hkacademy"
+          echo "${{ secrets.SERVER_PASSWORD }}" | sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} "pm2 start hkacademy"
