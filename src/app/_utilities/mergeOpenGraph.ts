@@ -7,7 +7,7 @@ const defaultOpenGraph: Metadata['openGraph'] = {
   description: 'Learn & Earn (Embrace Your Financial Future Through High-Income Skills)',
   images: [
     {
-      url: `${process.env.NEXT_PUBLIC_SERVER_URL}/wide-logo.png`,
+      url: `${process.env.NEXT_PUBLIC_SERVER_URL}/wide-logo.jpg`,
     },
   ],
 }
