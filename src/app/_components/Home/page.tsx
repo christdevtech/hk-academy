@@ -1,6 +1,6 @@
 'use client'
 import React, { Suspense } from 'react'
-import YouTubeEmbed from '../YoutubeEmbed'
+import YouTubeEmbed from '../YouTubeEmbed'
 import {
   Accordion,
   AccordionItem,
