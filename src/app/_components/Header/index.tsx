@@ -26,12 +26,5 @@ export async function Header() {
     payload.logger.error(`Error fetching: ${error}`)
   }
 
-  if (!header || !settings) {
-    return (
-      <div>
-        <h1>Loading...</h1>
-      </div>
-    )
-  }
   return <HeaderComponent header={header} settings={settings} />
 }

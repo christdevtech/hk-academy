@@ -148,8 +148,7 @@ scalar JSON
 
 type Course_CourseContent {
   description(depth: Int): JSON
-  videoUrl: String
-  videoTitle: String
+  video: Media
   id: String
 }
 
@@ -3245,8 +3244,7 @@ input Course_where {
   title: Course_title_operator
   mainDescription: Course_mainDescription_operator
   courseContent__description: Course_courseContent__description_operator
-  courseContent__videoUrl: Course_courseContent__videoUrl_operator
-  courseContent__videoTitle: Course_courseContent__videoTitle_operator
+  courseContent__video: Course_courseContent__video_operator
   courseContent__id: Course_courseContent__id_operator
   courseImage: Course_courseImage_operator
   relatedCourses: Course_relatedCourses_operator
@@ -3286,24 +3284,12 @@ input Course_courseContent__description_operator {
   contains: JSON
 }
 
-input Course_courseContent__videoUrl_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-}
-
-input Course_courseContent__videoTitle_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
+input Course_courseContent__video_operator {
+  equals: JSON
+  not_equals: JSON
+  in: [JSON]
+  not_in: [JSON]
+  all: [JSON]
   exists: Boolean
 }
 
@@ -3420,8 +3406,7 @@ input Course_where_and {
   title: Course_title_operator
   mainDescription: Course_mainDescription_operator
   courseContent__description: Course_courseContent__description_operator
-  courseContent__videoUrl: Course_courseContent__videoUrl_operator
-  courseContent__videoTitle: Course_courseContent__videoTitle_operator
+  courseContent__video: Course_courseContent__video_operator
   courseContent__id: Course_courseContent__id_operator
   courseImage: Course_courseImage_operator
   relatedCourses: Course_relatedCourses_operator
@@ -3441,8 +3426,7 @@ input Course_where_or {
   title: Course_title_operator
   mainDescription: Course_mainDescription_operator
   courseContent__description: Course_courseContent__description_operator
-  courseContent__videoUrl: Course_courseContent__videoUrl_operator
-  courseContent__videoTitle: Course_courseContent__videoTitle_operator
+  courseContent__video: Course_courseContent__video_operator
   courseContent__id: Course_courseContent__id_operator
   courseImage: Course_courseImage_operator
   relatedCourses: Course_relatedCourses_operator
@@ -3556,8 +3540,7 @@ type CoursesDocAccessFields_courseContent_Delete {
 
 type CoursesDocAccessFields_courseContent_Fields {
   description: CoursesDocAccessFields_courseContent_description
-  videoUrl: CoursesDocAccessFields_courseContent_videoUrl
-  videoTitle: CoursesDocAccessFields_courseContent_videoTitle
+  video: CoursesDocAccessFields_courseContent_video
   id: CoursesDocAccessFields_courseContent_id
 }
 
@@ -3584,49 +3567,26 @@ type CoursesDocAccessFields_courseContent_description_Delete {
   permission: Boolean!
 }
 
-type CoursesDocAccessFields_courseContent_videoUrl {
-  create: CoursesDocAccessFields_courseContent_videoUrl_Create
-  read: CoursesDocAccessFields_courseContent_videoUrl_Read
-  update: CoursesDocAccessFields_courseContent_videoUrl_Update
-  delete: CoursesDocAccessFields_courseContent_videoUrl_Delete
+type CoursesDocAccessFields_courseContent_video {
+  create: CoursesDocAccessFields_courseContent_video_Create
+  read: CoursesDocAccessFields_courseContent_video_Read
+  update: CoursesDocAccessFields_courseContent_video_Update
+  delete: CoursesDocAccessFields_courseContent_video_Delete
 }
 
-type CoursesDocAccessFields_courseContent_videoUrl_Create {
+type CoursesDocAccessFields_courseContent_video_Create {
   permission: Boolean!
 }
 
-type CoursesDocAccessFields_courseContent_videoUrl_Read {
+type CoursesDocAccessFields_courseContent_video_Read {
   permission: Boolean!
 }
 
-type CoursesDocAccessFields_courseContent_videoUrl_Update {
+type CoursesDocAccessFields_courseContent_video_Update {
   permission: Boolean!
 }
 
-type CoursesDocAccessFields_courseContent_videoUrl_Delete {
-  permission: Boolean!
-}
-
-type CoursesDocAccessFields_courseContent_videoTitle {
-  create: CoursesDocAccessFields_courseContent_videoTitle_Create
-  read: CoursesDocAccessFields_courseContent_videoTitle_Read
-  update: CoursesDocAccessFields_courseContent_videoTitle_Update
-  delete: CoursesDocAccessFields_courseContent_videoTitle_Delete
-}
-
-type CoursesDocAccessFields_courseContent_videoTitle_Create {
-  permission: Boolean!
-}
-
-type CoursesDocAccessFields_courseContent_videoTitle_Read {
-  permission: Boolean!
-}
-
-type CoursesDocAccessFields_courseContent_videoTitle_Update {
-  permission: Boolean!
-}
-
-type CoursesDocAccessFields_courseContent_videoTitle_Delete {
+type CoursesDocAccessFields_courseContent_video_Delete {
   permission: Boolean!
 }
 
@@ -3939,8 +3899,7 @@ type CourseVersion_Version {
 
 type CourseVersion_Version_CourseContent {
   description(depth: Int): JSON
-  videoUrl: String
-  videoTitle: String
+  video: Media
   id: String
 }
 
@@ -4350,8 +4309,7 @@ input versionsCourse_where {
   version__title: versionsCourse_version__title_operator
   version__mainDescription: versionsCourse_version__mainDescription_operator
   version__courseContent__description: versionsCourse_version__courseContent__description_operator
-  version__courseContent__videoUrl: versionsCourse_version__courseContent__videoUrl_operator
-  version__courseContent__videoTitle: versionsCourse_version__courseContent__videoTitle_operator
+  version__courseContent__video: versionsCourse_version__courseContent__video_operator
   version__courseContent__id: versionsCourse_version__courseContent__id_operator
   version__courseImage: versionsCourse_version__courseImage_operator
   version__relatedCourses: versionsCourse_version__relatedCourses_operator
@@ -4403,24 +4361,12 @@ input versionsCourse_version__courseContent__description_operator {
   contains: JSON
 }
 
-input versionsCourse_version__courseContent__videoUrl_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
-}
-
-input versionsCourse_version__courseContent__videoTitle_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
-  in: [String]
-  not_in: [String]
-  all: [String]
+input versionsCourse_version__courseContent__video_operator {
+  equals: JSON
+  not_equals: JSON
+  in: [JSON]
+  not_in: [JSON]
+  all: [JSON]
   exists: Boolean
 }
 
@@ -4566,8 +4512,7 @@ input versionsCourse_where_and {
   version__title: versionsCourse_version__title_operator
   version__mainDescription: versionsCourse_version__mainDescription_operator
   version__courseContent__description: versionsCourse_version__courseContent__description_operator
-  version__courseContent__videoUrl: versionsCourse_version__courseContent__videoUrl_operator
-  version__courseContent__videoTitle: versionsCourse_version__courseContent__videoTitle_operator
+  version__courseContent__video: versionsCourse_version__courseContent__video_operator
   version__courseContent__id: versionsCourse_version__courseContent__id_operator
   version__courseImage: versionsCourse_version__courseImage_operator
   version__relatedCourses: versionsCourse_version__relatedCourses_operator
@@ -4591,8 +4536,7 @@ input versionsCourse_where_or {
   version__title: versionsCourse_version__title_operator
   version__mainDescription: versionsCourse_version__mainDescription_operator
   version__courseContent__description: versionsCourse_version__courseContent__description_operator
-  version__courseContent__videoUrl: versionsCourse_version__courseContent__videoUrl_operator
-  version__courseContent__videoTitle: versionsCourse_version__courseContent__videoTitle_operator
+  version__courseContent__video: versionsCourse_version__courseContent__video_operator
   version__courseContent__id: versionsCourse_version__courseContent__id_operator
   version__courseImage: versionsCourse_version__courseImage_operator
   version__relatedCourses: versionsCourse_version__relatedCourses_operator
@@ -17559,8 +17503,7 @@ type CoursesFields_courseContent_Delete {
 
 type CoursesFields_courseContent_Fields {
   description: CoursesFields_courseContent_description
-  videoUrl: CoursesFields_courseContent_videoUrl
-  videoTitle: CoursesFields_courseContent_videoTitle
+  video: CoursesFields_courseContent_video
   id: CoursesFields_courseContent_id
 }
 
@@ -17587,49 +17530,26 @@ type CoursesFields_courseContent_description_Delete {
   permission: Boolean!
 }
 
-type CoursesFields_courseContent_videoUrl {
-  create: CoursesFields_courseContent_videoUrl_Create
-  read: CoursesFields_courseContent_videoUrl_Read
-  update: CoursesFields_courseContent_videoUrl_Update
-  delete: CoursesFields_courseContent_videoUrl_Delete
+type CoursesFields_courseContent_video {
+  create: CoursesFields_courseContent_video_Create
+  read: CoursesFields_courseContent_video_Read
+  update: CoursesFields_courseContent_video_Update
+  delete: CoursesFields_courseContent_video_Delete
 }
 
-type CoursesFields_courseContent_videoUrl_Create {
+type CoursesFields_courseContent_video_Create {
   permission: Boolean!
 }
 
-type CoursesFields_courseContent_videoUrl_Read {
+type CoursesFields_courseContent_video_Read {
   permission: Boolean!
 }
 
-type CoursesFields_courseContent_videoUrl_Update {
+type CoursesFields_courseContent_video_Update {
   permission: Boolean!
 }
 
-type CoursesFields_courseContent_videoUrl_Delete {
-  permission: Boolean!
-}
-
-type CoursesFields_courseContent_videoTitle {
-  create: CoursesFields_courseContent_videoTitle_Create
-  read: CoursesFields_courseContent_videoTitle_Read
-  update: CoursesFields_courseContent_videoTitle_Update
-  delete: CoursesFields_courseContent_videoTitle_Delete
-}
-
-type CoursesFields_courseContent_videoTitle_Create {
-  permission: Boolean!
-}
-
-type CoursesFields_courseContent_videoTitle_Read {
-  permission: Boolean!
-}
-
-type CoursesFields_courseContent_videoTitle_Update {
-  permission: Boolean!
-}
-
-type CoursesFields_courseContent_videoTitle_Delete {
+type CoursesFields_courseContent_video_Delete {
   permission: Boolean!
 }
 
@@ -22664,8 +22584,7 @@ input mutationCourseInput {
 
 input mutationCourse_CourseContentInput {
   description: JSON!
-  videoUrl: String!
-  videoTitle: String
+  video: String
   id: String
 }
 
@@ -22695,8 +22614,7 @@ input mutationCourseUpdateInput {
 
 input mutationCourseUpdate_CourseContentInput {
   description: JSON!
-  videoUrl: String!
-  videoTitle: String
+  video: String
   id: String
 }
 

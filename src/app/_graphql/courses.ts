@@ -17,8 +17,9 @@ export const COURSE_FIELDS = `
   mainDescription
   courseContent{
     description
-    videoUrl
-    videoTitle
+    video{
+      ${MEDIA_FIELDS}
+    }
   }
   courseImage{
     ${MEDIA_FIELDS}
@@ -30,8 +31,9 @@ export const COURSE_FIELDS = `
     mainDescription
     courseContent{
       description
-      videoUrl
-      videoTitle
+      video{
+        ${MEDIA_FIELDS}
+      }
     }
     courseImage{
       ${MEDIA_FIELDS}

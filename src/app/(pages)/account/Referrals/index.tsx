@@ -5,7 +5,16 @@ import CopyBox from '../../../_components/CopyBox'
 import RequestCashout from '../RequestCashout'
 import { Card, CardBody, CardFooter, CardHeader, Chip, Divider, Image } from '@nextui-org/react'
 
-const Referrals = ({ user }: { user: User }) => {
+const Referrals = ({ user, referredUsers }: { user: User; referredUsers: User[] }) => {
+  const subscribedUsers = () => {
+    let number = 0
+    referredUsers.forEach(user => {
+      if (user.subscriptions.length > 0) {
+        number++
+      }
+    })
+    return number
+  }
   return (
     <Card>
       <CardHeader className="p-8">
@@ -57,10 +66,15 @@ const Referrals = ({ user }: { user: User }) => {
         )}
       </CardBody>
       <Divider orientation="horizontal"></Divider>
-      <CardFooter className="p-8">
-        <Chip color={user?.referredUsers?.length > 0 ? 'primary' : 'warning'}>
-          Number of Referred Users: {user?.referredUsers?.length || 0}
+      <CardFooter className="p-8 gap-4 flex-wrap">
+        <Chip color={referredUsers?.length > 0 ? 'primary' : 'warning'}>
+          Number of Referred Users: {referredUsers?.length || 0}
         </Chip>
+        {referredUsers && (
+          <Chip color={subscribedUsers() > 0 ? 'primary' : 'warning'}>
+            Number of Subscribed Users: {subscribedUsers() || 0}
+          </Chip>
+        )}
       </CardFooter>
     </Card>
   )

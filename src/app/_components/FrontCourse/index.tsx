@@ -1,30 +1,46 @@
 'use client'
 
-import React, { Suspense, useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
 import { Button, Card, CardBody, Divider, Image, Link, Spinner } from '@nextui-org/react'
-import YouTubeEmbed from '../YouTubeEmbed'
 import RichText from '../RichText'
-import { Course, User } from '../../../payload/payload-types'
+import { Course, Media, User } from '../../../payload/payload-types'
+import VideoEmbed from '../VideoEmbed'
+
+interface CourseContentData {
+  description: {
+    [k: string]: unknown
+  }[]
+  video?: (string | null) | Media
+  id?: string | null
+}
+
+interface VideoData {
+  description: {
+    [k: string]: unknown
+  }[]
+  video?: Media
+  id?: string | null
+}
 
 const FrontCourse = ({ course, user }: { course: Course; user: User }) => {
-  const { courseContent, courseImage, relatedCourses, title, id } = course
+  const { courseContent, relatedCourses, title, id } = course
 
-  const router = useRouter()
-  const [currentVideo, setCurrentVideo] = useState<{
-    description: {
-      [k: string]: unknown
-    }[]
-    videoUrl: string
-    videoTitle?: string
-    id?: string | null
-  }>()
+  const [currentVideo, setCurrentVideo] = useState<VideoData>()
 
   useEffect(() => {
     if (courseContent) {
-      setCurrentVideo(courseContent[0])
+      setCurrentVideo(getCurrentVideo(courseContent[0]))
     }
   }, [courseContent])
+
+  useEffect(() => {
+    console.log('Current video updated:', currentVideo)
+  }, [currentVideo])
+
+  const getCurrentVideo = (courseContentData: CourseContentData) => {
+    const video = typeof courseContentData.video === 'object' && courseContentData.video
+    return { ...courseContentData, video: video }
+  }
 
   // Check if the user has a subscription that includes the course
   const hasCourseAccess = user.subscriptions.some(
@@ -36,12 +52,11 @@ const FrontCourse = ({ course, user }: { course: Course; user: User }) => {
       ),
   )
 
-  // // Redirect to /account if the user doesn't have access
-  // useEffect(() => {
-  //   if (!hasCourseAccess) {
-  //     router.push('/account')
-  //   }
-  // }, [hasCourseAccess, router])
+  // Function to handle video selection
+  const handleVideoSelect = (selectedContent: CourseContentData) => {
+    const selectedVideo = getCurrentVideo(selectedContent)
+    setCurrentVideo(selectedVideo)
+  }
 
   if (!hasCourseAccess) {
     // Optionally, you can render a message here before redirecting
@@ -83,31 +98,37 @@ const FrontCourse = ({ course, user }: { course: Course; user: User }) => {
       <Divider orientation="horizontal" className="" />
       <div className="grid grid-cols-8 m-auto bg-gradient-to-b from-slate-900 via-zinc-900 to-black-800">
         <div className="md:col-span-6 xl:col-span-5 col-span-8">
-          <Suspense fallback={<p>Loading Video...</p>}>
-            <YouTubeEmbed videoUrl={currentVideo?.videoUrl} />
-          </Suspense>{' '}
+          {courseContent.map(courseVideo => {
+            if (
+              typeof courseVideo.video != 'string' &&
+              courseVideo.video.url === currentVideo.video.url
+            )
+              return <VideoEmbed video={currentVideo?.video} />
+          })}
+
           <RichText content={currentVideo?.description} className="p-4" />
         </div>
         <div className="md:col-span-2 xl:col-span-3  col-span-8 text-center">
           <Divider orientation="horizontal" />
           <h2 className="text-lg md:text-xl font-semibold xl:text-3xl p-4">Course Lessons</h2>
           <Divider orientation="horizontal" />
-          {courseContent.map((courseVideo, index) => (
-            <Button
-              key={index}
-              className={`w-full ${
-                currentVideo.videoTitle === courseVideo.videoTitle ? 'text-blue-500' : ''
-              } hover:text-red-500`}
-              onClick={() => {
-                setCurrentVideo(courseVideo)
-              }}
-              radius="none"
-              variant="flat"
-              size="lg"
-            >
-              {courseVideo.videoTitle}
-            </Button>
-          ))}
+          {courseContent.map(courseVideo => {
+            if (typeof courseVideo.video !== 'string')
+              return (
+                <Button
+                  key={courseVideo.id}
+                  className={`w-full ${
+                    currentVideo.video.url === courseVideo.video.url ? 'text-blue-500' : ''
+                  } hover:text-red-500`}
+                  onClick={() => handleVideoSelect(courseVideo)}
+                  radius="none"
+                  variant="flat"
+                  size="lg"
+                >
+                  {getCurrentVideo(courseVideo).video.alt}
+                </Button>
+              )
+          })}
         </div>
       </div>
 

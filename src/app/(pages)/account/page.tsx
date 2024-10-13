@@ -6,7 +6,7 @@ import { getMeUser } from '../../_utilities/getMeUser'
 import { mergeOpenGraph } from '../../_utilities/mergeOpenGraph'
 
 import classes from './index.module.scss'
-import type { Subscription, Transaction } from '../../../payload/payload-types'
+import type { Subscription, Transaction, User } from '../../../payload/payload-types'
 
 import payload from 'payload'
 
@@ -32,10 +32,12 @@ export default async function Account() {
       },
     },
   })
+
   const cashoutTransactions = pendingCashoutTransactions.docs.map(transaction => {
     const trans = { ...transaction } as unknown
     return trans as Transaction
   })
+
   const userTransactionsData = await payload.find({
     collection: 'transactions',
     where: {
@@ -51,6 +53,20 @@ export default async function Account() {
     return trans as Transaction
   })
 
+  const referredUsersDocs = await payload.find({
+    collection: 'users',
+    where: {
+      referredBy: {
+        equals: user.id,
+      },
+    },
+  })
+
+  const referredUsers = referredUsersDocs.docs.map(user => {
+    const userDoc = { ...user } as unknown
+    return userDoc as User
+  })
+
   // console.log("User's Data", user)
 
   const { hkWallet } = await fetchSettings()
@@ -60,6 +76,7 @@ export default async function Account() {
   }
 
   let subscriptions: Subscription[] = []
+
   if (user?.subscriptions?.length > 0) {
     const subscriptionIdArray = user.subscriptions?.map(subscription => {
       return typeof subscription === 'string' ? subscription : subscription?.id
@@ -83,7 +100,12 @@ export default async function Account() {
         <RenderParams className={classes.params} />
       </Gutter>
       <Gutter className="pb-8">
-        <Dashboard subscriptions={subscriptions} user={user} userTransactions={userTransactions} />
+        <Dashboard
+          subscriptions={subscriptions}
+          user={user}
+          userTransactions={userTransactions}
+          referredUsers={referredUsers}
+        />
         {user?.roles?.includes('admin') && (
           <ApprovePayout
             cashoutTransactions={cashoutTransactions}

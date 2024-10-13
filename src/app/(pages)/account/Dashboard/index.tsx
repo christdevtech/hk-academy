@@ -13,10 +13,12 @@ export default function Dashboard({
   subscriptions,
   user,
   userTransactions,
+  referredUsers,
 }: {
   subscriptions: Subscription[]
   user: User
   userTransactions: Transaction[]
+  referredUsers: User[]
 }) {
   return (
     <div className="flex flex-col px-0">
@@ -29,7 +31,7 @@ export default function Dashboard({
             <UserTransactions transactions={userTransactions} />
           </Tab>
           <Tab key="referrals" title="Referrals">
-            <Referrals user={user} />
+            <Referrals user={user} referredUsers={referredUsers} />
           </Tab>
           <Tab key="profile" title="Profile">
             <AccountForm />

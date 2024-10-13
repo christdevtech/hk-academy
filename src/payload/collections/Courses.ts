@@ -43,13 +43,9 @@ const Courses: CollectionConfig = {
           label: 'Description',
         }),
         {
-          name: 'videoUrl',
-          type: 'text',
-          required: true,
-        },
-        {
-          name: 'videoTitle',
-          type: 'text',
+          name: 'video',
+          type: 'relationship',
+          relationTo: 'media',
         },
       ],
     },

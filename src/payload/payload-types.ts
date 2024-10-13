@@ -100,8 +100,7 @@ export interface Course {
         description: {
           [k: string]: unknown;
         }[];
-        videoUrl: string;
-        videoTitle?: string | null;
+        video?: (string | null) | Media;
         id?: string | null;
       }[]
     | null;
