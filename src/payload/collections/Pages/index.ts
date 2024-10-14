@@ -29,7 +29,7 @@ export const Pages: CollectionConfig = {
     afterRead: [populateArchiveBlock],
   },
   versions: {
-    drafts: false,
+    drafts: true,
   },
   access: {
     read: adminsOrPublished,
