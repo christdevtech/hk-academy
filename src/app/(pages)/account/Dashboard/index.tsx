@@ -22,8 +22,8 @@ export default function Dashboard({
 }) {
   return (
     <div className="flex flex-col px-0">
-      <div className="flex w-full flex-col">
-        <Tabs aria-label="Options" isVertical={false} color="default">
+      <div className="flex w-full flex-col px-0">
+        <Tabs aria-label="Options" isVertical={false} color="default" size="sm">
           <Tab key="subscription" title="Courses">
             <Subscriptions subscriptions={subscriptions} user={user} />
           </Tab>

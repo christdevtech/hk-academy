@@ -24,6 +24,11 @@
     --gutter-h: 24px;
     --block-padding: 60px;
   }
+
+  @include small-break{
+    --gutter-h:8px;
+    --block-padding: 25px
+  }
 }
 
 * {

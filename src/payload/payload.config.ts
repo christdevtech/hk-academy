@@ -88,6 +88,11 @@ export default buildConfig({
     Categories,
     Comments,
   ],
+  upload: {
+    limits: {
+      fileSize: 900000000, // 900MB, written in bytes
+    },
+  },
   globals: [Settings, Header, Footer],
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts'),

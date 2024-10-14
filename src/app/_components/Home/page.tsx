@@ -368,7 +368,7 @@ const HomePage = () => {
             <div className="md:col-span-3 col-span-8">
               <Image src="/img/img-mentorship.png" alt="mentor" />
             </div>
-            <div className="col-span-8 md:col-span-5 text-left md:pt-16">
+            <div className="col-span-8 md:col-span-5 text-left lg:pt-16">
               <Accordion variant="splitted" defaultExpandedKeys={'1'}>
                 <AccordionItem key="1" aria-label="mentor" title="Mentorship">
                   We don’t just train you but we have partnered with seasoned entrepreneurs who will

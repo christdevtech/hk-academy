@@ -99,7 +99,7 @@ export default async function Account() {
       <Gutter>
         <RenderParams className={classes.params} />
       </Gutter>
-      <Gutter className="pb-8">
+      <Gutter className="pb-8 px-0">
         <Dashboard
           subscriptions={subscriptions}
           user={user}

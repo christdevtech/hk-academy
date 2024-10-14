@@ -168,11 +168,11 @@ const HeaderComponent = ({ header, settings }: { header: Header; settings: Setti
               <Button
                 href="/logout"
                 color="danger"
-                className="text-xl "
+                className="text-xl mt-2"
                 as={Link}
                 variant={'solid'}
               >
-                Sign Out
+                <span className="text-white font-semibold">Sign Out</span>
               </Button>
             </NavbarMenuItem>
           </React.Fragment>
