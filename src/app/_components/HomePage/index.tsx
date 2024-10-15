@@ -259,7 +259,7 @@ const HomePage = () => {
             </Card>
             <Card className="light foreground background py-3">
               <h3 className="text-lg px-2 md:text-2xl font-bold uppercase">
-                FREE QUALITY MENTORSHIPJOIN
+                FREE QUALITY MENTORSHIP
               </h3>
               <Image src="/img/img-business.png" alt="million" />
               <p className="px-8 pb-6 text-xl">
