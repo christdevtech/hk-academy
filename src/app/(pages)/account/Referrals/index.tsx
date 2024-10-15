@@ -9,7 +9,7 @@ const Referrals = ({ user, referredUsers }: { user: User; referredUsers: User[] 
   const subscribedUsers = () => {
     let number = 0
     referredUsers.forEach(user => {
-      if (user.subscriptions.length > 0) {
+      if (user?.subscriptions?.length > 0) {
         number++
       }
     })
@@ -60,9 +60,12 @@ const Referrals = ({ user, referredUsers }: { user: User; referredUsers: User[] 
         {user.accountBalance >= 3000 ? (
           <RequestCashout user={user} />
         ) : (
-          <Chip color="warning" className="mt-8" onClose={() => {}}>
+          <span
+            color="warning"
+            className="mt-8 bg-danger text-lg font-semibold text-center rounded-md py-2 px-4"
+          >
             You will be able to withdraw once your balance reaches 3000 FCFA
-          </Chip>
+          </span>
         )}
       </CardBody>
       <Divider orientation="horizontal"></Divider>

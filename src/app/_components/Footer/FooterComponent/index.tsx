@@ -38,10 +38,10 @@ export const FooterComponent = ({ footer, settings }: { footer: Footer; settings
             {navItems?.map(({ link }, i) => {
               return <CMSLink key={i} {...link} />
             })}
-            <Link href="/terms-and-conditions" className="hover:text-blue-400">
-              Terms & Conditions
+            <Link href={'/terms-and-conditions'} className="hover:text-primary">
+              Terms and Conditions
             </Link>
-            <Link href="/privacy-policy" className="hover:text-blue-400">
+            <Link href={'/privacy-policy'} className="hover:text-primary">
               Privacy Policy
             </Link>
           </nav>
@@ -54,7 +54,7 @@ export const FooterComponent = ({ footer, settings }: { footer: Footer; settings
               href="https://christdev.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-400"
+              className="hover:text-blue-400 font-bold text-primary"
             >
               Christdev
             </Link>

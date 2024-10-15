@@ -21,7 +21,7 @@ export default function Dashboard({
   referredUsers: User[]
 }) {
   return (
-    <div className="flex flex-col px-0">
+    <div className="flex flex-col px-0 min-h-[40dvh]">
       <div className="flex w-full flex-col px-0">
         <Tabs aria-label="Options" isVertical={false} color="default" size="sm">
           <Tab key="subscription" title="Courses">

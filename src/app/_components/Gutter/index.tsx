@@ -17,7 +17,11 @@ export const Gutter: React.FC<Props> = forwardRef<HTMLDivElement, Props>((props,
 
   return (
     <div
-      style={bg && typeof bg !== 'string' && { backgroundImage: `url("${bg.url}")` }}
+      style={
+        bg && typeof bg !== 'string'
+          ? { backgroundImage: `url("${bg.url}")` }
+          : { backgroundImage: `url("${bg}")` }
+      }
       ref={ref}
       className={[
         classes.gutter,

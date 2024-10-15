@@ -15,6 +15,7 @@ export const setReferredByBeforeCreate: CollectionBeforeChangeHook<User> = async
 
     if (!referralCode) {
       // If no referral code is provided, use the default email to find the referrer
+      payload.logger.info('No Referral Code, using default user')
       const referrers = await payload.find({
         collection: 'users',
         where: {
@@ -29,6 +30,7 @@ export const setReferredByBeforeCreate: CollectionBeforeChangeHook<User> = async
       }
     } else {
       // Find the referrer user by referral code
+      payload.logger.info(`Using referral code: ${referralCode} to find the referrer`)
       const referrers = await payload.find({
         collection: 'users',
         where: {
@@ -45,28 +47,10 @@ export const setReferredByBeforeCreate: CollectionBeforeChangeHook<User> = async
 
     if (referrerUser) {
       // Set the referredBy field on the new user data before creation
+      payload.logger.info(
+        `Updated the user ${data.name}'s account to include the referrer: ${referrerUser.name}`,
+      )
       data.referredBy = referrerUser.id
-
-      // Update the referredUsers array of the referrer user
-      // const referredUserIDs = referrerUser.referredUsers
-      //   ? referrerUser.referredUsers.map((user: User) => user.id)
-      //   : []
-
-      // const updatedReferredUsers = [...referredUserIDs, data.id]
-
-      // try {
-      //   await payload.update({
-      //     collection: 'users',
-      //     id: referrerUser.id,
-      //     data: {
-      //       referredUsers: updatedReferredUsers,
-      //     },
-      //   })
-      // } catch (error) {
-      //   payload.logger.info(
-      //     `Error updating referredUsers field on ${referrerUser.id}: ${error.message}`,
-      //   )
-      // }
     }
   }
 

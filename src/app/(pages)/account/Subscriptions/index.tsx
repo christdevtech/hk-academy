@@ -62,7 +62,7 @@ const Subscriptions = ({ subscriptions, user }: { subscriptions: Subscription[];
             <h2 className="font-bold text-2xl md:text-4xl">Pay HK Academy SignUp Fee!</h2>
           </CardHeader>
           <Divider orientation="horizontal" />
-          <CardBody className="md:p-8 p-4">
+          <CardBody className="md:p-8 p-4 gap-8">
             <p className="text-xl">Subscribe now to access all the features of HK Academy.</p>
             <CreatePaymentLink {...user} />
           </CardBody>

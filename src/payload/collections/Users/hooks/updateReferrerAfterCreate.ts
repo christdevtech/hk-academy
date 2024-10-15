@@ -9,16 +9,16 @@ export const updateReferrerAfterCreate: CollectionAfterChangeHook = async ({
   operation,
 }) => {
   if (operation === 'create') {
-    // Get referral code from cookies
     const referralCode = req.cookies?.referral || null
-    // console.log('All cookies in request:', req.headers.cookie)
 
     let referrerUser = null
 
+    let referrers = null
+
     if (!referralCode) {
-      // No referral code provided, return early
-      // console.log('No referral code provided')
-      const referrers = await payload.find({
+      // No referral code provided, use the default referral user
+      payload.logger.info('No referral code provided, using default referrer')
+      referrers = await payload.find({
         collection: 'users',
         where: {
           email: {
@@ -26,73 +26,28 @@ export const updateReferrerAfterCreate: CollectionAfterChangeHook = async ({
           },
         },
       })
+    } else {
+      // Find the referrer user by referral code
 
-      // If no referrer is found, return early
-      // if (referrers.docs.length === 0) {
-      //   console.log('No referrer found with provided code')
-      //   return doc
-      // }
-
-      referrerUser = referrers.docs[0]
-
-      // Update the referredBy field on the new user
-      await payload.update({
+      referrers = await payload.find({
         collection: 'users',
-        id: doc.id,
-        data: {
-          referredBy: referrerUser.id,
+        where: {
+          referralCode: {
+            equals: referralCode,
+          },
         },
       })
-
-      // Extract only the IDs from the existing referredUsers array
-      const referredUserIDs = referrerUser.referredUsers
-        ? referrerUser.referredUsers.map((user: User) => user.id)
-        : []
-
-      // Update the referredUsers field on the referrer user
-      const updatedReferredUsers = [...referredUserIDs, doc.id]
-
-      await payload.update({
-        collection: 'users',
-        id: referrerUser.id,
-        data: {
-          referredUsers: updatedReferredUsers,
-        },
-      })
-
-      return doc
     }
-
-    // Find the referrer user by referral code
-    const referrers = await payload.find({
-      collection: 'users',
-      where: {
-        referralCode: {
-          equals: referralCode,
-        },
-      },
-    })
 
     // If no referrer is found, return early
     if (referrers.docs.length === 0) {
-      // console.log('No referrer found with provided code')
+      payload.logger.info('No referrer found with provided code')
       return doc
+    } else {
+      payload.logger.info(`Referrer found: ${referrers.docs[0].name}`)
     }
 
     referrerUser = referrers.docs[0]
-
-    // Update the referredBy field on the new user
-    // try {
-    //   await payload.update({
-    //     collection: 'users',
-    //     id: doc.id,
-    //     data: {
-    //       referredBy: referrerUser.id,
-    //     },
-    //   })
-    // } catch (error) {
-    //   payload.logger.info(`Error setting referredBy field on ${doc.id}: ${error.message}`)
-    // }
 
     // Extract only the IDs from the existing referredUsers array
     const referredUserIDs = referrerUser.referredUsers
@@ -109,6 +64,9 @@ export const updateReferrerAfterCreate: CollectionAfterChangeHook = async ({
           referredUsers: updatedReferredUsers,
         },
       })
+      payload.logger.info(
+        `Updated ${referrerUser.name}'s account to add referred user: ${doc.name}`,
+      )
     } catch (error) {
       payload.logger.info(`Error setting referrerUser on ${referrerUser.id}: ${error}`)
     }

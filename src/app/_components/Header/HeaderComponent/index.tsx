@@ -36,20 +36,7 @@ const HeaderComponent = ({ header, settings }: { header: Header; settings: Setti
         .filter(Boolean)
         .join(' ')}
       classNames={{
-        item: [
-          'flex',
-          'relative',
-          'h-full',
-          'items-center',
-          // "data-[active=true]:after:content-['']",
-          // 'data-[active=true]:after:absolute',
-          // 'data-[active=true]:after:bottom-0',
-          // 'data-[active=true]:after:left-0',
-          // 'data-[active=true]:after:right-0',
-          // 'data-[active=true]:after:h-[2px]',
-          // 'data-[active=true]:after:rounded-[2px]',
-          'data-[active=true]:after:bg-primary',
-        ],
+        item: ['flex', 'relative', 'h-full', 'items-center', 'data-[active=true]:after:bg-primary'],
       }}
       maxWidth="2xl"
     >
@@ -84,12 +71,12 @@ const HeaderComponent = ({ header, settings }: { header: Header; settings: Setti
           <React.Fragment>
             <NavbarItem>
               <Button href="/login" as={Link} variant="ghost" color="danger">
-                Login
+                <span className="text-white font-semibold">Login</span>
               </Button>
             </NavbarItem>
             <NavbarItem key="2">
               <Button as={Link} href="/create-account" variant="shadow" color="danger">
-                Join Now
+                <span className="text-white font-semibold">Join Now</span>
               </Button>
             </NavbarItem>
           </React.Fragment>
@@ -103,7 +90,12 @@ const HeaderComponent = ({ header, settings }: { header: Header; settings: Setti
               <DropdownItem key="3" href="/account">
                 User DashBoard
               </DropdownItem>
-              <DropdownItem key="logout" href="/logout" className="text-danger" color="danger">
+              <DropdownItem
+                key="logout"
+                href="/logout"
+                className="text-danger hover:text-white"
+                color="danger"
+              >
                 Sign Out
               </DropdownItem>
             </DropdownMenu>

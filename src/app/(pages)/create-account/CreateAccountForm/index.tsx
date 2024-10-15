@@ -42,6 +42,7 @@ const CreateAccountForm: React.FC = () => {
 
   const onSubmit = useCallback(
     async (data: FormData) => {
+      setLoading(true)
       const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users`, {
         method: 'POST',
         body: JSON.stringify(data),
@@ -125,7 +126,6 @@ const CreateAccountForm: React.FC = () => {
       />
       <Button
         type="submit"
-        disabled={loading}
         isLoading={loading}
         variant="solid"
         className={classes.submit}
