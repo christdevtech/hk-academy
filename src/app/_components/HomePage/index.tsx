@@ -261,7 +261,7 @@ const HomePage = () => {
               <h3 className="text-lg px-2 md:text-2xl font-bold uppercase">
                 FREE QUALITY MENTORSHIP
               </h3>
-              <Image src="/img/img-business.png" alt="million" />
+              <Image src="/img/img-mentorship.png" alt="million" />
               <p className="px-8 pb-6 text-xl">
                 Let's face it, No one can truly be successful without a mentor. Get free access to
                 HK Academy online community as a signed up user. Learn from industry experts and
@@ -366,7 +366,7 @@ const HomePage = () => {
               <h2 className="md:text-4xl text-2xl font-bold">WHY CHOOSE HK ACADEMY ?</h2>
             </div>
             <div className="md:col-span-3 col-span-8">
-              <Image src="/img/img-mentorship.png" alt="mentor" />
+              <Image src="/img/img-mentor.png" alt="mentor" />
             </div>
             <div className="col-span-8 md:col-span-5 text-left lg:pt-16">
               <Accordion variant="splitted" defaultExpandedKeys={'1'}>
