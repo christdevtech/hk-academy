@@ -14,10 +14,14 @@ export const generateMeta = async (args: { doc: Page | Project | Post }): Promis
 
   return {
     title: doc?.meta?.title || 'HK Academy',
-    description: doc?.meta?.description,
+    description:
+      doc?.meta?.description ||
+      'Learn & Earn (Embrace Your Financial Future Through High-Income Skills)',
     openGraph: mergeOpenGraph({
       title: doc?.meta?.title || 'HK Academy',
-      description: doc?.meta?.description,
+      description:
+        doc?.meta?.description ||
+        'Learn & Earn (Embrace Your Financial Future Through High-Income Skills)',
       url: Array.isArray(doc?.slug) ? doc?.slug.join('/') : '/',
       images: ogImage
         ? [

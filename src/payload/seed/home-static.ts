@@ -7,8 +7,8 @@ export const staticHome: Page = {
   createdAt: '',
   updatedAt: '',
   meta: {
-    title: 'Payload Website Template',
-    description: 'An open-source website built with Payload and Next.js.',
+    title: 'HK Academy',
+    description: 'Learn & Earn (Embrace Your Financial Future Through High-Income Skills)',
   },
   hero: {
     type: 'lowImpact',
@@ -17,7 +17,7 @@ export const staticHome: Page = {
       {
         children: [
           {
-            text: 'Payload Website Template',
+            text: 'HK Academy',
           },
         ],
         type: 'h1',
