@@ -11,18 +11,17 @@ export const LogoutPage: React.FC = () => {
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
 
-  const performLogout = async () => {
-    try {
-      await logout()
-      setSuccess('Logged out successfully.')
-    } catch (error) {
-      setError('You are logged out.')
-    }
-  }
-
   useEffect(() => {
+    const performLogout = async () => {
+      try {
+        await logout()
+        setSuccess('Logged out successfully.')
+      } catch (error) {
+        setError('You are logged out.')
+      }
+    }
     performLogout()
-  }, [])
+  }, [logout])
 
   return (
     <Fragment>

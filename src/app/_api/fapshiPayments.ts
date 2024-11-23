@@ -186,11 +186,9 @@ router.post('/create-cashout', async (req, res) => {
     payload.logger.info(`Minimum Cashout Amount: ${minimumCashout}, requested amount: ${amount}`)
 
     if (minimumCashout > amount) {
-      return res
-        .status(400)
-        .json({
-          message: `Cashout amount ${amount} is less than XAF ${minimumCashout} which is the minimum cashout amount`,
-        })
+      return res.status(400).json({
+        message: `Cashout amount ${amount} is less than XAF ${minimumCashout} which is the minimum cashout amount`,
+      })
     }
     // Check if user has sufficient balance
     payload.logger.info(`User balance: ${user.accountBalance}, requested amount: ${amount}`)
@@ -346,6 +344,113 @@ router.post('/approve-cashout', async (req, res) => {
   } catch (error: any) {
     payload.logger.error(error)
     return res.status(500).json({ error: (error.message = 'Error processing transaction') })
+  }
+})
+
+router.post('/admin-cashout', async (req, res) => {
+  try {
+    const { amount, phoneNumber, userId } = req.body
+
+    payload.logger.info(`Making out cashout of ${amount} to ${phoneNumber} by ${userId}`)
+
+    // Validate required inputs
+    if (!amount || !phoneNumber) {
+      return res.status(400).json({ message: 'Amount and phone number are required.' })
+    }
+
+    if (typeof amount !== 'number' || amount <= 0) {
+      return res.status(400).json({ message: 'Amount must be a positive number.' })
+    }
+
+    if (!/^\d{9}$/.test(phoneNumber)) {
+      return res.status(400).json({ message: 'Phone number must be 9 digits.' })
+    }
+
+    // Fetch global settings for hkWallet
+    const settings = await payload.findGlobal({
+      slug: 'settings',
+    })
+
+    const hkWallet = settings.hkWallet as {
+      balance: number
+      pendingPayout: number
+      total: number
+    }
+
+    if (amount > hkWallet.balance) {
+      return res.status(400).json({
+        message: 'Insufficient wallet balance to process the cashout.',
+      })
+    }
+
+    // Prepare Fapshi API request
+    const data = JSON.stringify({
+      amount,
+      phone: phoneNumber,
+      message: 'HK Academy Admin Cashout',
+    })
+
+    const config = {
+      method: 'post',
+      url: `${process.env.FAPSHI_BASE_URL}/payout`,
+      headers: {
+        apiuser: process.env.FAPSHI_API_USER_CASHOUT,
+        apikey: process.env.FAPSHI_API_KEY_CASHOUT,
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    }
+
+    // Call Fapshi API
+    const response = await axios.request(config)
+
+    if (response.data && response.data.message === 'Accepted') {
+      // Create a new transaction
+      // const userId = req.user.id // Assumes authentication middleware populates `req.user`
+      const newTransaction = await payload.create({
+        collection: 'transactions',
+        data: {
+          user: userId,
+          amount,
+          status: 'SUCCESSFUL',
+          type: 'CASH_OUT',
+          fromAccount: 'HK Balance',
+          toAccount: `${phoneNumber}`,
+          paymentMethod: 'FAPSHI',
+          transactionDate: new Date().toISOString(),
+        },
+      })
+
+      // Update hkWallet balance
+      const updatedWallet = {
+        ...hkWallet,
+        balance: hkWallet.balance - amount,
+      }
+
+      await payload.updateGlobal({
+        slug: 'settings',
+        data: {
+          hkWallet: updatedWallet,
+        },
+      })
+
+      return res.status(201).json({
+        message: 'Cashout request processed successfully.',
+        transaction: newTransaction,
+        updatedWallet,
+      })
+    } else {
+      return res.status(500).json({
+        message: 'Failed to process cashout request. Please try again later.',
+        details: response.data,
+      })
+    }
+  } catch (error) {
+    payload.logger.error('Error processing cashout:', error)
+    return res.status(500).json({
+      message: 'An error occurred while processing the cashout request.',
+      error: error.message,
+    })
   }
 })
 

@@ -15,15 +15,20 @@ import {
   Button,
   Card,
   Chip,
+  Spacer,
 } from '@nextui-org/react'
 import Image from 'next/image'
+import AdminCashoutForm from '../AdminCashout'
+// import AdminCashoutForm from '../AdminCashout'
 
 export default function ApprovePayout({
   cashoutTransactions,
   hkWallet,
+  userId,
 }: {
   cashoutTransactions: Transaction[]
   hkWallet: HkWallet
+  userId: string
 }) {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -153,6 +158,9 @@ export default function ApprovePayout({
           {loading ? 'Processing Payout Requests...' : 'Approve Cash Out Requests'}
         </Button>
       )}
+
+      <Spacer y={4} />
+      <AdminCashoutForm maxAmount={hkWallet.balance} userId={userId} />
     </div>
   )
 }

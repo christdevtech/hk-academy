@@ -108,6 +108,7 @@ export default async function Account() {
         />
         {user?.roles?.includes('admin') && (
           <ApprovePayout
+            userId={user.id}
             cashoutTransactions={cashoutTransactions}
             hkWallet={hkWallet}
           ></ApprovePayout>

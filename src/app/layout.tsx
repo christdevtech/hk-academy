@@ -5,7 +5,6 @@ import { AdminBar } from './_components/AdminBar'
 import Footer from './_components/Footer'
 import { Header } from './_components/Header'
 import { Providers } from './_providers'
-import { InitTheme } from './_providers/Theme/InitTheme'
 import { mergeOpenGraph } from './_utilities/mergeOpenGraph'
 
 import './_css/app.scss'
@@ -36,7 +35,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL),
   twitter: {
     card: 'summary_large_image',
-    creator: '@christdevtech',
+    creator: '@christdev',
   },
   openGraph: mergeOpenGraph(),
 }
