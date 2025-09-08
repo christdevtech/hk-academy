@@ -1,0 +1,16 @@
+[phases.setup]
+nixPkgs = ["nodejs-18_x", "yarn"]
+
+[phases.install]
+cmds = ["yarn install --frozen-lockfile"]
+
+[phases.build]
+cmds = ["chmod +x .nixpacks/build.sh", "./.nixpacks/build.sh"]
+
+[start]
+cmd = "chmod +x .nixpacks/start.sh && ./.nixpacks/start.sh"
+
+[variables]
+NODE_ENV = "production"
+PAYLOAD_CONFIG_PATH = "dist/payload/payload.config.js"
+NIXPACKS_PATH = "/opt/nixpacks"
