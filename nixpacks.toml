@@ -16,4 +16,4 @@ cmd = "node dist/server.js"
 
 [variables]
 NODE_ENV = "production"
-PAYLOAD_CONFIG_PATH = "dist/payload.config.js"
+PAYLOAD_CONFIG_PATH = "dist/payload/payload.config.js"
