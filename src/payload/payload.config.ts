@@ -102,15 +102,7 @@ export default buildConfig({
   },
   cors: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
   csrf: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
-  endpoints: [
-    // The seed endpoint is used to populate the database with some example data
-    // You should delete this endpoint before deploying your site to production
-    // {
-    //   path: '/seed',
-    //   method: 'get',
-    //   handler: seed,
-    // },
-  ],
+  endpoints: [],
   plugins: [
     redirects({
       collections: ['pages', 'posts'],

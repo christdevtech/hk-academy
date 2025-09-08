@@ -4,6 +4,7 @@ import nextBuild from 'next/dist/build'
 import path from 'path'
 import cookieParser from 'cookie-parser'
 import fapshiPayments from './app/_api/fapshiPayments'
+import { createResendTransport } from './lib/resendTransport'
 
 dotenv.config({
   path: path.resolve(__dirname, '../.env'),
@@ -29,18 +30,13 @@ const start = async (): Promise<void> => {
       payload.logger.info(`Payload Admin URL: ${payload.getAdminURL()}`)
     },
     email: {
-      transportOptions: {
-        host: process.env.SMTP_HOST,
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
-        },
-        port: Number(process.env.SMTP_HOST),
-        secure: Number(process.env.SMTP_PORT) === 465, // true for port 465, false (the default) for 587 and others
-        requireTLS: true,
-      },
-      fromName: 'HK Academy',
-      fromAddress: 'no-reply@hkacademy.net',
+      transport: createResendTransport({
+        apiKey: process.env.RESEND_API_KEY || '',
+        fromName: process.env.EMAIL_FROM_NAME || 'HK Academy',
+        fromAddress: process.env.EMAIL_FROM_ADDRESS || 'no-reply@hkacademy.net',
+      }),
+      fromName: process.env.EMAIL_FROM_NAME || 'HK Academy',
+      fromAddress: process.env.EMAIL_FROM_ADDRESS || 'no-reply@hkacademy.net',
     },
   })
 
