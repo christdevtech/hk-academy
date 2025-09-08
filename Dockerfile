@@ -11,6 +11,8 @@ RUN yarn build
 
 FROM base as runtime
 
+ARG RESEND_API_KEY
+ENV RESEND_API_KEY=$RESEND_API_KEY
 ENV NODE_ENV=production
 ENV PAYLOAD_CONFIG_PATH=dist/payload.config.js
 
