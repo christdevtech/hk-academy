@@ -46,6 +46,7 @@
     "react-hook-form": "7.45.4",
     "react-router-dom": "5.3.4",
     "resend": "^6.0.2",
+    "sharp": "^0.34.3",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
